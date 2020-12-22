@@ -24,4 +24,30 @@ Please be considerate and rescind the offer in a comment if you cannot finish in
 or add a new comment stating that you're still actively working on the issue and need a little 
 more time.
 
-W
+We are using the [GitHub Flow](https://guides.github.com/introduction/flow/) process to manage 
+code contributions. If you are unfamiliar, please review that link before proceeding. 
+To work on something, whether a new feature or a bug fix:
+
+  1. [Fork](https://help.github.com/articles/fork-a-repo/) the repo.
+  2. Clone it locally:
+  
+  ```
+  git clone https://github.com/<your-id>/crypto.git
+  ```
+  3. Add the upstream repository as a remote: 
+  ```
+  git remote add upstream https://github.com/gazbert/crypto.git
+  ```  
+  Make sure you keep your forked repo [up-to-date](https://help.github.com/articles/syncing-a-fork/) 
+  with the upstream repository.
+  
+  4. Create a meaningful-named branch off of your cloned fork - full details 
+  [here](https://git-scm.com/docs/git-checkout).
+  
+  ```
+  cd crypto
+  git checkout -b my-new-feature-or-bugfix-branch
+  ```
+  5. Write some code! Commit to that branch locally, and regularly push your work to the same 
+  branch on the server. Commit messages must have a short description no longer than 50 characters 
+  followed by a blank line and a longer, more de
