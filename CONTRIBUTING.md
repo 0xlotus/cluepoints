@@ -50,4 +50,25 @@ To work on something, whether a new feature or a bug fix:
   ```
   5. Write some code! Commit to that branch locally, and regularly push your work to the same 
   branch on the server. Commit messages must have a short description no longer than 50 characters 
-  followed by a blank line and a longer, more de
+  followed by a blank line and a longer, more descriptive message that includes reference to 
+  issue(s) being addressed so that they will be automatically closed on a merge e.g. 
+  ```Closes #1234``` or ```Fixes #1234``` - see 
+  [here](https://help.github.com/articles/closing-issues-via-commit-messages/) for more details.
+  When writing a commit message please follow 
+  [these conventions](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
+
+  6. Any code changes that affect documentation (e.g. README.MD) should be accompanied by 
+  corresponding changes (or additions) to the documentation and tests. This will ensure that if 
+  the merged PR is reversed, all traces of the change will be reversed as well.
+
+  7. When you're done, make sure your [Travis](https://travis-ci.org/) 
+  Continuous Integration (CI) build is green and create a 
+  [Pull Request (PR)](https://help.github.com/articles/using-pull-requests/) to submit your changes.
+
+  
+After your PR has been reviewed and signed off, a maintainer will merge it into 
+the master branch.
+
+## Code conventions and housekeeping
+
+The following conventions should be followed:
