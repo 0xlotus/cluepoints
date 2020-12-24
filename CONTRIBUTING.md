@@ -89,4 +89,7 @@ The following conventions should be followed:
   [here](https://github.com/google/styleguide). If you use IntelliJ, there's also a handy 
   [Google plugin](https://plugins.jetbrains.com/plugin/8527-google-java-format) for formatting your 
   code.
-* We like static analysis: the build uses [JaC
+* We like static analysis: the build uses [JaCoCo](https://www.jacoco.org/jacoco/) to enforce code 
+  coverage and [SpotBugs](https://spotbugs.github.io/) to weed out bugs. 
+  [Sonarcloud](https://sonarcloud.io/dashboard?id=gazbert_crypto) is used for analysing and 
+  maintaining the quality of our code. Please maintain this, or better still, help improve it! 
