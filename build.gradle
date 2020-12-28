@@ -63,4 +63,16 @@ ext.libraries = [
             force = true
         },
         spring_tx                               : dependencies.create("org.springframework:spring-tx:" + ext.versions.springTxVersion),
-        jjwt                                    : dependencies.c
+        jjwt                                    : dependencies.create("io.jsonwebtoken:jjwt:0.9.1"),
+        google_guava                            : dependencies.create("com.google.guava:guava:28.2-jre"),
+        google_gson                             : dependencies.create("com.google.code.gson:gson:2.8.6"),
+        h2                                      : dependencies.create("com.h2database:h2:1.4.199"),
+        javax_mail_api                          : dependencies.create("javax.mail:javax.mail-api:" + ext.versions.javaxMailVersion),
+        javax_mail_sun                          : dependencies.create("com.sun.mail:javax.mail:" + ext.versions.javaxMailVersion),
+        javax_xml_api                           : dependencies.create("javax.xml.bind:jaxb-api:" + ext.versions.jaxbVersion),
+        javax_xml_impl                          : dependencies.create("com.sun.xml.bind:jaxb-impl:" + ext.versions.jaxbVersion),
+        snake_yaml                              : dependencies.create("org.yaml:snakeyaml:1.26"),
+
+        springfox_swagger2                      : dependencies.create("io.springfox:springfox-swagger2:" + ext.versions.springFoxVersion),
+        springfox_swagger_ui                    : dependencies.create("io.springfox:springfox-swagger-ui:" + ext.versions.springFoxVersion),
+        
