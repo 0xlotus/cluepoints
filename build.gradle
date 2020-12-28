@@ -46,4 +46,21 @@ ext.libraries = [
             exclude module: "spring-boot-starter-logging"
             force = true
         },
-        spring_boot_starter_data_rest           : dependencies.create("org.sp
+        spring_boot_starter_data_rest           : dependencies.create("org.springframework.boot:spring-boot-starter-data-rest:" + ext.versions.springBootVersion) {
+            exclude module: "spring-boot-starter-logging"
+            force = true
+        },
+        spring_boot_starter_actuator            : dependencies.create("org.springframework.boot:spring-boot-starter-actuator:" + ext.versions.springBootVersion) {
+            exclude module: "spring-boot-starter-logging"
+            force = true
+        },
+        spring_boot_starter_security            : dependencies.create("org.springframework.boot:spring-boot-starter-security:" + ext.versions.springBootVersion) {
+            exclude module: "spring-boot-starter-logging"
+            force = true
+        },
+        spring_cloud_starter                    : dependencies.create("org.springframework.cloud:spring-cloud-starter:" + ext.versions.springCloudVersion) {
+            exclude module: "spring-boot-starter-logging"
+            force = true
+        },
+        spring_tx                               : dependencies.create("org.springframework:spring-tx:" + ext.versions.springTxVersion),
+        jjwt                                    : dependencies.c
