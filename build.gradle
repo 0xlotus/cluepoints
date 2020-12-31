@@ -87,4 +87,53 @@ ext.libraries = [
         powermock_api_easymock                  : dependencies.create("org.powermock:powermock-api-easymock:2.0.6"),
         easymock                                : dependencies.create("org.easymock:easymock:4.2"),
 
-        spring_boot_starter_test                :
+        spring_boot_starter_test                : dependencies.create("org.springframework.boot:spring-boot-starter-test:" + ext.versions.springBootVersion) {
+            exclude module: "spring-boot-starter-logging"
+            force = true
+        },
+        spring_security_test                    : dependencies.create("org.springframework.security:spring-security-test:5.2.2.RELEASE"),
+        awaitility                              : dependencies.create("org.awaitility:awaitility:4.0.2")
+]
+
+allprojects {
+
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: 'maven'
+    apply plugin: 'checkstyle'
+    apply plugin: "com.github.spotbugs"
+    apply plugin: "jacoco"
+
+    group = 'com.gazbert.crypto'
+    version = '1.0.1'
+}
+
+subprojects {
+
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.11
+    targetCompatibility = 1.11
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+
+    javadoc {
+        include "**/api/**"
+    }
+
+    checkstyle {
+        toolVersion '8.21'
+        configFile = file("${rootDir}/etc/google_checks.xml")
+        ignoreFailures = false
+        showViolations = true
+        maxErrors = 0
+        maxWarnings = 0
+    }
+    checkstyle
