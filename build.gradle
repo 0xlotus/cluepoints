@@ -75,4 +75,16 @@ ext.libraries = [
 
         springfox_swagger2                      : dependencies.create("io.springfox:springfox-swagger2:" + ext.versions.springFoxVersion),
         springfox_swagger_ui                    : dependencies.create("io.springfox:springfox-swagger-ui:" + ext.versions.springFoxVersion),
-        
+        springfox_bean_validators               : dependencies.create("io.springfox:springfox-bean-validators:" + ext.versions.springFoxVersion),
+        swagger_annotations                     : dependencies.create("io.swagger:swagger-annotations:1.6.0"),
+
+        validation_api                          : dependencies.create("javax.validation:validation-api:2.0.0.Final"),
+        hibernate_validator                     : dependencies.create("org.hibernate.validator:hibernate-validator:" + ext.versions.hibernateVaildatorVersion),
+        hibernate_validator_annotation_processor: dependencies.create("org.hibernate.validator:hibernate-validator-annotation-processor:" + ext.versions.hibernateVaildatorVersion),
+
+        junit                                   : dependencies.create("junit:junit:4.13"),
+        powermock_junit                         : dependencies.create("org.powermock:powermock-module-junit4:2.0.6"),
+        powermock_api_easymock                  : dependencies.create("org.powermock:powermock-api-easymock:2.0.6"),
+        easymock                                : dependencies.create("org.easymock:easymock:4.2"),
+
+        spring_boot_starter_test                :
