@@ -136,4 +136,51 @@ subprojects {
         maxErrors = 0
         maxWarnings = 0
     }
-    checkstyle
+    checkstyleMain {
+        source = 'src/main/java'
+    }
+    checkstyleTest {
+        source = 'src/test/java'
+    }
+
+    spotbugs {
+        ignoreFailures = false
+        sourceSets = [sourceSets.main]
+        excludeFilter = file("${rootDir}/etc/spotbugs-exclude-filter.xml")
+        reportsDir = file("$project.buildDir/reports/spotbugs")
+        effort = "max"
+    }
+    tasks.withType(com.github.spotbugs.SpotBugsTask) {
+        reports {
+            xml.enabled false
+            html.enabled true
+        }
+    }
+
+    jacoco {
+        toolVersion = "0.8.5"
+    }
+    jacocoTestReport {
+        reports {
+            xml.enabled true
+            csv.enabled false
+            html.enabled true
+        }
+    }
+    test.finalizedBy jacocoTestReport
+    check.dependsOn jacocoTestCoverageVerification
+}
+
+// TODO: Strip out common stuff into separate method?
+task buildZipDist(type: Zip, dependsOn: build) {
+
+    baseName = 'crypto-app'
+
+    into("$baseName-$version") {
+
+        into('libs') {
+            from 'crypto-app/build/libs'
+            include '*.jar' //copy the fat jar created by bootRepackage
+        }
+
+        into('') 
