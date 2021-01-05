@@ -245,4 +245,27 @@ task buildTarGzipDist(type: Tar, dependsOn: build) {
             from 'LICENSE'
         }
 
-        int
+        into('') {
+            from '3rd-party-licenses.md'
+        }
+
+        into('') {
+            from 'crypto.sh'
+        }
+
+        into('') {
+            from 'crypto.bat'
+        }
+
+        from('config/application.properties') {
+            into 'config'
+        }
+
+        into('config') {
+            from 'config'
+            include('*.xml')
+            include('*.yaml')
+        }
+    }
+}
+
