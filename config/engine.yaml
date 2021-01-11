@@ -1,0 +1,12 @@
+############################################################################################
+# Trading Engine YAML config.
+#
+# - All fields are mandatory unless stated otherwise.
+# - Only 1 engine block can be specified.
+# - The indentation levels are significant in YAML: https://en.wikipedia.org/wiki/YAML
+############################################################################################
+---
+engine:
+
+  # A unique identifier for the bot. Value must be an alphanumeric string.
+  # Underscores and dashes are also permitted. E.g. my-bits
