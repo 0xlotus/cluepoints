@@ -14,4 +14,29 @@ See log4j2 guide for more options: http://logging.apache.org/log4j/2.x/manual/ap
     <Appenders>
         <RollingFile name="crypto_RollingFile" fileName="./logs/crypto.log"
                      filePattern="logs/$${date:yyyy-MM}/crypto-%d{MM-dd-yyyy}-%i.log.gz">
-       
+            <PatternLayout>
+                <Pattern>%-4r [%t] %d %-5p %c{1} %M() - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="90"/>
+        </RollingFile>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%-4r [%t] %d %-5p %c{1} %M() - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!--
+        I recommend running BX-bot at 'info'. 'debug' logging will produce a *lot* of output for the Exchange Adapters;
+        very handy for debugging, but not so good for your disk space!
+        -->
+        <Root level="info">
+            <AppenderRef ref="crypto_RollingFile"/>
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>

@@ -1,0 +1,6 @@
+############################################################################################
+# Email Alerts YAML config.
+#
+# - All fields are mandatory unless stated otherwise.
+# - Only 1 emailAlerts block can be specified.
+# - Th
