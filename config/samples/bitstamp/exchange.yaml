@@ -1,0 +1,14 @@
+############################################################################################
+# Exchange Adapter YAML config.
+#
+# - Sample config below currently set to run against Bitstamp.
+# - All fields are mandatory unless stated otherwise.
+# - BX-bot only supports running 1 exchange per bot.
+# - The indentation levels are significant in YAML: https://en.wikipedia.org/wiki/YAML
+#
+# See the README "How do I write my own Exchange Adapter?" section for more details.
+############################################################################################
+---
+exchange:
+
+  # A friendly name for the Exchange. Value must be an alphanumeric string. Spaces are al

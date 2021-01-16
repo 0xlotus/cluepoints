@@ -1,3 +1,4 @@
+
 ############################################################################################
 # Trading Engine YAML config.
 #
@@ -9,11 +10,11 @@
 engine:
 
   # A unique identifier for the bot. Value must be an alphanumeric string.
-  # Underscores and dashes are also permitted. E.g. my-bitfinex-bot_1
-  botId: my-bitfinex-bot_1
+  # Underscores and dashes are also permitted. E.g. my-bitstamp-bot_1
+  botId: my-bitstamp-bot_1
 
-  # A friendly name for the bot. Value must be an alphanumeric string. Spaces are allowed. E.g. Bitfinex Bot
-  botName: Bitfinex Bot
+  # A friendly name for the bot. Value must be an alphanumeric string. Spaces are allowed. E.g. Bitstamp Bot
+  botName: Bitstamp Bot
 
   # This must be set to prevent catastrophic loss on the exchange.
   # This is normally the currency you intend to hold a long position in. It should be set to the currency short code for the
@@ -31,4 +32,4 @@ engine:
   # while their API documentation might say one thing, the reality is you might get socket timeouts and 5XX responses if you
   # hit it too hard - you cannot perform ultra low latency trading over the public internet ;-)
   # You'll need to experiment with the trade cycle interval for different exchanges.
-  tradeCycleInterval: 60
+  tradeCycleInterval: 20
