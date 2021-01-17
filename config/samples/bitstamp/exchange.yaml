@@ -35,4 +35,15 @@ exchange:
     # You'll need to experiment with values here.
     connectionTimeout: 30
 
-    # Optional HTTP status codes that will trigger the adapter to throw a non
+    # Optional HTTP status codes that will trigger the adapter to throw a non-fatal ExchangeNetworkException
+    # if the exchange returns any of the below in an API call response:
+    nonFatalErrorCodes: [502, 503, 504, 520, 522, 525]
+
+    # Optional java.io exception messages that will trigger the adapter to throw a non-fatal ExchangeNetworkException
+    # if the exchange returns any of the below in an API call response:
+    nonFatalErrorMessages:
+      - Connection reset
+      - Connection refused
+      - Remote host closed connection during handshake
+      - Unexpected end of file from server
+      - SSL peer shut down incorrectly

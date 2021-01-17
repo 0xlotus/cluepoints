@@ -1,0 +1,15 @@
+############################################################################################
+# Market YAML config.
+#
+# - All fields are mandatory unless stated otherwise.
+# - Multiple market blocks can be listed.
+# - The indentation levels are significant in YAML: https://en.wikipedia.org/wiki/YAML
+############################################################################################
+---
+markets:
+
+  # The id value is the market id as defined on the exchange, e.g. 'btcusd'.
+  - id: btcusd
+
+    # A friendly name for the market.
+    # Value must be an alphanumeric string. Spa
