@@ -24,4 +24,13 @@ engine:
 
   # This must be set to prevent a catastrophic loss on the exchange.
   # The Trading Engine checks this value at the start of every trade cycle: if your emergencyStopCurrency balance on
-  # the trading drops below this value, the Trading Engine will stop trading on all ma
+  # the trading drops below this value, the Trading Engine will stop trading on all markets and shutdown.
+  # Manual intervention is then required to restart the bot. You can set this value to 0 to override this check.
+  emergencyStopBalance: 1.7
+
+  # The is the interval in seconds that the Trading Engine will wait/sleep before executing
+  # the next trade cycle. The minimum value is 1 second. Some exchanges allow you to hit them harder than others. However,
+  # while their API documentation might say one thing, the reality is you might get socket timeouts and 5XX responses if you
+  # hit it too hard - you cannot perform ultra low latency trading over the public internet ;-)
+  # You'll need to experiment with the trade cycle interval for different exchanges.
+  tradeCycleInterval: 60
