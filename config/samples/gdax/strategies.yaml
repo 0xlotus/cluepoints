@@ -1,0 +1,16 @@
+############################################################################################
+# Trading Strategy YAML config.
+#
+# DO NOT USE: See https://github.com/gazbert/crypto/pull/120
+#
+# - You configure the loading of your strategy using either a className or a beanName field.
+# - All fields are mandatory unless stated otherwise.
+# - Multiple strategy blocks can be listed.
+# - The indentation levels are significant in YAML: https://en.wikipedia.org/wiki/YAML
+#
+# See the README "How do I write my own Trading Strategy?" section for full details.
+############################################################################################
+---
+strategies:
+
+  # A unique identifier for the strategy. The markets.yaml tradingStrategyId ent

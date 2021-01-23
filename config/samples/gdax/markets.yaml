@@ -23,4 +23,14 @@ markets:
     # counter currency.
     baseCurrency: BTC
 
-    # The counterCurrency value is the currency short code for the counter currency in the
+    # The counterCurrency value is the currency short code for the counter currency in the currency pair. This is also known
+    # as the quote currency.
+    counterCurrency: GBP
+
+    # The enabled value allows you toggle trading on the market - config changes are only applied on startup.
+    enabled: true
+
+    # The tradingStrategyId value must match a strategy id defined in your strategies.yaml config.
+    # Currently, BX-bot only supports 1 strategy per market.
+    tradingStrategyId: scalping-strategy
+
