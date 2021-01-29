@@ -38,4 +38,21 @@ exchange:
     # if the exchange returns any of the below in an API call response:
     nonFatalErrorCodes: [502, 503, 504, 520, 522, 525]
 
-    # Optional java.io exception messages t
+    # Optional java.io exception messages that will trigger the adapter to throw a non-fatal ExchangeNetworkException
+    # if the exchange returns any of the below in an API call response:
+    nonFatalErrorMessages:
+      - Connection reset
+      - Connection refused
+      - Remote host closed connection during handshake
+      - Unexpected end of file from server
+
+  otherConfig:
+    # Exchange Taker Buy fee in %
+    # IMPORTANT - keep an eye on the fees: https://gemini.com/fee-schedule/
+    # Taker fee on 3 Aug 2016 = 0.25%
+    buy-fee: 0.25
+
+    # Exchange Taker Sell fee in %
+    # IMPORTANT - keep an eye on the fees: https://gemini.com/fee-schedule/
+    # Taker fee on 3 Aug 2016 = 0.25%
+    sell-fee: 0.25
