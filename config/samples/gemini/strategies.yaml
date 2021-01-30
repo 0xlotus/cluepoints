@@ -1,1 +1,25 @@
-######################################################################################
+############################################################################################
+# Trading Strategy YAML config.
+#
+# - You configure the loading of your strategy using either a className or a beanName field.
+# - All fields are mandatory unless stated otherwise.
+# - Multiple strategy blocks can be listed.
+# - The indentation levels are significant in YAML: https://en.wikipedia.org/wiki/YAML
+#
+# See the README "How do I write my own Trading Strategy?" section for full details.
+############################################################################################
+---
+strategies:
+
+  # A unique identifier for the strategy. The markets.yaml tradingStrategyId entries reference this.
+  # Value must be an alphanumeric string. Underscores and dashes are also permitted. E.g. my-macd-strat-1
+  - id: scalping-strategy
+
+    # A friendly name for the strategy.
+    # Value must be an alphanumeric string. Spaces are allowed. E.g. My Super MACD Strat
+    name: Basic Scalping Strat
+
+    # The description value is optional.
+    description: >
+      A simple trend following scalper that buys at the current BID price, holds until current market price has reached
+      a configurable minimum percentage gain, and then sells at current ASK price, thereby taking pro
