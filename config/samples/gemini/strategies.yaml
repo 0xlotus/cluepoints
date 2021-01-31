@@ -22,4 +22,23 @@ strategies:
     # The description value is optional.
     description: >
       A simple trend following scalper that buys at the current BID price, holds until current market price has reached
-      a configurable minimum percentage gain, and then sells at current ASK price, thereby taking pro
+      a configurable minimum percentage gain, and then sells at current ASK price, thereby taking profit from the spread.
+      Don't forget to factor in the exchange fees!
+
+    # For the className value, you must specify the fully qualified name of your Strategy class for the
+    # Trading Engine to load and execute. This class must be on the runtime classpath.
+    # If you set this value to load your strategy, you cannot set the beanName value.
+    className: com.gazbert.crypto.strategies.ExampleScalpingStrategy
+
+    # For the beanName value, you must specify the Spring bean name of you Strategy component class
+    # for the Trading Engine to load and execute.
+    # You will also need to annotate your strategy class with `@Component("exampleScalpingStrategy")` -
+    # take a look at ExampleScalpingStrategy.java. This results in Spring injecting the bean.
+    # (see https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/stereotype/Component.html)
+    # If you set this value to load your strategy, you cannot set the className value.
+    #beanName: exampleScalpingStrategy
+
+    # The configItems section is optional and allows you to set custom key/value pair config items. This config
+    # is passed to your Trading Strategy when the bot starts up.
+    configItems:
+      counter-currency-buy-orde
