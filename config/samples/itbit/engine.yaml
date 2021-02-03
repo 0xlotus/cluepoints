@@ -1,0 +1,6 @@
+############################################################################################
+# Trading Engine YAML config.
+#
+# - All fields are mandatory unless stated otherwise.
+# - Only 1 engine block can be specified.
+# - Th

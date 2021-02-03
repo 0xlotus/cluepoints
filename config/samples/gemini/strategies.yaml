@@ -41,4 +41,5 @@ strategies:
     # The configItems section is optional and allows you to set custom key/value pair config items. This config
     # is passed to your Trading Strategy when the bot starts up.
     configItems:
-      counter-currency-buy-orde
+      counter-currency-buy-order-amount: 20
+      minimum-percentage-gain: 2
