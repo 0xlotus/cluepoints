@@ -1,0 +1,14 @@
+############################################################################################
+# Market YAML config.
+#
+# - All fields are mandatory unless stated otherwise.
+# - Multiple market blocks can be listed.
+# - The indentation levels are significant in YAML: https://en.wikipedia.org/wiki/YAML
+#
+# NOTE: XXBT is the same currency code as BTC for Bitcoin on Kraken exchange.
+############################################################################################
+---
+markets:
+
+  # The id value is the market id as defined on the exchange, e.g. 'XBTUSD'.
+  # Kraken markets assets (e.g. currencies) can be referenced using the
