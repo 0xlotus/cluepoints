@@ -11,4 +11,23 @@
 markets:
 
   # The id value is the market id as defined on the exchange, e.g. 'XBTUSD'.
-  # Kraken markets assets (e.g. currencies) can be referenced using the
+  # Kraken markets assets (e.g. currencies) can be referenced using their ISO4217-A3 names in the case of ISO
+  # registered names, their 3 letter commonly used names in the case of unregistered names,
+  # or their X-ISO4217-A3 code (see http://www.ifex-project.org/).
+  #
+  # The Kraken Exchange Adapter expects the market id to use the 3 letter commonly used names,
+  # e.g. you access the XBT/USD market using 'XBTUSD'. The reason for this is because the Kraken OpenOrders API
+  # call returns orders with asset pair id to identify the market - this is in the 3 letter commonly used name
+  # format, and the adapter uses the marketId to filter the returned orders.
+  - id: XBTUSD
+
+    # A friendly name for the market.
+    # Value must be an alphanumeric string. Spaces are allowed. E.g. XBT/USD
+    name: XBT/USD
+
+    # The baseCurrency value is the currency short code for the base currency in the currency pair. When you buy or sell a
+    # currency pair, you are performing that action on the base currency. The base currency is the commodity you are buying or
+    # selling. E.g. in a XBT/USD market, the first currency (XBT) is the base currency and the second currency (USD) is the
+    # counter currency.
+    #
+    # Mark
