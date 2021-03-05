@@ -30,4 +30,23 @@ markets:
     # selling. E.g. in a XBT/USD market, the first currency (XBT) is the base currency and the second currency (USD) is the
     # counter currency.
     #
-    # Mark
+    # Markets assets (currencies) can be referenced using their ISO4217-A3 names in the case of ISO registered names,
+    # their 3 letter commonly used names in the case of unregistered names,
+    # or their X-ISO4217-A3 code (see http://www.ifex-project.org/).
+    #
+    # The Kraken Exchange Balance API call always returns the currency short code in the X-ISO4217-A3 format, so you must
+    # specify your codes the same way here. E.g. XBT must be specified as 'XXBT'.
+    baseCurrency: XXBT
+
+    # The counterCurrency value is the currency short code for the counter currency in the currency pair. This is also known
+    # as the quote currency.
+    #
+    # Markets assets (currencies) can be referenced using their ISO4217-A3 names in the case of ISO registered names,
+    # their 3 letter commonly used names in the case of unregistered names,
+    # or their X-ISO4217-A3 code (see http://www.ifex-project.org/).
+    #
+    # The Kraken Exchange Balance API call always returns the currency short code in the X-ISO4217-A3 format, so you must
+    # specify your codes the same way here. E.g. USD should be specified as 'ZUSD'.
+    counterCurrency: ZUSD
+
+    # The en
