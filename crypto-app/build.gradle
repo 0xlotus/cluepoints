@@ -1,0 +1,20 @@
+apply plugin: 'org.springframework.boot'
+
+bootJar {
+    mainClassName = 'com.gazbert.crypto.crypto'
+}
+
+dependencies {
+
+    compile project(':crypto-trading-api')
+    compile project(':crypto-strategy-api')
+    compile project(':crypto-exchange-api')
+    compile project(':crypto-strategies')
+    compile project(':crypto-exchanges')
+    compile project(':crypto-domain-objects')
+    compile project(':crypto-yaml-datastore')
+    compile project(':crypto-repository')
+    compile project(':crypto-core')
+    compile project(':crypto-rest-api')
+
+    // Add you
