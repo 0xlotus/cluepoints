@@ -17,4 +17,9 @@ dependencies {
     compile project(':crypto-core')
     compile project(':crypto-rest-api')
 
-    // Add you
+    // Add your (optional) Trading Strategies here
+    // compile group: 'com.gazbert.crypto', name: 'crypto-strategies', version: '3.0-SNAPSHOT'
+
+    // Add your (optional) Exchange Adapters here
+    // compile group: 'com.your.stuff', name: 'your-custom-exchanges', version: '1.0-SNAPSHOT'
+}
