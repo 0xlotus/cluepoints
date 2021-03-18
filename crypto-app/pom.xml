@@ -95,4 +95,11 @@
         <executions>
           <execution>
             <goals>
-              <goal>repackage</
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
