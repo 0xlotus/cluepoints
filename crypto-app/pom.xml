@@ -60,4 +60,39 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifact
+      <artifactId>crypto-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>crypto-rest-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Add your (optional) Trading Strategies here -->
+    <!--<dependency>-->
+    <!--<groupId>com.gazbert.crypto</groupId>-->
+    <!--<artifactId>crypto-strategies</artifactId>-->
+    <!--<version>7.0.1-SNAPSHOT</version>-->
+    <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
+
+    <!-- Add your (optional) Exchange Adapters here -->
+    <!--<dependency>-->
+    <!--<groupId>com.your.stuff</groupId>-->
+    <!--<artifactId>your-custom-exchanges</artifactId>-->
+    <!--<version>1.0-SNAPSHOT</version>-->
+    <!--<scope>runtime</scope>-->
+    <!--</dependency>-->
+
+  </dependencies>
+  <build>
+    <defaultGoal>clean install</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</
