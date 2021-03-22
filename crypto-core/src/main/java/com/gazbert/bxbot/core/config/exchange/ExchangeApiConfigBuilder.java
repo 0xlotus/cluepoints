@@ -50,4 +50,26 @@ public final class ExchangeApiConfigBuilder {
     exchangeApiConfig.setExchangeAdapter(exchangeConfig.getAdapter());
 
     final NetworkConfig networkConfig = exchangeConfig.getNetworkConfig();
-    if (ne
+    if (networkConfig != null) {
+      final NetworkConfigImpl exchangeApiNetworkConfig = new NetworkConfigImpl();
+      exchangeApiNetworkConfig.setConnectionTimeout(networkConfig.getConnectionTimeout());
+
+      final List<Integer> nonFatalErrorCodes = networkConfig.getNonFatalErrorCodes();
+      if (nonFatalErrorCodes != null && !nonFatalErrorCodes.isEmpty()) {
+        exchangeApiNetworkConfig.setNonFatalErrorCodes(nonFatalErrorCodes);
+      } else {
+        LOG.info(
+            () ->
+                "No (optional) NetworkConfiguration NonFatalErrorCodes have been set for "
+                    + "Exchange Adapter: "
+                    + exchangeConfig.getAdapter());
+      }
+
+      final List<String> nonFatalErrorMessages = networkConfig.getNonFatalErrorMessages();
+      if (nonFatalErrorMessages != null && !nonFatalErrorMessages.isEmpty()) {
+        exchangeApiNetworkConfig.setNonFatalErrorMessages(nonFatalErrorMessages);
+      } else {
+        LOG.info(
+            () ->
+                "No (optional) NetworkConfiguration NonFatalErrorMessages have been set for "
+                    + "Exchange Adapter: "
