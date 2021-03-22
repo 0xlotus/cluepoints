@@ -73,3 +73,32 @@ public final class ExchangeApiConfigBuilder {
             () ->
                 "No (optional) NetworkConfiguration NonFatalErrorMessages have been set for "
                     + "Exchange Adapter: "
+                    + exchangeConfig.getAdapter());
+      }
+
+      exchangeApiConfig.setNetworkConfig(exchangeApiNetworkConfig);
+      LOG.info(() -> "NetworkConfiguration has been set: " + exchangeApiNetworkConfig);
+
+    } else {
+      LOG.info(
+          () ->
+              "No (optional) NetworkConfiguration has been set for Exchange Adapter: "
+                  + exchangeConfig.getAdapter());
+    }
+
+    final Map<String, String> authenticationConfig = exchangeConfig.getAuthenticationConfig();
+    if (authenticationConfig != null) {
+      final AuthenticationConfigImpl exchangeApiAuthenticationConfig =
+          new AuthenticationConfigImpl();
+      exchangeApiAuthenticationConfig.setItems(authenticationConfig);
+      exchangeApiConfig.setAuthenticationConfig(exchangeApiAuthenticationConfig);
+
+      // We don't log the creds!
+      LOG.info(() -> "AuthenticationConfiguration has been set successfully.");
+
+    } else {
+      LOG.info(
+          () ->
+              "No (optional) AuthenticationConfiguration has been set for Exchange Adapter: "
+                  + exchangeConfig.getAdapter());
+   
