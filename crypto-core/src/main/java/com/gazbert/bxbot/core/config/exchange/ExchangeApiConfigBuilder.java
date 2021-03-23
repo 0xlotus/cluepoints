@@ -101,4 +101,20 @@ public final class ExchangeApiConfigBuilder {
           () ->
               "No (optional) AuthenticationConfiguration has been set for Exchange Adapter: "
                   + exchangeConfig.getAdapter());
-   
+    }
+
+    final Map<String, String> otherConfig = exchangeConfig.getOtherConfig();
+    if (otherConfig != null) {
+      final OtherConfigImpl exchangeApiOtherConfig = new OtherConfigImpl();
+      exchangeApiOtherConfig.setItems(otherConfig);
+      exchangeApiConfig.setOtherConfig(exchangeApiOtherConfig);
+      LOG.info(() -> "Other Exchange Adapter config has been set: " + exchangeApiOtherConfig);
+    } else {
+      LOG.info(
+          () ->
+              "No Other config has been set for Exchange Adapter: " + exchangeConfig.getAdapter());
+    }
+
+    return exchangeApiConfig;
+  }
+}
