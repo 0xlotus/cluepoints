@@ -39,4 +39,54 @@ public class ExchangeConfigImpl implements ExchangeConfig {
   private String exchangeName;
   private String exchangeAdapter;
   private AuthenticationConfig authenticationConfig;
-  pri
+  private NetworkConfig networkConfig;
+  private OtherConfig otherConfig;
+
+  @Override
+  public String getExchangeName() {
+    return exchangeName;
+  }
+
+  void setExchangeName(String exchangeName) {
+    this.exchangeName = exchangeName;
+  }
+
+  @Override
+  public String getExchangeAdapter() {
+    return exchangeAdapter;
+  }
+
+  void setExchangeAdapter(String exchangeAdapter) {
+    this.exchangeAdapter = exchangeAdapter;
+  }
+
+  @Override
+  public AuthenticationConfig getAuthenticationConfig() {
+    return authenticationConfig;
+  }
+
+  public void setAuthenticationConfig(AuthenticationConfig authenticationConfig) {
+    this.authenticationConfig = authenticationConfig;
+  }
+
+  public void setNetworkConfig(NetworkConfig networkConfig) {
+    this.networkConfig = networkConfig;
+  }
+
+  @Override
+  public NetworkConfig getNetworkConfig() {
+    return networkConfig;
+  }
+
+  public OtherConfig getOtherConfig() {
+    return otherConfig;
+  }
+
+  public void setOtherConfig(OtherConfig otherConfig) {
+    this.otherConfig = otherConfig;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+               .add("exchangeNam
