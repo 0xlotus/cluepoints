@@ -89,4 +89,11 @@ public class ExchangeConfigImpl implements ExchangeConfig {
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-               .add("exchangeNam
+               .add("exchangeName", exchangeName)
+               .add("exchangeAdapter", exchangeAdapter)
+               .add("authenticationConfig", "NOT SHOWN BY DESIGN")
+               .add("networkConfig", networkConfig)
+               .add("otherConfig", otherConfig)
+               .toString();
+  }
+}
