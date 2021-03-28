@@ -16,4 +16,47 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY C
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.core.config.exchange;
+
+import com.gazbert.crypto.exchange.api.NetworkConfig;
+import com.google.common.base.MoreObjects;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Exchange API Network config.
+ *
+ * @author gazbert
+ */
+public class NetworkConfigImpl implements NetworkConfig {
+
+  private Integer connectionTimeout;
+  private List<Integer> nonFatalErrorCodes;
+  private List<String> nonFatalErrorMessages;
+
+  public NetworkConfigImpl() {
+    nonFatalErrorCodes = new ArrayList<>();
+    nonFatalErrorMessages = new ArrayList<>();
+  }
+
+  @Override
+  public Integer getConnectionTimeout() {
+    return connectionTimeout;
+  }
+
+  public void setConnectionTimeout(Integer connectionTimeout) {
+    this.connectionTimeout = connectionTimeout;
+  }
+
+  @Override
+  public List<Integer> getNonFatalErrorCodes() {
+    return nonFatalErrorCodes;
+  }
+
+  public void setNonFatalErrorCodes(List<Integer> nonFatalErrorCodes) {
