@@ -60,3 +60,24 @@ public class NetworkConfigImpl implements NetworkConfig {
   }
 
   public void setNonFatalErrorCodes(List<Integer> nonFatalErrorCodes) {
+    this.nonFatalErrorCodes = nonFatalErrorCodes;
+  }
+
+  @Override
+  public List<String> getNonFatalErrorMessages() {
+    return nonFatalErrorMessages;
+  }
+
+  public void setNonFatalErrorMessages(List<String> nonFatalErrorMessages) {
+    this.nonFatalErrorMessages = nonFatalErrorMessages;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+               .add("connectionTimeout", connectionTimeout)
+               .add("nonFatalErrorCodes", nonFatalErrorCodes)
+               .add("nonFatalErrorMessages", nonFatalErrorMessages)
+               .toString();
+  }
+}
