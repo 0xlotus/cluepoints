@@ -11,4 +11,51 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or su
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.core.config.exchange;
+
+import com.gazbert.crypto.exchange.api.OtherConfig;
+import com.google.common.base.MoreObjects;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Exchange API Other config.
+ *
+ * @author gazbert
+ */
+public class OtherConfigImpl implements OtherConfig {
+
+  private Map<String, String> items;
+
+  public OtherConfigImpl() {
+    items = new HashMap<>();
+  }
+
+  @Override
+  public String getItem(String name) {
+    return items.get(name);
+  }
+
+  Map<String, String> getItems() {
+    return items;
+  }
+
+  public void setItems(Map<String, String> items) {
+    this.items = items;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+       
