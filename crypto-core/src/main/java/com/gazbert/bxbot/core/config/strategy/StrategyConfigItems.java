@@ -1,7 +1,8 @@
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Gareth Jon Lynch
+ * Copyright (c) 2015 Gareth Jon Lynch
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,44 +22,51 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gazbert.crypto.core.config.exchange;
+package com.gazbert.crypto.core.config.strategy;
 
-import com.gazbert.crypto.exchange.api.OtherConfig;
+import com.gazbert.crypto.strategy.api.StrategyConfig;
 import com.google.common.base.MoreObjects;
-
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * Exchange API Other config.
+ * Encapsulates (optional) Strategy Config Items.
  *
  * @author gazbert
  */
-public class OtherConfigImpl implements OtherConfig {
+public final class StrategyConfigItems implements StrategyConfig {
 
-  private Map<String, String> items;
+  private Map<String, String> items = new HashMap<>();
 
-  public OtherConfigImpl() {
-    items = new HashMap<>();
+  @Override
+  public String getConfigItem(String key) {
+    return items.get(key);
   }
 
   @Override
-  public String getItem(String name) {
-    return items.get(name);
+  public int getNumberOfConfigItems() {
+    return items.size();
   }
 
-  Map<String, String> getItems() {
-    return items;
+  @Override
+  public Set<String> getConfigItemKeys() {
+    return Collections.unmodifiableSet(items.keySet());
   }
 
   public void setItems(Map<String, String> items) {
     this.items = items;
   }
 
+  Map<String, String> getItems() {
+    return items;
+  }
+
   @Override
   public String toString() {
     return MoreObjects.toStringHelper(this)
-               .add("items", items)
-               .toString();
+        .add("items", items)
+        .toString();
   }
 }
