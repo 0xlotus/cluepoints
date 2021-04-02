@@ -69,4 +69,28 @@ public final class EmailAlertMessageBuilder {
     msgContent.append(new Date());
     msgContent.append(NEWLINE).append(NEWLINE);
 
-    msgContent.append(HORIZONTAL_RULE
+    msgContent.append(HORIZONTAL_RULE);
+    msgContent.append("Event Details:");
+    msgContent.append(NEWLINE).append(NEWLINE);
+    msgContent.append(errorDetails);
+    msgContent.append(NEWLINE).append(NEWLINE);
+
+    msgContent.append(HORIZONTAL_RULE);
+    msgContent.append("Action Taken:");
+    msgContent.append(NEWLINE).append(NEWLINE);
+    msgContent.append("The bot will shut down NOW! Check the bot logs for more information.");
+    msgContent.append(NEWLINE).append(NEWLINE);
+
+    if (exception != null) {
+      msgContent.append(HORIZONTAL_RULE);
+      msgContent.append("Stacktrace:");
+      msgContent.append(NEWLINE).append(NEWLINE);
+      final StringWriter stringWriter = new StringWriter();
+      final PrintWriter printWriter = new PrintWriter(stringWriter);
+      exception.printStackTrace(printWriter);
+      msgContent.append(stringWriter.toString());
+    }
+
+    return msgContent.toString();
+  }
+}
