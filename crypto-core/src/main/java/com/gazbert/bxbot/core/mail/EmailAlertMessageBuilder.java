@@ -36,4 +36,37 @@ public final class EmailAlertMessageBuilder {
 
   private static final String NEWLINE = System.getProperty("line.separator");
   private static final String HORIZONTAL_RULE =
-      "-
+      "--------------------------------------------------" + NEWLINE;
+
+  private EmailAlertMessageBuilder() {
+  }
+
+  /** Builds critical message content. */
+  public static String buildCriticalMsgContent(
+      String errorDetails, Throwable exception, String botId, String botName, String adapterName) {
+
+    final StringBuilder msgContent =
+        new StringBuilder("A CRITICAL error event has occurred on BX-bot.");
+    msgContent.append(NEWLINE).append(NEWLINE);
+
+    msgContent.append(HORIZONTAL_RULE);
+    msgContent.append("Bot Id / Name:");
+    msgContent.append(NEWLINE).append(NEWLINE);
+    msgContent.append(botId);
+    msgContent.append(" / ");
+    msgContent.append(botName);
+    msgContent.append(NEWLINE).append(NEWLINE);
+
+    msgContent.append(HORIZONTAL_RULE);
+    msgContent.append("Exchange Adapter:");
+    msgContent.append(NEWLINE).append(NEWLINE);
+    msgContent.append(adapterName);
+    msgContent.append(NEWLINE).append(NEWLINE);
+
+    msgContent.append(HORIZONTAL_RULE);
+    msgContent.append("Event Time:");
+    msgContent.append(NEWLINE).append(NEWLINE);
+    msgContent.append(new Date());
+    msgContent.append(NEWLINE).append(NEWLINE);
+
+    msgContent.append(HORIZONTAL_RULE
