@@ -23,4 +23,36 @@
 
 package com.gazbert.crypto.core.util;
 
-import com.gazbert.crypto.core.mail.EmailAlertMessageBuil
+import com.gazbert.crypto.core.mail.EmailAlertMessageBuilder;
+import com.gazbert.crypto.core.mail.EmailAlerter;
+import com.gazbert.crypto.domain.engine.EngineConfig;
+import com.gazbert.crypto.exchange.api.ExchangeAdapter;
+import com.gazbert.crypto.trading.api.BalanceInfo;
+import com.gazbert.crypto.trading.api.ExchangeNetworkException;
+import com.gazbert.crypto.trading.api.TradingApiException;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * Util class that checks if Emergency Stop Limit has been breached.
+ *
+ * @author gazbert
+ */
+public class EmergencyStopChecker {
+
+  private static final Logger LOG = LogManager.getLogger();
+
+  private static final String CRITICAL_EMAIL_ALERT_SUBJECT = "CRITICAL Alert message from BX-bot";
+  private static final String DECIMAL_FORMAT_PATTERN = "#.########";
+
+  private EmergencyStopChecker() {
+  }
+
+  /**
+   * Checks if the Emergency Stop Currency (e.g. USD, BTC) wallet balance on exchange has gone
+   * <strong>below</strong> configured limit.
+   *
+   * <p>If the balance cannot be obtained or has dropped below the conf
