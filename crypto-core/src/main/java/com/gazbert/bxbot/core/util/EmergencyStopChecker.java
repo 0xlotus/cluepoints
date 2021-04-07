@@ -55,4 +55,29 @@ public class EmergencyStopChecker {
    * Checks if the Emergency Stop Currency (e.g. USD, BTC) wallet balance on exchange has gone
    * <strong>below</strong> configured limit.
    *
-   * <p>If the balance cannot be obtained or has dropped below the conf
+   * <p>If the balance cannot be obtained or has dropped below the configured limit, we send an
+   * Email Alert and notify the main control loop to immediately shutdown the bot.
+   *
+   * <p>This check is here to help protect runaway losses due to:
+   *
+   * <ul>
+   *   <li>'buggy' Trading Strategies.
+   *   <li>Unforeseen bugs in the Trading Engine and Exchange Adapter.
+   *   <li>The exchange sending corrupt order book data and the Trading Strategy being misled...
+   *       this has happened.
+   * </ul>
+   *
+   * @param exchangeAdapter the adapter used to connect to the exchange.
+   * @param engineConfig the Trading Engine config.
+   * @param emailAlerter the Email Alerter.
+   * @return true if the emergency stop limit has been breached, false otherwise.
+   * @throws TradingApiException if a serious error has occurred connecting to exchange.
+   * @throws ExchangeNetworkException if a temporary network exception has occurred.
+   */
+  public static boolean isEmergencyStopLimitBreached(
+      ExchangeAdapter exchangeAdapter, EngineConfig engineConfig, EmailAlerter emailAlerter)
+      throws TradingApiException, ExchangeNetworkException {
+
+    boolean isEmergencyStopLimitBreached = true;
+
+    LOG.info(() -> "Performing Emergency Stop check..
