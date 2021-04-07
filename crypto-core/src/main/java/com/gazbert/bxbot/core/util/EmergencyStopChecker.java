@@ -80,4 +80,35 @@ public class EmergencyStopChecker {
 
     boolean isEmergencyStopLimitBreached = true;
 
-    LOG.info(() -> "Performing Emergency Stop check..
+    LOG.info(() -> "Performing Emergency Stop check...");
+
+    BalanceInfo balanceInfo;
+    try {
+      balanceInfo = exchangeAdapter.getBalanceInfo();
+    } catch (TradingApiException e) {
+      final String errorMsg =
+          "Failed to get Balance info from exchange to perform Emergency Stop check - letting"
+              + " Trade Engine error policy decide what to do next...";
+      LOG.error(() -> errorMsg, e);
+      // re-throw to main loop - might only be connection issue and it will retry...
+      throw e;
+    }
+
+    final Map<String, BigDecimal> balancesAvailable = balanceInfo.getBalancesAvailable();
+    final BigDecimal currentBalance =
+        balancesAvailable.get(engineConfig.getEmergencyStopCurrency());
+    if (currentBalance == null) {
+      final String errorMsg =
+          "Emergency stop check: Failed to get current Emergency Stop Currency balance as '"
+              + engineConfig.getEmergencyStopCurrency()
+              + "' key into Balances map "
+              + "returned null. Balances returned: "
+              + balancesAvailable;
+      LOG.error(() -> errorMsg);
+      throw new IllegalStateException(errorMsg);
+    } else {
+
+      LOG.info(
+          () ->
+              "Emergency Stop Currency balance available on exchange is ["
+       
