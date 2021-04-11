@@ -135,4 +135,24 @@ public class EmergencyStopChecker {
                 + new DecimalFormat(DECIMAL_FORMAT_PATTERN)
                     .format(engineConfig.getEmergencyStopBalance())
                 + "] "
-                + engineC
+                + engineConfig.getEmergencyStopCurrency();
+
+        LOG.fatal(() -> balanceBlownErrorMsg);
+
+        emailAlerter.sendMessage(
+            CRITICAL_EMAIL_ALERT_SUBJECT,
+            EmailAlertMessageBuilder.buildCriticalMsgContent(
+                balanceBlownErrorMsg,
+                null,
+                engineConfig.getBotId(),
+                engineConfig.getBotName(),
+                exchangeAdapter.getClass().getName()));
+      } else {
+
+        isEmergencyStopLimitBreached = false;
+        LOG.info(() -> "Emergency Stop check PASSED!");
+      }
+    }
+    return isEmergencyStopLimitBreached;
+  }
+}
