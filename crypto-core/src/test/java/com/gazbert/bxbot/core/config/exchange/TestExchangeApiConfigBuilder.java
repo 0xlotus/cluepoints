@@ -41,4 +41,27 @@ import org.junit.Test;
 public class TestExchangeApiConfigBuilder {
 
   private static final String EXCHANGE_NAME = "Bitstamp";
-  private static final String EXCHANGE_ADAPTER = "com.gazbert.crypto.exchanges.Te
+  private static final String EXCHANGE_ADAPTER = "com.gazbert.crypto.exchanges.TestExchangeAdapter";
+
+  private static final String API_KEY_CONFIG_ITEM_KEY = "api-key";
+  private static final String API_KEY_CONFIG_ITEM_VALUE = "apiKey--123";
+  private static final String SECRET_CONFIG_ITEM_KEY = "secret";
+  private static final String SECRET_FEE_CONFIG_ITEM_VALUE = "secret-key";
+
+  private static final Integer CONNECTION_TIMEOUT = 30;
+  private static final List<Integer> NON_FATAL_ERROR_CODES = Arrays.asList(502, 503);
+  private static final List<String> NON_FATAL_ERROR_MESSAGES =
+      Arrays.asList("Connection refused", "Remote host closed connection during handshake");
+
+  private static final String BUY_FEE_CONFIG_ITEM_KEY = "buy-fee";
+  private static final String BUY_FEE_CONFIG_ITEM_VALUE = "0.20";
+  private static final String SELL_FEE_CONFIG_ITEM_KEY = "sell-fee";
+  private static final String SELL_FEE_CONFIG_ITEM_VALUE = "0.25";
+
+  @Test
+  public void testBuildingConfig() {
+    final com.gazbert.crypto.exchange.api.ExchangeConfig exchangeApiConfig =
+        ExchangeApiConfigBuilder.buildConfig(buildExchangeConfig());
+
+    assertThat(exchangeApiConfig.getExchangeName()).isEqualTo(EXCHANGE_NAME);
+    assertThat(exchangeApiC
