@@ -86,4 +86,28 @@ public class TestExchangeApiConfigBuilder {
 
   @Test
   public void testBuildingConfigWithMandatoryConfigOnly() {
-    final com.gazbert.crypto.exchange.api.ExchangeConfig excha
+    final com.gazbert.crypto.exchange.api.ExchangeConfig exchangeApiConfig =
+        ExchangeApiConfigBuilder.buildConfig(buildExchangeConfigWithMandatoryConfigOnly());
+
+    assertThat(exchangeApiConfig.getExchangeName()).isEqualTo(EXCHANGE_NAME);
+    assertThat(exchangeApiConfig.getExchangeAdapter()).isEqualTo(EXCHANGE_ADAPTER);
+
+    assertThat(exchangeApiConfig.getAuthenticationConfig()).isNull();
+    assertThat(exchangeApiConfig.getNetworkConfig()).isNull();
+    assertThat(exchangeApiConfig.getOtherConfig()).isNull();
+  }
+
+  @Test
+  public void testBuildingConfigWithoutOptionalNetworkConfig() {
+    final com.gazbert.crypto.exchange.api.ExchangeConfig exchangeApiConfig =
+        ExchangeApiConfigBuilder.buildConfig(buildExchangeConfigWithoutOptionalNetworkConfig());
+
+    assertThat(exchangeApiConfig.getExchangeName()).isEqualTo(EXCHANGE_NAME);
+    assertThat(exchangeApiConfig.getExchangeAdapter()).isEqualTo(EXCHANGE_ADAPTER);
+
+    assertThat(exchangeApiConfig.getAuthenticationConfig().getItem(API_KEY_CONFIG_ITEM_KEY))
+        .isEqualTo(API_KEY_CONFIG_ITEM_VALUE);
+    assertThat(exchangeApiConfig.getAuthenticationConfig().getItem(SECRET_CONFIG_ITEM_KEY))
+        .isEqualTo(SECRET_FEE_CONFIG_ITEM_VALUE);
+
+    assertThat(exchangeApiConfig.getNetworkConfig().getConnectionTim
