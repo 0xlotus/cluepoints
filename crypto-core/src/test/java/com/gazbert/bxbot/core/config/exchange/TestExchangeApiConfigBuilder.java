@@ -110,4 +110,30 @@ public class TestExchangeApiConfigBuilder {
     assertThat(exchangeApiConfig.getAuthenticationConfig().getItem(SECRET_CONFIG_ITEM_KEY))
         .isEqualTo(SECRET_FEE_CONFIG_ITEM_VALUE);
 
-    assertThat(exchangeApiConfig.getNetworkConfig().getConnectionTim
+    assertThat(exchangeApiConfig.getNetworkConfig().getConnectionTimeout())
+        .isEqualTo(CONNECTION_TIMEOUT);
+    assertThat(exchangeApiConfig.getNetworkConfig().getNonFatalErrorCodes()).isEmpty();
+    assertThat(exchangeApiConfig.getNetworkConfig().getNonFatalErrorMessages()).isEmpty();
+
+    assertThat(exchangeApiConfig.getOtherConfig().getItem(BUY_FEE_CONFIG_ITEM_KEY))
+        .isEqualTo(BUY_FEE_CONFIG_ITEM_VALUE);
+    assertThat(exchangeApiConfig.getOtherConfig().getItem(SELL_FEE_CONFIG_ITEM_KEY))
+        .isEqualTo(SELL_FEE_CONFIG_ITEM_VALUE);
+  }
+
+  private static Map<String, String> buildAuthenticationConfig() {
+    final Map<String, String> authenticationConfig = new HashMap<>();
+    authenticationConfig.put(API_KEY_CONFIG_ITEM_KEY, API_KEY_CONFIG_ITEM_VALUE);
+    authenticationConfig.put(SECRET_CONFIG_ITEM_KEY, SECRET_FEE_CONFIG_ITEM_VALUE);
+    return authenticationConfig;
+  }
+
+  private static NetworkConfig buildNetworkConfig() {
+    final NetworkConfig networkConfig = new NetworkConfig();
+    networkConfig.setConnectionTimeout(CONNECTION_TIMEOUT);
+    networkConfig.setNonFatalErrorCodes(NON_FATAL_ERROR_CODES);
+    networkConfig.setNonFatalErrorMessages(NON_FATAL_ERROR_MESSAGES);
+    return networkConfig;
+  }
+
+  private static Netwo
