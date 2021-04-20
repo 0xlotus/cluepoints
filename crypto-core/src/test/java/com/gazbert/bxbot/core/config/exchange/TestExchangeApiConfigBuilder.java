@@ -166,4 +166,13 @@ public class TestExchangeApiConfigBuilder {
     return exchangeConfig;
   }
 
-  private static ExchangeConfig buildExcha
+  private static ExchangeConfig buildExchangeConfigWithoutOptionalNetworkConfig() {
+    final ExchangeConfig exchangeConfig = new ExchangeConfig();
+    exchangeConfig.setName(EXCHANGE_NAME);
+    exchangeConfig.setAdapter(EXCHANGE_ADAPTER);
+    exchangeConfig.setAuthenticationConfig(buildAuthenticationConfig());
+    exchangeConfig.setNetworkConfig(buildNetworkConfigWithoutErrorCodesAndMessages());
+    exchangeConfig.setOtherConfig(buildOtherConfig());
+    return exchangeConfig;
+  }
+}
