@@ -136,4 +136,34 @@ public class TestExchangeApiConfigBuilder {
     return networkConfig;
   }
 
-  private static Netwo
+  private static NetworkConfig buildNetworkConfigWithoutErrorCodesAndMessages() {
+    final NetworkConfig networkConfig = new NetworkConfig();
+    networkConfig.setConnectionTimeout(CONNECTION_TIMEOUT);
+    return networkConfig;
+  }
+
+  private static Map<String, String> buildOtherConfig() {
+    final Map<String, String> otherConfig = new HashMap<>();
+    otherConfig.put(BUY_FEE_CONFIG_ITEM_KEY, BUY_FEE_CONFIG_ITEM_VALUE);
+    otherConfig.put(SELL_FEE_CONFIG_ITEM_KEY, SELL_FEE_CONFIG_ITEM_VALUE);
+    return otherConfig;
+  }
+
+  private static ExchangeConfig buildExchangeConfig() {
+    final ExchangeConfig exchangeConfig = new ExchangeConfig();
+    exchangeConfig.setName(EXCHANGE_NAME);
+    exchangeConfig.setAdapter(EXCHANGE_ADAPTER);
+    exchangeConfig.setAuthenticationConfig(buildAuthenticationConfig());
+    exchangeConfig.setNetworkConfig(buildNetworkConfig());
+    exchangeConfig.setOtherConfig(buildOtherConfig());
+    return exchangeConfig;
+  }
+
+  private static ExchangeConfig buildExchangeConfigWithMandatoryConfigOnly() {
+    final ExchangeConfig exchangeConfig = new ExchangeConfig();
+    exchangeConfig.setName(EXCHANGE_NAME);
+    exchangeConfig.setAdapter(EXCHANGE_ADAPTER);
+    return exchangeConfig;
+  }
+
+  private static ExchangeConfig buildExcha
