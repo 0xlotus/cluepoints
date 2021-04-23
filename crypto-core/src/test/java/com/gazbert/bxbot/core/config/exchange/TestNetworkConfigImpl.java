@@ -13,4 +13,40 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.core.config.exchange;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Test;
+
+/**
+ * Tests Network Config exchange API config object behaves as expected.
+ *
+ * @author gazbert
+ */
+public class TestNetworkConfigImpl {
+
+  private static final Integer CONNECTION_TIMEOUT = 30;
+  private static final List<Integer> NON_FATAL_ERROR_CODES = Arrays.asList(502, 503, 504);
+  private static final List<String> NON_FATAL_ERROR_MESSAGES =
+      Arrays.asList(
+          "Connection refused",
+          "Connection reset",
+          "Remote host closed connection during handshake");
+
+  @Test
+  public void testInitialisationWorksAsExpected() {
+
+    final
