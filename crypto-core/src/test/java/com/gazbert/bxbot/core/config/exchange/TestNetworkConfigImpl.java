@@ -49,4 +49,24 @@ public class TestNetworkConfigImpl {
   @Test
   public void testInitialisationWorksAsExpected() {
 
-    final
+    final NetworkConfigImpl networkConfig = new NetworkConfigImpl();
+    assertNull(networkConfig.getConnectionTimeout());
+    assertTrue(networkConfig.getNonFatalErrorCodes().isEmpty());
+    assertTrue(networkConfig.getNonFatalErrorMessages().isEmpty());
+  }
+
+  @Test
+  public void testSettersWorkAsExpected() {
+
+    final NetworkConfigImpl networkConfig = new NetworkConfigImpl();
+
+    networkConfig.setConnectionTimeout(CONNECTION_TIMEOUT);
+    assertEquals(CONNECTION_TIMEOUT, networkConfig.getConnectionTimeout());
+
+    networkConfig.setNonFatalErrorCodes(NON_FATAL_ERROR_CODES);
+    assertEquals(NON_FATAL_ERROR_CODES, networkConfig.getNonFatalErrorCodes());
+
+    networkConfig.setNonFatalErrorMessages(NON_FATAL_ERROR_MESSAGES);
+    assertEquals(NON_FATAL_ERROR_MESSAGES, networkConfig.getNonFatalErrorMessages());
+  }
+}
