@@ -731,3 +731,151 @@ public class TestTradingEngine {
 
   private void setupEngineConfigExpectations() {
     expect(engineConfigService.getEngineConfig()).andReturn(someEngineConfig());
+  }
+
+  private void setupEngineConfigForNoEmergencyStopCheckExpectations() {
+    expect(engineConfigService.getEngineConfig())
+        .andReturn(someEngineConfigForNoEmergencyStopCheck());
+  }
+
+  private void setupStrategyAndMarketConfigExpectations() {
+    expect(strategyConfigService.getAllStrategyConfig()).andReturn(allTheStrategiesConfig());
+    expect(marketConfigService.getAllMarketConfig()).andReturn(allTheMarketsConfig());
+    expect(ConfigurableComponentFactory.createComponent(STRATEGY_IMPL_CLASS))
+        .andReturn(tradingStrategy);
+    tradingStrategy.init(
+        eq(exchangeAdapter),
+        anyObject(Market.class),
+        anyObject(com.gazbert.crypto.strategy.api.StrategyConfig.class));
+  }
+
+  private void setupConfigLoadingExpectations() {
+    setupExchangeAdapterConfigExpectations();
+    setupEngineConfigExpectations();
+    setupStrategyAndMarketConfigExpectations();
+  }
+
+  private void setupConfigLoadingExpectationsForNoEmergencyStopCheck() {
+    setupExchangeAdapterConfigExpectations();
+    setupEngineConfigForNoEmergencyStopCheckExpectations();
+    setupStrategyAndMarketConfigExpectations();
+  }
+
+  private static com.gazbert.crypto.domain.exchange.ExchangeConfig someExchangeConfig() {
+    final Map<String, String> authenticationConfig = someAuthenticationConfig();
+    final NetworkConfig networkConfig = someNetworkConfig();
+    final Map<String, String> otherConfig = someOtherConfig();
+
+    final com.gazbert.crypto.domain.exchange.ExchangeConfig exchangeConfig =
+        new com.gazbert.crypto.domain.exchange.ExchangeConfig();
+    exchangeConfig.setAuthenticationConfig(authenticationConfig);
+    exchangeConfig.setName(EXCHANGE_NAME);
+    exchangeConfig.setAdapter(EXCHANGE_ADAPTER_IMPL_CLASS);
+    exchangeConfig.setNetworkConfig(networkConfig);
+    exchangeConfig.setOtherConfig(otherConfig);
+
+    return exchangeConfig;
+  }
+
+  private static com.gazbert.crypto.domain.exchange.ExchangeConfig
+      someExchangeConfigWithoutNetworkConfig() {
+    final Map<String, String> authenticationConfig = someAuthenticationConfig();
+    final Map<String, String> otherConfig = someOtherConfig();
+    final com.gazbert.crypto.domain.exchange.ExchangeConfig exchangeConfig =
+        new com.gazbert.crypto.domain.exchange.ExchangeConfig();
+    exchangeConfig.setAuthenticationConfig(authenticationConfig);
+    exchangeConfig.setName(EXCHANGE_NAME);
+    exchangeConfig.setAdapter(EXCHANGE_ADAPTER_IMPL_CLASS);
+    exchangeConfig.setOtherConfig(otherConfig);
+    return exchangeConfig;
+  }
+
+  private static NetworkConfig someNetworkConfig() {
+    final NetworkConfig networkConfig = new NetworkConfig();
+    networkConfig.setConnectionTimeout(EXCHANGE_ADAPTER_NETWORK_TIMEOUT);
+    networkConfig.setNonFatalErrorCodes(EXCHANGE_ADAPTER_NONFATAL_ERROR_CODES);
+    networkConfig.setNonFatalErrorMessages(EXCHANGE_ADAPTER_NONFATAL_ERROR_MESSAGES);
+    return networkConfig;
+  }
+
+  private static Map<String, String> someAuthenticationConfig() {
+    final Map<String, String> authenticationConfig = new HashMap<>();
+    authenticationConfig.put(
+        EXCHANGE_ADAPTER_AUTHENTICATION_CONFIG_ITEM_NAME,
+        EXCHANGE_ADAPTER_AUTHENTICATION_CONFIG_ITEM_VALUE);
+    return authenticationConfig;
+  }
+
+  private static Map<String, String> someOtherConfig() {
+    final Map<String, String> otherConfig = new HashMap<>();
+    otherConfig.put(
+        EXCHANGE_ADAPTER_OTHER_CONFIG_ITEM_NAME, EXCHANGE_ADAPTER_OTHER_CONFIG_ITEM_VALUE);
+    return otherConfig;
+  }
+
+  private static EngineConfig someEngineConfig() {
+    final EngineConfig engineConfig = new EngineConfig();
+    engineConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
+    engineConfig.setEmergencyStopBalance(ENGINE_EMERGENCY_STOP_BALANCE);
+    engineConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
+    return engineConfig;
+  }
+
+  private static EngineConfig someEngineConfigForNoEmergencyStopCheck() {
+    final EngineConfig engineConfig = new EngineConfig();
+    engineConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
+    engineConfig.setEmergencyStopBalance(BigDecimal.ZERO); // ZERO bypasses the check
+    engineConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
+    return engineConfig;
+  }
+
+  private static List<StrategyConfig> allTheStrategiesConfig() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(STRATEGY_CONFIG_ITEM_NAME, STRATEGY_CONFIG_ITEM_VALUE);
+
+    final StrategyConfig strategyConfig1 =
+        new StrategyConfig(
+            STRATEGY_ID,
+            STRATEGY_NAME,
+            STRATEGY_DESCRIPTION,
+            STRATEGY_IMPL_CLASS,
+            STRATEGY_IMPL_BEAN,
+            configItems);
+
+    final List<StrategyConfig> allStrategies = new ArrayList<>();
+    allStrategies.add(strategyConfig1);
+    return allStrategies;
+  }
+
+  private static List<MarketConfig> allTheMarketsConfig() {
+    final MarketConfig marketConfig1 =
+        new MarketConfig(
+            MARKET_ID,
+            MARKET_NAME,
+            MARKET_BASE_CURRENCY,
+            MARKET_COUNTER_CURRENCY,
+            MARKET_IS_ENABLED,
+            STRATEGY_ID);
+    final List<MarketConfig> allMarkets = new ArrayList<>();
+    allMarkets.add(marketConfig1);
+    return allMarkets;
+  }
+
+  private Callable<Boolean> engineStateChanged(TradingEngine engine, EngineState engineState) {
+    return () -> {
+      boolean stateChanged = false;
+
+      // Startup requested and has started
+      if (engineState == EngineState.RUNNING && engine.isRunning()) {
+        stateChanged = true;
+      }
+
+      // Shutdown requested and has shutdown
+      if (engineState == EngineState.SHUTDOWN && !engine.isRunning()) {
+        stateChanged = true;
+      }
+
+      return stateChanged;
+    };
+  }
+}
