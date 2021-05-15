@@ -25,4 +25,22 @@ package com.gazbert.crypto.core.config.strategy.strategies;
 
 import com.gazbert.crypto.strategy.api.StrategyConfig;
 import com.gazbert.crypto.strategy.api.StrategyException;
-import com
+import com.gazbert.crypto.strategy.api.TradingStrategy;
+import com.gazbert.crypto.trading.api.Market;
+import com.gazbert.crypto.trading.api.TradingApi;
+
+/**
+ * Dummy strategy for class name instantiation.
+ *
+ * @author gazbert
+ */
+public class TradingStrategyForClassnameInstantiation implements TradingStrategy {
+
+  @Override
+  public void init(TradingApi tradingApi, Market market, StrategyConfig config) {
+  }
+
+  @Override
+  public void execute() throws StrategyException {
+  }
+}
