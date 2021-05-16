@@ -11,4 +11,35 @@
  * subject to the following conditions:
  *
  * The above copyright notice and this permission notice shall be included in all
- * copies or substan
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.core.util;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import com.gazbert.crypto.strategy.api.TradingStrategy;
+import org.junit.Test;
+
+/**
+ * Tests Trading Strategies are created as expected.
+ *
+ * @author gazbert
+ */
+public class TestTradingStrategyCreation {
+
+  private static final String VALID_TRADING_STRATEGY_IMPL =
+      "com.gazbert.crypto.core.util.strategies.ValidTradingStrategy";
+
+  private static final String INVALID_TRADING_STRATEGY_IMPL =
+      "com.gazbert.crypto.core.util.strategies.InvalidTradingStrategy";
+
+  private static final Strin
