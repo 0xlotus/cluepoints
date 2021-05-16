@@ -42,4 +42,26 @@ public class TestTradingStrategyCreation {
   private static final String INVALID_TRADING_STRATEGY_IMPL =
       "com.gazbert.crypto.core.util.strategies.InvalidTradingStrategy";
 
-  private static final Strin
+  private static final String MISSING_TRADING_STRATEGY_IMPL =
+      "com.gazbert.crypto.core.util.strategies.MissingInvalidTradingStrategy";
+
+  @Test
+  public void testCreationOfValidTradingStrategyImpl() {
+    final TradingStrategy tradingStrategy =
+        ConfigurableComponentFactory.createComponent(VALID_TRADING_STRATEGY_IMPL);
+    assertNotNull(tradingStrategy);
+    assertEquals(VALID_TRADING_STRATEGY_IMPL, tradingStrategy.getClass().getCanonicalName());
+  }
+
+  @Test(expected = ClassCastException.class)
+  public void testCreatingTradingStrategyImplThatDoesNotImplementTradingStrategyThrowsException() {
+    final TradingStrategy tradingStrategy =
+        ConfigurableComponentFactory.createComponent(INVALID_TRADING_STRATEGY_IMPL);
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testCreatingTradingStrategyImplThatDoesNotExistThrowsException() {
+    final TradingStrategy tradingStrategy =
+        ConfigurableComponentFactory.createComponent(MISSING_TRADING_STRATEGY_IMPL);
+  }
+}
