@@ -28,4 +28,20 @@ import com.gazbert.crypto.trading.api.OpenOrder;
 import java.util.List;
 
 /*
- * An invalid (and useless!) Excha
+ * An invalid (and useless!) Exchange Adapter for unit testing.
+ * Invalid because it does not implement the TradingApi interface.
+ */
+public class InvalidExchangeAdapterNotImplTradingApi {
+
+  public String getImplName() {
+    return null;
+  }
+
+  public MarketOrderBook getMarketOrders(String marketId) {
+    return null;
+  }
+
+  public List<OpenOrder> getYourOpenOrders(String marketId) {
+    return null;
+  }
+}
