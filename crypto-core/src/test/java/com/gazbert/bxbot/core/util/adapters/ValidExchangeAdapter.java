@@ -53,4 +53,38 @@ public class ValidExchangeAdapter implements TradingApi, ExchangeAdapter {
     return null;
   }
 
-  @O
+  @Override
+  public String createOrder(
+      String marketId, OrderType orderType, BigDecimal quantity, BigDecimal price) {
+    return null;
+  }
+
+  @Override
+  public boolean cancelOrder(String orderId, String marketId) {
+    return false;
+  }
+
+  @Override
+  public BigDecimal getLatestMarketPrice(String marketId) {
+    return null;
+  }
+
+  @Override
+  public BalanceInfo getBalanceInfo() {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getPercentageOfBuyOrderTakenForExchangeFee(String marketId) {
+    return null;
+  }
+
+  @Override
+  public BigDecimal getPercentageOfSellOrderTakenForExchangeFee(String marketId) {
+    return null;
+  }
+
+  @Override
+  public void init(ExchangeConfig config) {
+  }
+}
