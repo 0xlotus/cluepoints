@@ -14,4 +14,43 @@
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIE
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.core.util.adapters;
+
+import com.gazbert.crypto.exchange.api.ExchangeAdapter;
+import com.gazbert.crypto.exchange.api.ExchangeConfig;
+import com.gazbert.crypto.trading.api.BalanceInfo;
+import com.gazbert.crypto.trading.api.MarketOrderBook;
+import com.gazbert.crypto.trading.api.OpenOrder;
+import com.gazbert.crypto.trading.api.OrderType;
+import com.gazbert.crypto.trading.api.TradingApi;
+import java.math.BigDecimal;
+import java.util.List;
+
+/*
+ * A valid (but useless!) Exchange Adapter for unit testing.
+ */
+public class ValidExchangeAdapter implements TradingApi, ExchangeAdapter {
+
+  @Override
+  public String getImplName() {
+    return null;
+  }
+
+  @Override
+  public MarketOrderBook getMarketOrders(String marketId) {
+    return null;
+  }
+
+  @Override
+  public List<OpenOrder> getYourOpenOrders(String marketId) {
+    return null;
+  }
+
+  @O
