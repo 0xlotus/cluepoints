@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,12 +24,20 @@
 
 package com.gazbert.crypto.core.util.strategies;
 
-/*
- * An invalid (and useless) Trading Strategy for unit testing.
- * Invalid because it does not implement the TradingStrategy interface.
- */
-public class InvalidTradingStrategy {
+import com.gazbert.crypto.strategy.api.StrategyConfig;
+import com.gazbert.crypto.strategy.api.TradingStrategy;
+import com.gazbert.crypto.trading.api.Market;
+import com.gazbert.crypto.trading.api.TradingApi;
 
+/*
+ * A valid (but useless) Trading Strategy for unit testing.
+ */
+public class ValidTradingStrategy implements TradingStrategy {
+  @Override
+  public void init(TradingApi tradingApi, Market market, StrategyConfig config) {
+  }
+
+  @Override
   public void execute() {
   }
 }
