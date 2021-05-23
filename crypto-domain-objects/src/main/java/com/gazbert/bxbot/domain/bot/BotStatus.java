@@ -40,4 +40,56 @@ public class BotStatus {
   private String botId;
 
   private String displayName;
-  private String stat
+  private String status;
+  private Date datetime;
+
+  // Required by ConfigurableComponentFactory
+  public BotStatus() {
+  }
+
+  /** Creates a new BotStatus. */
+  public BotStatus(String botId, String displayName, String status, Date datetime) {
+    this.botId = botId;
+    this.displayName = displayName;
+    this.status = status;
+    setDatetime(datetime);
+  }
+
+  public String getBotId() {
+    return botId;
+  }
+
+  public void setBotId(String botId) {
+    this.botId = botId;
+  }
+
+  public String getDisplayName() {
+    return displayName;
+  }
+
+  public void setDisplayName(String displayName) {
+    this.displayName = displayName;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public Date getDatetime() {
+    return datetime != null ? new Date(datetime.getTime()) : null;
+  }
+
+  public void setDatetime(Date datetime) {
+    this.datetime = datetime != null ? new Date(datetime.getTime()) : null;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("botId", botId)
+        .add("displayName", displayName)
+   
