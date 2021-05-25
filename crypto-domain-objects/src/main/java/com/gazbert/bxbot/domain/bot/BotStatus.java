@@ -92,4 +92,8 @@ public class BotStatus {
     return MoreObjects.toStringHelper(this)
         .add("botId", botId)
         .add("displayName", displayName)
-   
+        .add("status", status)
+        .add("datetime", getDatetime())
+        .toString();
+  }
+}
