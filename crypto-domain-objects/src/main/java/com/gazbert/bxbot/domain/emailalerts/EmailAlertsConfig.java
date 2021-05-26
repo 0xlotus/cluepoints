@@ -18,4 +18,54 @@
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALIN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.domain.emailalerts;
+
+import com.google.common.base.MoreObjects;
+
+/**
+ * Domain object representing the Email Alerts config.
+ *
+ * @author gazbert
+ */
+public class EmailAlertsConfig {
+
+  private boolean enabled;
+  private SmtpConfig smtpConfig;
+
+  // Required by ConfigurableComponentFactory
+  public EmailAlertsConfig() {
+  }
+
+  /** Creates a new EmailAlertsConfig. */
+  public EmailAlertsConfig(boolean enabled, SmtpConfig smtpConfig) {
+    this.enabled = enabled;
+    this.smtpConfig = smtpConfig;
+  }
+
+  public boolean isEnabled() {
+    return enabled;
+  }
+
+  public void setEnabled(boolean enabled) {
+    this.enabled = enabled;
+  }
+
+  public SmtpConfig getSmtpConfig() {
+    return smtpConfig;
+  }
+
+  public void setSmtpConfig(SmtpConfig smtpConfig) {
+    this.smtpConfig = smtpConfig;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("enabled", enabled)
+        .add("smtpConfig", smtpConfig)
+        .toString();
+  }
+}
