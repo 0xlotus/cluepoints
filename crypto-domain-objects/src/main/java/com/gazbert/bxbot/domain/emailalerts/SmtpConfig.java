@@ -108,3 +108,25 @@ public class SmtpConfig {
 
   public void setFromAddress(String fromAddress) {
     this.fromAddress = fromAddress;
+  }
+
+  public String getToAddress() {
+    return toAddress;
+  }
+
+  public void setToAddress(String toAddress) {
+    this.toAddress = toAddress;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+        .add("host", host)
+        .add("tlsPort", tlsPort)
+        .add("accountUsername", accountUsername)
+        // accountPassword is not included
+        .add("fromAddress", fromAddress)
+        .add("toAddress", toAddress)
+        .toString();
+  }
+}
