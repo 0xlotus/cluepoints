@@ -23,4 +23,39 @@
 
 package com.gazbert.crypto.domain.exchange;
 
-import static org.
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Test;
+
+/**
+ * Tests NetworkConfig domain object behaves as expected.
+ *
+ * @author gazbert
+ */
+public class TestNetworkConfig {
+
+  private static final Integer CONNECTION_TIMEOUT = 30;
+  private static final List<Integer> NON_FATAL_ERROR_CODES = Arrays.asList(502, 503, 504);
+  private static final List<String> NON_FATAL_ERROR_MESSAGES =
+      Arrays.asList(
+          "Connection refused",
+          "Connection reset",
+          "Remote host closed connection during handshake");
+
+  @Test
+  public void testInitialisationWorksAsExpected() {
+    final NetworkConfig networkConfig = new NetworkConfig();
+    assertNull(networkConfig.getConnectionTimeout());
+    assertTrue(networkConfig.getNonFatalErrorCodes().isEmpty());
+    assertTrue(networkConfig.getNonFatalErrorMessages().isEmpty());
+  }
+
+  @Test
+  public void testSettersWorkAsExpected() {
+    final NetworkConfig networkConfig = new NetworkConfig();
+
+    networkConfig.setConnectionTimeout(CONN
