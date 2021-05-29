@@ -68,3 +68,26 @@ public class TestExchangeConfig {
     assertEquals(AUTHENTICATION_CONFIG, exchangeConfig.getAuthenticationConfig());
 
     exchangeConfig.setNetworkConfig(NETWORK_CONFIG);
+    assertEquals(NETWORK_CONFIG, exchangeConfig.getNetworkConfig());
+
+    exchangeConfig.setOtherConfig(OTHER_CONFIG);
+    assertEquals(OTHER_CONFIG, exchangeConfig.getOtherConfig());
+  }
+
+  @Test
+  public void testToStringWorksAsExpected() {
+    final ExchangeConfig exchangeConfig = new ExchangeConfig();
+    exchangeConfig.setName(EXCHANGE_NAME);
+    exchangeConfig.setAdapter(EXCHANGE_ADAPTER);
+    exchangeConfig.setAuthenticationConfig(AUTHENTICATION_CONFIG);
+    exchangeConfig.setNetworkConfig(NETWORK_CONFIG);
+    exchangeConfig.setOtherConfig(OTHER_CONFIG);
+
+    assertEquals(
+        "ExchangeConfig{name=Bitstamp, "
+            + "adapter=com.gazbert.crypto.exchanges.TestExchangeAdapter, "
+            + "networkConfig=NetworkConfig{connectionTimeout=null, nonFatalErrorCodes=[], "
+            + "nonFatalErrorMessages=[]}, otherConfig={}}",
+        exchangeConfig.toString());
+  }
+}
