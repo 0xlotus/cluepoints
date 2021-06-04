@@ -58,4 +58,27 @@ public class TestNetworkConfig {
   public void testSettersWorkAsExpected() {
     final NetworkConfig networkConfig = new NetworkConfig();
 
-    networkConfig.setConnectionTimeout(CONN
+    networkConfig.setConnectionTimeout(CONNECTION_TIMEOUT);
+    assertEquals(CONNECTION_TIMEOUT, networkConfig.getConnectionTimeout());
+
+    networkConfig.setNonFatalErrorCodes(NON_FATAL_ERROR_CODES);
+    assertEquals(NON_FATAL_ERROR_CODES, networkConfig.getNonFatalErrorCodes());
+
+    networkConfig.setNonFatalErrorMessages(NON_FATAL_ERROR_MESSAGES);
+    assertEquals(NON_FATAL_ERROR_MESSAGES, networkConfig.getNonFatalErrorMessages());
+  }
+
+  @Test
+  public void testToStringWorksAsExpected() {
+    final NetworkConfig networkConfig = new NetworkConfig();
+    networkConfig.setConnectionTimeout(CONNECTION_TIMEOUT);
+    networkConfig.setNonFatalErrorCodes(NON_FATAL_ERROR_CODES);
+    networkConfig.setNonFatalErrorMessages(NON_FATAL_ERROR_MESSAGES);
+
+    assertEquals(
+        "NetworkConfig{connectionTimeout=30, nonFatalErrorCodes=[502, 503, 504],"
+            + " nonFatalErrorMessages=[Connection refused, Connection reset, "
+            + "Remote host closed connection during handshake]}",
+        networkConfig.toString());
+  }
+}
