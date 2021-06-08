@@ -55,4 +55,39 @@ public class TestStrategyConfig {
     assertEquals(ID, strategyConfig.getId());
     assertEquals(LABEL, strategyConfig.getName());
     assertEquals(DESCRIPTION, strategyConfig.getDescription());
-    assertEqual
+    assertEquals(CLASSNAME, strategyConfig.getClassName());
+    assertEquals(CONFIG_ITEMS, strategyConfig.getConfigItems());
+  }
+
+  @Test
+  public void testSettersWorkAsExpected() {
+    final StrategyConfig strategyConfig = new StrategyConfig();
+    assertNull(strategyConfig.getId());
+    assertNull(strategyConfig.getName());
+    assertNull(strategyConfig.getDescription());
+    assertNull(strategyConfig.getClassName());
+    assertTrue(strategyConfig.getConfigItems().isEmpty());
+
+    strategyConfig.setId(ID);
+    assertEquals(ID, strategyConfig.getId());
+
+    strategyConfig.setName(LABEL);
+    assertEquals(LABEL, strategyConfig.getName());
+
+    strategyConfig.setDescription(DESCRIPTION);
+    assertEquals(DESCRIPTION, strategyConfig.getDescription());
+
+    strategyConfig.setClassName(CLASSNAME);
+    assertEquals(CLASSNAME, strategyConfig.getClassName());
+
+    strategyConfig.setBeanName(BEAN_NAME);
+    assertEquals(BEAN_NAME, strategyConfig.getBeanName());
+
+    strategyConfig.setConfigItems(CONFIG_ITEMS);
+    assertEquals(CONFIG_ITEMS, strategyConfig.getConfigItems());
+  }
+
+  @Test
+  public void testCloningWorksAsExpected() {
+    final StrategyConfig strategyConfig =
+        new Strate
