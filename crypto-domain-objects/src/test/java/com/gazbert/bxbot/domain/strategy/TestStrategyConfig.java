@@ -90,4 +90,29 @@ public class TestStrategyConfig {
   @Test
   public void testCloningWorksAsExpected() {
     final StrategyConfig strategyConfig =
-        new Strate
+        new StrategyConfig(ID, LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+    final StrategyConfig clonedStrategyConfig = new StrategyConfig(strategyConfig);
+
+    assertEquals(clonedStrategyConfig, strategyConfig);
+  }
+
+  @Test
+  public void testEqualsWorksAsExpected() {
+    final StrategyConfig strategy1 =
+        new StrategyConfig(ID, LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+    final StrategyConfig strategy2 =
+        new StrategyConfig("different-id", LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+    final StrategyConfig strategy3 =
+        new StrategyConfig(ID, "different-label", DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+
+    assertEquals(strategy1, strategy1);
+    assertNotEquals(strategy1, strategy2);
+    assertEquals(strategy1, strategy3);
+  }
+
+  @Test
+  public void testHashCodeWorksAsExpected() {
+    final StrategyConfig strategy1 =
+        new StrategyConfig(ID, LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+    final StrategyConfig strategy2 =
+        new StrategyConfig("different-id", LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CO
