@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="BX-bot" packages="">
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%-4r [%t] %d %-5p %c{1} %M() - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+    

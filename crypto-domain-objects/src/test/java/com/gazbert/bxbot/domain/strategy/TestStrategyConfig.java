@@ -115,4 +115,25 @@ public class TestStrategyConfig {
     final StrategyConfig strategy1 =
         new StrategyConfig(ID, LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
     final StrategyConfig strategy2 =
-        new StrategyConfig("different-id", LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CO
+        new StrategyConfig("different-id", LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+    final StrategyConfig strategy3 =
+        new StrategyConfig(ID, "different-label", DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+
+    assertEquals(strategy1.hashCode(), strategy1.hashCode());
+    assertNotEquals(strategy1.hashCode(), strategy2.hashCode());
+    assertEquals(strategy1.hashCode(), strategy3.hashCode());
+  }
+
+  @Test
+  public void testToStringWorksAsExpected() {
+    final StrategyConfig strategy =
+        new StrategyConfig(ID, LABEL, DESCRIPTION, CLASSNAME, BEAN_NAME, CONFIG_ITEMS);
+
+    assertEquals(
+        "StrategyConfig{id=macd-long-position, name=MACD Long Position Algo, "
+            + "description=Uses MACD as indicator and takes long position in base currency., "
+            + "className=com.gazbert.nova.algos.MacdLongBase, beanName=macdLongBase,"
+            + " configItems={}}",
+        strategy.toString());
+  }
+}
