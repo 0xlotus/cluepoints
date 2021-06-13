@@ -17,30 +17,4 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-package com.gazbert.crypto.exchange.api;
-
-import com.gazbert.crypto.trading.api.TradingApi;
-
-/**
- * All Exchange Adapters must implement this interface. It's main purpose is for the Trading Engine
- * to pass the adapter its configuration on startup.
- *
- * <p>The Trading Engine will send only 1 thread through the Exchange Adapter code at a time - you
- * do not have to code for concurrency.
- *
- * @author gazbert
- * @since 1.0
- */
-public interface ExchangeAdapter extends TradingApi {
-
-  /**
-   * Called once by the Trading Engine when it starts up.
-   *
-   * @param config configuration for the Exchange Adapter.
-   */
-  void init(ExchangeConfig config);
-}
+ * IN AN ACTION OF CONTRACT
