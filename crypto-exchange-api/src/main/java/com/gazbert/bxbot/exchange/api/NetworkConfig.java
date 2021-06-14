@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,46 +24,34 @@
 
 package com.gazbert.crypto.exchange.api;
 
+import java.util.List;
+
 /**
- * Encapsulates configuration for an Exchange Adapter.
+ * Encapsulates any (optional) Network configuration for an Exchange Adapter.
  *
  * @author gazbert
  * @since 1.0
  */
-public interface ExchangeConfig {
+public interface NetworkConfig {
 
   /**
-   * Returns the name of the exchange.
+   * Fetches (optional) list of non-fatal error codes.
    *
-   * @return the exchange name.
+   * @return a list of non-fatal error codes if present, an empty list otherwise.
    */
-  String getExchangeName();
+  List<Integer> getNonFatalErrorCodes();
 
   /**
-   * Returns the fully qualified class name of the Exchange Adapter.
+   * Fetches (optional) list of non-fatal error messages.
    *
-   * @return the full class name (includes packages) of the Exchange Adapter.
+   * @return list of non-fatal error messages if present, an empty list otherwise.
    */
-  String getExchangeAdapter();
+  List<String> getNonFatalErrorMessages();
 
   /**
-   * Returns the authentication config.
+   * Fetches (optional) connection timeout value.
    *
-   * @return authentication config if present, null otherwise.
+   * @return the connection timeout value if present, null otherwise.
    */
-  AuthenticationConfig getAuthenticationConfig();
-
-  /**
-   * Returns the network config.
-   *
-   * @return network config if present, null otherwise.
-   */
-  NetworkConfig getNetworkConfig();
-
-  /**
-   * Returns the other config.
-   *
-   * @return other config if present, null otherwise.
-   */
-  OtherConfig getOtherConfig();
+  Integer getConnectionTimeout();
 }
