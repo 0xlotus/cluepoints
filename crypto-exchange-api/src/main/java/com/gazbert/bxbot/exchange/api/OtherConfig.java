@@ -21,3 +21,22 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
+package com.gazbert.crypto.exchange.api;
+
+/**
+ * Encapsulates other configuration for an Exchange Adapter.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+public interface OtherConfig {
+
+  /**
+   * Fetches a given config item by name.
+   *
+   * @param name the name of the item to fetch.
+   * @return the item value if found, null otherwise.
+   */
+  String getItem(String name);
+}
