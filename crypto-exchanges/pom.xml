@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>crypto-exchanges</artifactId>
+  <packaging>jar</packaging>
+  <name>BX-bot Exchange Adapters</name>
+  <description>Sample Exchange Adapters for integrating with Bitcoin exchanges</description>
+  <url>http://github.com/gazbert/crypto</url>
+  <parent>
+    <groupId>com.gazbert.crypto</groupId>
+    <artifactId>crypto-parent</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <profiles>
+    <profile>
+      <id>unit</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <build.profile.id>unit</build.profile.id>
+        <skip.integration.tests>true</skip.integration.tests>
+        <skip.unit.tests>false</skip.unit
