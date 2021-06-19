@@ -23,4 +23,46 @@
       <properties>
         <build.profile.id>unit</build.profile.id>
         <skip.integration.tests>true</skip.integration.tests>
-        <skip.unit.tests>false</skip.unit
+        <skip.unit.tests>false</skip.unit.tests>
+      </properties>
+    </profile>
+    <profile>
+      <id>int</id>
+      <properties>
+        <build.profile.id>int</build.profile.id>
+        <skip.integration.tests>false</skip.integration.tests>
+        <skip.unit.tests>true</skip.unit.tests>
+      </properties>
+    </profile>
+    <profile>
+      <id>all</id>
+      <properties>
+        <build.profile.id>all</build.profile.id>
+        <skip.integration.tests>false</skip.integration.tests>
+        <skip.unit.tests>false</skip.unit.tests>
+      </properties>
+    </profile>
+  </profiles>
+  <dependencies>
+    <!--
+    BX-bot dependencies
+    -->
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>crypto-trading-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>crypto-exchange-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!--
+    3rd party dependencies
+    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
