@@ -148,3 +148,34 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-integration-test-sources</id>
+            <phase>generate-test-sources</phase>
+            <goals>
+              <goal>add-test-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>src/integration-test/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <configuration>
+          <!--
+            Ignore classes tested using Powermock. JaCoCo won't/can't instrument them:
+            "... right now there is NO WAY TO USE PowerMock with JaCoCo On-the-fly instrumentation."
+            See https://github.com/powermock/powermock/wiki/Code-coverage-with-JaCoCo
+           -->
+          <excludes>
+            <exclude>**/exchanges/*Adapter.class</exclude>    <!-- main adapter classes -->
+            <exclude>**/exchanges/*Adapter$*.c
