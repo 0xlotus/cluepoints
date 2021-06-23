@@ -178,4 +178,40 @@
            -->
           <excludes>
             <exclude>**/exchanges/*Adapter.class</exclude>    <!-- main adapter classes -->
-            <exclude>**/exchanges/*Adapter$*.c
+            <exclude>**/exchanges/*Adapter$*.class</exclude>  <!-- adapter static inner classes -->
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>jacoco-check</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <rule>
+                  <element>CLASS</element>
+                  <limits>
+                    <limit>
+                      <counter>LINE</counter>
+                      <value>COVEREDRATIO</value>
+                      <minimum>0.7</minimum>
+                    </limit>
+                  </limits>
+                </rule>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>
