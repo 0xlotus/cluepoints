@@ -84,4 +84,33 @@ public class BitfinexIT {
     expect(networkConfig.getNonFatalErrorMessages()).andReturn(nonFatalNetworkErrorMessages);
 
     exchangeConfig = createMock(ExchangeConfig.class);
-    expect(exchangeConfig.getAuthenticationC
+    expect(exchangeConfig.getAuthenticationConfig()).andReturn(authenticationConfig);
+    expect(exchangeConfig.getNetworkConfig()).andReturn(networkConfig);
+
+    // no other config for this adapter
+  }
+
+  @Test
+  public void testPublicApiCalls() throws Exception {
+    replay(authenticationConfig, networkConfig, exchangeConfig);
+
+    final ExchangeAdapter exchangeAdapter = new BitfinexExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    assertNotNull(exchangeAdapter.getLatestMarketPrice(MARKET_ID));
+    assertNotNull(exchangeAdapter.getLatestMarketPrice(MARKET_ID));
+
+    final MarketOrderBook orderBook = exchangeAdapter.getMarketOrders(MARKET_ID);
+    assertFalse(orderBook.getBuyOrders().isEmpty());
+    assertFalse(orderBook.getSellOrders().isEmpty());
+
+    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID);
+    assertNotNull(ticker.getLast());
+    assertNotNull(ticker.getAsk());
+    assertNotNull(ticker.getBid());
+    assertNotNull(ticker.getHigh());
+    assertNotNull(ticker.getLow());
+    assertNull(ticker.getOpen()); // vwap not supplied by finex
+    assertNotNull(ticker.getVolume());
+    assertNull(ticker.getVwap()); // vwap not supplied by finex
+    assertNotNul
