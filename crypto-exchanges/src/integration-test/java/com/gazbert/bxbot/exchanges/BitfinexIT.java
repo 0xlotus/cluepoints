@@ -57,4 +57,31 @@ public class BitfinexIT {
   private static final BigDecimal SELL_ORDER_QUANTITY = new BigDecimal("0.01");
 
   private static final String KEY = "key123";
-  private static final String SEC
+  private static final String SECRET = "notGonnaTellYa";
+  private static final List<Integer> nonFatalNetworkErrorCodes = Arrays.asList(502, 503, 504);
+  private static final List<String> nonFatalNetworkErrorMessages =
+      Arrays.asList(
+          "Connection refused",
+          "Connection reset",
+          "Remote host closed connection during handshake");
+
+  private ExchangeConfig exchangeConfig;
+  private AuthenticationConfig authenticationConfig;
+  private NetworkConfig networkConfig;
+
+  /**
+   * Create some exchange config - the TradingEngine would normally do this.
+   */
+  @Before
+  public void setupForEachTest() {
+    authenticationConfig = createMock(AuthenticationConfig.class);
+    expect(authenticationConfig.getItem("key")).andReturn(KEY);
+    expect(authenticationConfig.getItem("secret")).andReturn(SECRET);
+
+    networkConfig = createMock(NetworkConfig.class);
+    expect(networkConfig.getConnectionTimeout()).andReturn(30);
+    expect(networkConfig.getNonFatalErrorCodes()).andReturn(nonFatalNetworkErrorCodes);
+    expect(networkConfig.getNonFatalErrorMessages()).andReturn(nonFatalNetworkErrorMessages);
+
+    exchangeConfig = createMock(ExchangeConfig.class);
+    expect(exchangeConfig.getAuthenticationC
