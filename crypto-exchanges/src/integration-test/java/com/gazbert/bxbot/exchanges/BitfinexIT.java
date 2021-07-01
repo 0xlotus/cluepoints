@@ -139,4 +139,9 @@ public class BitfinexIT {
     // final String orderId = exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL,
     // SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
     // final List<OpenOrder> openOrders = exchangeAdapter.getYourOpenOrders(MARKET_ID);
-    // assertTrue(o
+    // assertTrue(openOrders.stream().anyMatch(o -> o.getId().equals(orderId)));
+    // assertTrue(exchangeAdapter.cancelOrder(orderId, MARKET_ID));
+
+    verify(authenticationConfig, networkConfig, exchangeConfig);
+  }
+}
