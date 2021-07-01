@@ -113,4 +113,30 @@ public class BitfinexIT {
     assertNull(ticker.getOpen()); // vwap not supplied by finex
     assertNotNull(ticker.getVolume());
     assertNull(ticker.getVwap()); // vwap not supplied by finex
-    assertNotNul
+    assertNotNull(ticker.getTimestamp());
+
+    verify(authenticationConfig, networkConfig, exchangeConfig);
+  }
+
+  /*
+   * You'll need to change the KEY, SECRET, constants to real-world values.
+   */
+  @Ignore("Disabled. Integration testing authenticated API calls requires your secret credentials!")
+  @Test
+  public void testAuthenticatedApiCalls() throws Exception {
+    replay(authenticationConfig, networkConfig, exchangeConfig);
+
+    final ExchangeAdapter exchangeAdapter = new BitfinexExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    assertNotNull(exchangeAdapter.getPercentageOfBuyOrderTakenForExchangeFee(MARKET_ID));
+    assertNotNull(exchangeAdapter.getPercentageOfSellOrderTakenForExchangeFee(MARKET_ID));
+
+    final BalanceInfo balanceInfo = exchangeAdapter.getBalanceInfo();
+    assertNotNull(balanceInfo.getBalancesAvailable().get("BTC"));
+
+    // Careful here: make sure the SELL_ORDER_PRICE is sensible!
+    // final String orderId = exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL,
+    // SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+    // final List<OpenOrder> openOrders = exchangeAdapter.getYourOpenOrders(MARKET_ID);
+    // assertTrue(o
