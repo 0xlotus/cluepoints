@@ -16,4 +16,40 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.exchanges;
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
+import com.gazbert.crypto.exchange.api.AuthenticationConfig;
+import com.gazbert.crypto.exchange.api.ExchangeAdapter;
+import com.gazbert.crypto.exchange.api.ExchangeConfig;
+import com.gazbert.crypto.exchange.api.NetworkConfig;
+import com.gazbert.crypto.trading.api.BalanceInfo;
+import com.gazbert.crypto.trading.api.MarketOrderBook;
+import com.gazbert.crypto.trading.api.Ticker;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+/**
+ * Basic integration testing with Bitstamp exchange.
+ *
+ * @author gazbert
+ */
+public class BitstampIT {
+
+  private static final String MARKET_ID = "btcusd";
+  private static final 
