@@ -52,4 +52,31 @@ import org.junit.Test;
 public class BitstampIT {
 
   private static final String MARKET_ID = "btcusd";
-  private static final 
+  private static final BigDecimal BUY_ORDER_PRICE = new BigDecimal("100.17");
+  private static final BigDecimal BUY_ORDER_QUANTITY = new BigDecimal("0.1"); // in BTC
+
+  private static final String CLIENT_ID = "clientId123";
+  private static final String KEY = "key123";
+  private static final String SECRET = "notGonnaTellYa";
+  private static final List<Integer> nonFatalNetworkErrorCodes = Arrays.asList(502, 503, 504);
+  private static final List<String> nonFatalNetworkErrorMessages =
+      Arrays.asList(
+          "Connection refused",
+          "Connection reset",
+          "Remote host closed connection during handshake");
+
+  private ExchangeConfig exchangeConfig;
+  private AuthenticationConfig authenticationConfig;
+  private NetworkConfig networkConfig;
+
+  /**
+   * Create some exchange config - the TradingEngine would normally do this.
+   */
+  @Before
+  public void setupForEachTest() {
+    authenticationConfig = createMock(AuthenticationConfig.class);
+    expect(authenticationConfig.getItem("client-id")).andReturn(CLIENT_ID);
+    expect(authenticationConfig.getItem("key")).andReturn(KEY);
+    expect(authenticationConfig.getItem("secret")).andReturn(SECRET);
+
+    networkCon
