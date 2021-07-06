@@ -79,4 +79,30 @@ public class BitstampIT {
     expect(authenticationConfig.getItem("key")).andReturn(KEY);
     expect(authenticationConfig.getItem("secret")).andReturn(SECRET);
 
-    networkCon
+    networkConfig = createMock(NetworkConfig.class);
+    expect(networkConfig.getConnectionTimeout()).andReturn(30);
+    expect(networkConfig.getNonFatalErrorCodes()).andReturn(nonFatalNetworkErrorCodes);
+    expect(networkConfig.getNonFatalErrorMessages()).andReturn(nonFatalNetworkErrorMessages);
+
+    exchangeConfig = createMock(ExchangeConfig.class);
+    expect(exchangeConfig.getAuthenticationConfig()).andReturn(authenticationConfig);
+    expect(exchangeConfig.getNetworkConfig()).andReturn(networkConfig);
+
+    // no other config for this adapter
+  }
+
+  @Test
+  public void testPublicApiCalls() throws Exception {
+    replay(authenticationConfig, networkConfig, exchangeConfig);
+
+    final ExchangeAdapter exchangeAdapter = new BitstampExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    assertNotNull(exchangeAdapter.getLatestMarketPrice(MARKET_ID));
+
+    final MarketOrderBook orderBook = exchangeAdapter.getMarketOrders(MARKET_ID);
+    assertFalse(orderBook.getBuyOrders().isEmpty());
+    assertFalse(orderBook.getSellOrders().isEmpty());
+
+    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID);
+    assertNotNull(ticker.getLast());
