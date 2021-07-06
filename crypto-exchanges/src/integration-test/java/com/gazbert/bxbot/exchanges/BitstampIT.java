@@ -106,3 +106,33 @@ public class BitstampIT {
 
     final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID);
     assertNotNull(ticker.getLast());
+    assertNotNull(ticker.getAsk());
+    assertNotNull(ticker.getBid());
+    assertNotNull(ticker.getHigh());
+    assertNotNull(ticker.getLow());
+    assertNotNull(ticker.getOpen());
+    assertNotNull(ticker.getVolume());
+    assertNotNull(ticker.getVwap());
+    assertNotNull(ticker.getTimestamp());
+
+    verify(authenticationConfig, networkConfig, exchangeConfig);
+  }
+
+  /*
+   * You'll need to change the CLIENT_ID, KEY, SECRET, constants to real-world values.
+   */
+  @Ignore("Disabled. Integration testing authenticated API calls requires your secret credentials!")
+  @Test
+  public void testAuthenticatedApiCalls() throws Exception {
+    replay(authenticationConfig, networkConfig, exchangeConfig);
+
+    final ExchangeAdapter exchangeAdapter = new BitstampExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    assertNotNull(exchangeAdapter.getPercentageOfBuyOrderTakenForExchangeFee(MARKET_ID));
+    assertNotNull(exchangeAdapter.getPercentageOfSellOrderTakenForExchangeFee(MARKET_ID));
+
+    final BalanceInfo balanceInfo = exchangeAdapter.getBalanceInfo();
+    assertNotNull(balanceInfo.getBalancesAvailable().get("BTC"));
+
+    // Caref
