@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -29,11 +30,13 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import com.gazbert.crypto.exchange.api.AuthenticationConfig;
 import com.gazbert.crypto.exchange.api.ExchangeAdapter;
 import com.gazbert.crypto.exchange.api.ExchangeConfig;
 import com.gazbert.crypto.exchange.api.NetworkConfig;
+import com.gazbert.crypto.exchange.api.OtherConfig;
 import com.gazbert.crypto.trading.api.BalanceInfo;
 import com.gazbert.crypto.trading.api.MarketOrderBook;
 import com.gazbert.crypto.trading.api.Ticker;
@@ -45,17 +48,21 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Basic integration testing with Bitstamp exchange.
+ * Basic integration testing with GDAX exchange.
+ *
+ * <p>DO NOT USE: See https://github.com/gazbert/crypto/pull/120
  *
  * @author gazbert
+ * @deprecated #120 : GDAX exchange has been superseded by Coinbase Pro: https://pro.coinbase.com/
  */
-public class BitstampIT {
+@Deprecated(forRemoval = true)
+public class GdaxIT {
 
-  private static final String MARKET_ID = "btcusd";
-  private static final BigDecimal BUY_ORDER_PRICE = new BigDecimal("100.17");
-  private static final BigDecimal BUY_ORDER_QUANTITY = new BigDecimal("0.1"); // in BTC
+  private static final String MARKET_ID = "BTC-GBP";
+  private static final BigDecimal BUY_ORDER_PRICE = new BigDecimal("450.176");
+  private static final BigDecimal BUY_ORDER_QUANTITY = new BigDecimal("0.01");
 
-  private static final String CLIENT_ID = "clientId123";
+  private static final String PASSPHRASE = "lePassPhrase";
   private static final String KEY = "key123";
   private static final String SECRET = "notGonnaTellYa";
   private static final List<Integer> nonFatalNetworkErrorCodes = Arrays.asList(502, 503, 504);
@@ -68,14 +75,13 @@ public class BitstampIT {
   private ExchangeConfig exchangeConfig;
   private AuthenticationConfig authenticationConfig;
   private NetworkConfig networkConfig;
+  private OtherConfig otherConfig;
 
-  /**
-   * Create some exchange config - the TradingEngine would normally do this.
-   */
+  /** Create some exchange config - the TradingEngine would normally do this. */
   @Before
   public void setupForEachTest() {
     authenticationConfig = createMock(AuthenticationConfig.class);
-    expect(authenticationConfig.getItem("client-id")).andReturn(CLIENT_ID);
+    expect(authenticationConfig.getItem("passphrase")).andReturn(PASSPHRASE);
     expect(authenticationConfig.getItem("key")).andReturn(KEY);
     expect(authenticationConfig.getItem("secret")).andReturn(SECRET);
 
@@ -84,18 +90,21 @@ public class BitstampIT {
     expect(networkConfig.getNonFatalErrorCodes()).andReturn(nonFatalNetworkErrorCodes);
     expect(networkConfig.getNonFatalErrorMessages()).andReturn(nonFatalNetworkErrorMessages);
 
+    otherConfig = createMock(OtherConfig.class);
+    expect(otherConfig.getItem("buy-fee")).andReturn("0.25");
+    expect(otherConfig.getItem("sell-fee")).andReturn("0.25");
+
     exchangeConfig = createMock(ExchangeConfig.class);
     expect(exchangeConfig.getAuthenticationConfig()).andReturn(authenticationConfig);
     expect(exchangeConfig.getNetworkConfig()).andReturn(networkConfig);
-
-    // no other config for this adapter
+    expect(exchangeConfig.getOtherConfig()).andReturn(otherConfig);
   }
 
   @Test
   public void testPublicApiCalls() throws Exception {
-    replay(authenticationConfig, networkConfig, exchangeConfig);
+    replay(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
 
-    final ExchangeAdapter exchangeAdapter = new BitstampExchangeAdapter();
+    final ExchangeAdapter exchangeAdapter = new GdaxExchangeAdapter();
     exchangeAdapter.init(exchangeConfig);
 
     assertNotNull(exchangeAdapter.getLatestMarketPrice(MARKET_ID));
@@ -112,36 +121,33 @@ public class BitstampIT {
     assertNotNull(ticker.getLow());
     assertNotNull(ticker.getOpen());
     assertNotNull(ticker.getVolume());
-    assertNotNull(ticker.getVwap());
+    assertNull(ticker.getVwap()); // not provided by GDAX
     assertNotNull(ticker.getTimestamp());
 
-    verify(authenticationConfig, networkConfig, exchangeConfig);
+    verify(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
   }
 
   /*
-   * You'll need to change the CLIENT_ID, KEY, SECRET, constants to real-world values.
+   * You'll need to change the PASSPHRASE, KEY, SECRET, constants to real-world values.
    */
   @Ignore("Disabled. Integration testing authenticated API calls requires your secret credentials!")
   @Test
   public void testAuthenticatedApiCalls() throws Exception {
-    replay(authenticationConfig, networkConfig, exchangeConfig);
+    replay(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
 
-    final ExchangeAdapter exchangeAdapter = new BitstampExchangeAdapter();
+    final ExchangeAdapter exchangeAdapter = new GdaxExchangeAdapter();
     exchangeAdapter.init(exchangeConfig);
-
-    assertNotNull(exchangeAdapter.getPercentageOfBuyOrderTakenForExchangeFee(MARKET_ID));
-    assertNotNull(exchangeAdapter.getPercentageOfSellOrderTakenForExchangeFee(MARKET_ID));
 
     final BalanceInfo balanceInfo = exchangeAdapter.getBalanceInfo();
     assertNotNull(balanceInfo.getBalancesAvailable().get("BTC"));
 
-    // Careful here: make sure the BUY_ORDER_PRICE is sensible!
+    // Careful here: make sure the SELL_ORDER_PRICE is sensible!
     // final String orderId = exchangeAdapter.createOrder(MARKET_ID, OrderType.BUY,
     // BUY_ORDER_QUANTITY, BUY_ORDER_PRICE);
     // final List<OpenOrder> openOrders = exchangeAdapter.getYourOpenOrders(MARKET_ID);
     // assertTrue(openOrders.stream().anyMatch(o -> o.getId().equals(orderId)));
     // assertTrue(exchangeAdapter.cancelOrder(orderId, MARKET_ID));
 
-    verify(authenticationConfig, networkConfig, exchangeConfig);
+    verify(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
   }
 }
