@@ -29,4 +29,34 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-imp
+import static org.junit.Assert.assertNull;
+
+import com.gazbert.crypto.exchange.api.AuthenticationConfig;
+import com.gazbert.crypto.exchange.api.ExchangeAdapter;
+import com.gazbert.crypto.exchange.api.ExchangeConfig;
+import com.gazbert.crypto.exchange.api.NetworkConfig;
+import com.gazbert.crypto.exchange.api.OtherConfig;
+import com.gazbert.crypto.trading.api.BalanceInfo;
+import com.gazbert.crypto.trading.api.MarketOrderBook;
+import com.gazbert.crypto.trading.api.Ticker;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
+/**
+ * Basic integration testing with Kraken exchange.
+ *
+ * @author gazbert
+ */
+public class KrakenIT {
+
+  // Market id must be the same as the Asset Pair id. See:
+  // https://www.kraken.com/help/api#get-tradable-pairs
+  private static final String MARKET_ID = "XBTUSD";
+  private static final BigDecimal SELL_ORDER_PRICE = new BigDecimal("10000.176");
+  private static final BigDecimal SELL_ORDER_QUANTITY = new BigDecimal("0.001");
+
+  private static final String KEY =
