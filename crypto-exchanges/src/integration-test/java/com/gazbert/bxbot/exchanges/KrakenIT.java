@@ -111,4 +111,34 @@ public class KrakenIT {
     assertFalse(orderBook.getBuyOrders().isEmpty());
     assertFalse(orderBook.getSellOrders().isEmpty());
 
-    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID
+    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID);
+    assertNotNull(ticker.getLast());
+    assertNotNull(ticker.getAsk());
+    assertNotNull(ticker.getBid());
+    assertNotNull(ticker.getHigh());
+    assertNotNull(ticker.getLow());
+    assertNotNull(ticker.getOpen());
+    assertNotNull(ticker.getVolume());
+    assertNotNull(ticker.getVwap());
+    assertNull(ticker.getTimestamp()); // timestamp not supplied by Kraken
+
+    verify(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
+  }
+
+  /*
+   * You'll need to change the KEY, SECRET, constants to real-world values.
+   */
+  @Ignore("Disabled. Integration testing authenticated API calls requires your secret credentials!")
+  @Test
+  public void testAuthenticatedApiCalls() throws Exception {
+    replay(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
+
+    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BalanceInfo balanceInfo = exchangeAdapter.getBalanceInfo();
+    assertNotNull(balanceInfo.getBalancesAvailable().get("XXBT"));
+
+    // Careful here: make sure the SELL_ORDER_PRICE is sensible!
+    // final String orderId = exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL,
+    // SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
