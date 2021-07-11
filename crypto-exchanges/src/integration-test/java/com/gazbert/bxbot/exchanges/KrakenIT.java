@@ -85,4 +85,30 @@ public class KrakenIT {
     networkConfig = createMock(NetworkConfig.class);
     expect(networkConfig.getConnectionTimeout()).andReturn(30);
     expect(networkConfig.getNonFatalErrorCodes()).andReturn(nonFatalNetworkErrorCodes);
-    expect(networkConfig.getNonFatalErrorMessages()).andReturn(
+    expect(networkConfig.getNonFatalErrorMessages()).andReturn(nonFatalNetworkErrorMessages);
+
+    otherConfig = createMock(OtherConfig.class);
+    expect(otherConfig.getItem("buy-fee")).andReturn("0.25");
+    expect(otherConfig.getItem("sell-fee")).andReturn("0.25");
+    expect(otherConfig.getItem("keep-alive-during-maintenance")).andReturn("false");
+
+    exchangeConfig = createMock(ExchangeConfig.class);
+    expect(exchangeConfig.getAuthenticationConfig()).andReturn(authenticationConfig);
+    expect(exchangeConfig.getNetworkConfig()).andReturn(networkConfig);
+    expect(exchangeConfig.getOtherConfig()).andReturn(otherConfig);
+  }
+
+  @Test
+  public void testPublicApiCalls() throws Exception {
+    replay(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
+
+    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    assertNotNull(exchangeAdapter.getLatestMarketPrice(MARKET_ID));
+
+    final MarketOrderBook orderBook = exchangeAdapter.getMarketOrders(MARKET_ID);
+    assertFalse(orderBook.getBuyOrders().isEmpty());
+    assertFalse(orderBook.getSellOrders().isEmpty());
+
+    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID
