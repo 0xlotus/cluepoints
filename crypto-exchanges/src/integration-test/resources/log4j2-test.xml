@@ -12,4 +12,19 @@
                 <!--<Pattern>%-4r [%t] %d %-5p %c{1} %M() - %m%n</Pattern>-->
             <!--</PatternLayout>-->
             <!--<Policies>-->
-     
+                <!--<TimeBasedTriggeringPolicy/>-->
+                <!--<SizeBasedTriggeringPolicy size="100 MB"/>-->
+            <!--</Policies>-->
+            <!--<DefaultRolloverStrategy max="90"/>-->
+        <!--</RollingFile>-->
+    </Appenders>
+    <Loggers>
+        <!--
+        debug for testing
+        -->
+        <Root level="debug">
+            <AppenderRef ref="STDOUT"/>
+            <!--<AppenderRef ref="crypto_RollingFile"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
