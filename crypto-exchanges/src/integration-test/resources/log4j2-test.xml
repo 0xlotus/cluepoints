@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="BX-bot" packages="">
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout>
+                <Pattern>%-4r [%t] %d %-5p %c{1} %M() - %m%n</Pattern>
+            </PatternLayout>
+        </Console>
+        <!--<RollingFile name="crypto_RollingFile" fileName="./logs/crypto.log"-->
+                     <!--filePattern="logs/$${date:yyyy-MM}/crypto-%d{MM-dd-yyyy}-%i.log.gz">-->
+            <!--<PatternLayout>-->
+                <!--<Pattern>%-4r [%t] %d %-5p %c{1} %M() - %m%n</Pattern>-->
+            <!--</PatternLayout>-->
+            <!--<Policies>-->
+     

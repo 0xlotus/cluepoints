@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -47,15 +48,17 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Basic integration testing with Kraken exchange.
+ * Basic integration testing with OKCoin exchange.
+ *
+ * <p>DO NOT USE: See https://github.com/gazbert/crypto/issues/122
  *
  * @author gazbert
  */
-public class KrakenIT {
+@Deprecated(forRemoval = true)
+@Ignore("gazbert 26/03/2020 - v1 API is now deprecated and disabled. Adapter needs updating!")
+public class OkCoinIT {
 
-  // Market id must be the same as the Asset Pair id. See:
-  // https://www.kraken.com/help/api#get-tradable-pairs
-  private static final String MARKET_ID = "XBTUSD";
+  private static final String MARKET_ID = "btc_usd";
   private static final BigDecimal SELL_ORDER_PRICE = new BigDecimal("10000.176");
   private static final BigDecimal SELL_ORDER_QUANTITY = new BigDecimal("0.001");
 
@@ -73,9 +76,7 @@ public class KrakenIT {
   private NetworkConfig networkConfig;
   private OtherConfig otherConfig;
 
-  /**
-   * Create some exchange config - the TradingEngine would normally do this.
-   */
+  /** Create some exchange config - the TradingEngine would normally do this. */
   @Before
   public void setupForEachTest() {
     authenticationConfig = createMock(AuthenticationConfig.class);
@@ -90,7 +91,6 @@ public class KrakenIT {
     otherConfig = createMock(OtherConfig.class);
     expect(otherConfig.getItem("buy-fee")).andReturn("0.25");
     expect(otherConfig.getItem("sell-fee")).andReturn("0.25");
-    expect(otherConfig.getItem("keep-alive-during-maintenance")).andReturn("false");
 
     exchangeConfig = createMock(ExchangeConfig.class);
     expect(exchangeConfig.getAuthenticationConfig()).andReturn(authenticationConfig);
@@ -102,7 +102,7 @@ public class KrakenIT {
   public void testPublicApiCalls() throws Exception {
     replay(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
 
-    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    final ExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
     exchangeAdapter.init(exchangeConfig);
 
     assertNotNull(exchangeAdapter.getLatestMarketPrice(MARKET_ID));
@@ -117,10 +117,10 @@ public class KrakenIT {
     assertNotNull(ticker.getBid());
     assertNotNull(ticker.getHigh());
     assertNotNull(ticker.getLow());
-    assertNotNull(ticker.getOpen());
+    assertNull(ticker.getOpen()); // open not supplied by OKCoin
     assertNotNull(ticker.getVolume());
-    assertNotNull(ticker.getVwap());
-    assertNull(ticker.getTimestamp()); // timestamp not supplied by Kraken
+    assertNull(ticker.getVwap()); // vwap not supplied by OKCoin
+    assertNotNull(ticker.getTimestamp());
 
     verify(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
   }
@@ -133,11 +133,11 @@ public class KrakenIT {
   public void testAuthenticatedApiCalls() throws Exception {
     replay(authenticationConfig, networkConfig, otherConfig, exchangeConfig);
 
-    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    final ExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
     exchangeAdapter.init(exchangeConfig);
 
     final BalanceInfo balanceInfo = exchangeAdapter.getBalanceInfo();
-    assertNotNull(balanceInfo.getBalancesAvailable().get("XXBT"));
+    assertNotNull(balanceInfo.getBalancesAvailable().get("BTC"));
 
     // Careful here: make sure the SELL_ORDER_PRICE is sensible!
     // final String orderId = exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL,
