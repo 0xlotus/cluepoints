@@ -51,4 +51,29 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
-import java.security.NoSu
+import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * Exchange Adapter for integrating with the Bitfinex exchange. The Bitfinex API is documented <a
+ * href="https://www.bitfinex.com/pages/api">here</a>.
+ *
+ * <p><strong> DISCLAIMER: This Exchange Adapter is provided as-is; it might have bugs in it and you
+ * could lose money. Despite running live on Bitfinex, it has only been unit tested up until the
+ * point of calling the {@link #sendPublicRequestToExchange(String)} and {@link
+ * #sendAuthenticatedRequestToExchange(String, Map)} methods. Use it at our own risk!</strong>
+ *
+ * <p>The adapter uses v1 of the Bitfinex API - it is limited to 60 API calls per minute. It only
+ * supports 'exchange' accounts; it does <em>not</em> support 'trading' (margin trading) accounts or
+ * 'deposit' (liquidity SWAPs) accounts. Furthermore, the adapter does 
