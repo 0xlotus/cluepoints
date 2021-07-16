@@ -76,4 +76,29 @@ import org.apache.logging.log4j.Logger;
  *
  * <p>The adapter uses v1 of the Bitfinex API - it is limited to 60 API calls per minute. It only
  * supports 'exchange' accounts; it does <em>not</em> support 'trading' (margin trading) accounts or
- * 'deposit' (liquidity SWAPs) accounts. Furthermore, the adapter does 
+ * 'deposit' (liquidity SWAPs) accounts. Furthermore, the adapter does not support sending 'hidden'
+ * orders.
+ *
+ * <p>There are different exchange fees for Takers and Makers - see <a
+ * href="https://www.bitfinex.com/pages/fees">here.</a> This adapter will use the <em>Taker</em>
+ * fees to keep things simple for now.
+ *
+ * <p>The Exchange Adapter is <em>not</em> thread safe. It expects to be called using a single
+ * thread in order to preserve trade execution order. The {@link URLConnection} achieves this by
+ * blocking/waiting on the input stream (response) for each API call.
+ *
+ * <p>The {@link TradingApi} calls will throw a {@link ExchangeNetworkException} if a network error
+ * occurs trying to connect to the exchange. A {@link TradingApiException} is thrown for
+ * <em>all</em> other failures.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
+    implements ExchangeAdapter {
+
+  private static final Logger LOG = LogManager.getLogger();
+
+  private static final String BITFINEX_API_VERSION = "v1";
+  private static final String PUBLIC_API_BASE_URL =
+      "https://api.bitfinex.com/" + BITF
