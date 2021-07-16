@@ -101,4 +101,25 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
   private static final String BITFINEX_API_VERSION = "v1";
   private static final String PUBLIC_API_BASE_URL =
-      "https://api.bitfinex.com/" + BITF
+      "https://api.bitfinex.com/" + BITFINEX_API_VERSION + "/";
+  private static final String AUTHENTICATED_API_URL = PUBLIC_API_BASE_URL;
+
+  private static final String UNEXPECTED_ERROR_MSG =
+      "Unexpected error has occurred in Bitfinex Exchange Adapter. ";
+  private static final String UNEXPECTED_IO_ERROR_MSG =
+      "Failed to connect to Exchange due to unexpected IO error.";
+
+  private static final String ID = "id";
+  private static final String EXCHANGE = "exchange";
+  private static final String SYMBOL = "symbol";
+  private static final String AMOUNT = "amount";
+  private static final String PRICE = "price";
+  private static final String TIMESTAMP = "timestamp";
+  private static final String AVG_EXECUTION_PRICE = "avgExecutionPrice";
+  private static final String IS_LIVE = "isLive";
+  private static final String IS_CANCELLED = "isCancelled";
+  private static final String IS_HIDDEN = "isHidden";
+  private static final String WAS_FORCED = "wasForced";
+  private static final String ORIGINAL_AMOUNT = "originalAmount";
+  private static final String REMAINING_AMOUNT = "remainingAmount";
+  private static final String EXECUTED_AMOUN
