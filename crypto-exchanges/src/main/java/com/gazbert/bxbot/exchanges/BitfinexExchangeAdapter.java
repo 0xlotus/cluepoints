@@ -122,4 +122,41 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
   private static final String WAS_FORCED = "wasForced";
   private static final String ORIGINAL_AMOUNT = "originalAmount";
   private static final String REMAINING_AMOUNT = "remainingAmount";
-  private static final String EXECUTED_AMOUN
+  private static final String EXECUTED_AMOUNT = "executedAmount";
+
+  private static final String KEY_PROPERTY_NAME = "key";
+  private static final String SECRET_PROPERTY_NAME = "secret";
+
+  private String key = "";
+  private String secret = "";
+
+  private Mac mac;
+  private boolean initializedMacAuthentication = false;
+  private long nonce = 0;
+
+  private Gson gson;
+
+  @Override
+  public void init(ExchangeConfig config) {
+    LOG.info(() -> "About to initialise Bitfinex ExchangeConfig: " + config);
+    setAuthenticationConfig(config);
+    setNetworkConfig(config);
+
+    nonce = System.currentTimeMillis() / 1000;
+    initSecureMessageLayer();
+    initGson();
+  }
+
+  // --------------------------------------------------------------------------
+  // Bitfinex API Calls adapted to the Trading API.
+  // See https://www.bitfinex.com/pages/api
+  // --------------------------------------------------------------------------
+
+  @Override
+  public MarketOrderBook getMarketOrders(String marketId)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final ExchangeHttpResponse response = sendPublicRequestToExchange("book/" + marketId);
+      LOG.debug(() -> "Market Orders response: " + response);
+
+      final B
