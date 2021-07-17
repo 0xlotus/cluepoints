@@ -159,4 +159,34 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
       final ExchangeHttpResponse response = sendPublicRequestToExchange("book/" + marketId);
       LOG.debug(() -> "Market Orders response: " + response);
 
-      final B
+      final BitfinexOrderBook orderBook =
+          gson.fromJson(response.getPayload(), BitfinexOrderBook.class);
+
+      final List<MarketOrder> buyOrders = new ArrayList<>();
+      for (BitfinexMarketOrder bitfinexBuyOrder : orderBook.bids) {
+        final MarketOrder buyOrder =
+            new MarketOrderImpl(
+                OrderType.BUY,
+                bitfinexBuyOrder.price,
+                bitfinexBuyOrder.amount,
+                bitfinexBuyOrder.price.multiply(bitfinexBuyOrder.amount));
+        buyOrders.add(buyOrder);
+      }
+
+      final List<MarketOrder> sellOrders = new ArrayList<>();
+      for (BitfinexMarketOrder bitfinexSellOrder : orderBook.asks) {
+        final MarketOrder sellOrder =
+            new MarketOrderImpl(
+                OrderType.SELL,
+                bitfinexSellOrder.price,
+                bitfinexSellOrder.amount,
+                bitfinexSellOrder.price.multiply(bitfinexSellOrder.amount));
+        sellOrders.add(sellOrder);
+      }
+
+      return new MarketOrderBookImpl(marketId, sellOrders, buyOrders);
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exceptio
