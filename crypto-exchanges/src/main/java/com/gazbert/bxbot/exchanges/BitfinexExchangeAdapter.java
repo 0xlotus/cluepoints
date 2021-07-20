@@ -222,4 +222,40 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
             break;
           default:
             throw new TradingApiException(
-                "Unrecognised order type received in getYou
+                "Unrecognised order type received in getYourOpenOrders(). Value: "
+                    + bitfinexOpenOrder.type);
+        }
+
+        final OpenOrder order =
+            new OpenOrderImpl(
+                Long.toString(bitfinexOpenOrder.id),
+                // for some reason 'finex adds decimal point to long date value, e.g. "1442073766.0"
+                //  - grrrr!
+                Date.from(
+                    Instant.ofEpochMilli(
+                        Integer.parseInt(bitfinexOpenOrder.timestamp.split("\\.")[0]))),
+                marketId,
+                orderType,
+                bitfinexOpenOrder.price,
+                bitfinexOpenOrder.remainingAmount,
+                bitfinexOpenOrder.originalAmount,
+                bitfinexOpenOrder.price.multiply(
+                    bitfinexOpenOrder.originalAmount) // total - not provided by finex :-(
+                );
+
+        ordersToReturn.add(order);
+      }
+      return ordersToReturn;
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public String createOrder(
+      String marketId, OrderType orderType, BigDecima
