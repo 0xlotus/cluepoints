@@ -189,4 +189,37 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
     } catch (ExchangeNetworkException | TradingApiException e) {
       throw e;
 
-    } catch (Exceptio
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public List<OpenOrder> getYourOpenOrders(String marketId)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final ExchangeHttpResponse response = sendAuthenticatedRequestToExchange("orders", null);
+      LOG.debug(() -> "Open Orders response: " + response);
+
+      final BitfinexOpenOrders bitfinexOpenOrders =
+          gson.fromJson(response.getPayload(), BitfinexOpenOrders.class);
+
+      final List<OpenOrder> ordersToReturn = new ArrayList<>();
+      for (final BitfinexOpenOrder bitfinexOpenOrder : bitfinexOpenOrders) {
+
+        if (!marketId.equalsIgnoreCase(bitfinexOpenOrder.symbol)) {
+          continue;
+        }
+
+        OrderType orderType;
+        switch (bitfinexOpenOrder.side) {
+          case "buy":
+            orderType = OrderType.BUY;
+            break;
+          case "sell":
+            orderType = OrderType.SELL;
+            break;
+          default:
+            throw new TradingApiException(
+                "Unrecognised order type received in getYou
