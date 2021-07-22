@@ -258,4 +258,34 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
   @Override
   public String createOrder(
-      String marketId, OrderType orderType, BigDecima
+      String marketId, OrderType orderType, BigDecimal quantity, BigDecimal price)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final Map<String, Object> params = createRequestParamMap();
+
+      params.put(SYMBOL, marketId);
+
+      // note we need to limit amount and price to 8 decimal places else exchange will barf
+      params.put(
+          AMOUNT, new DecimalFormat("#.########", getDecimalFormatSymbols()).format(quantity));
+      params.put(PRICE, new DecimalFormat("#.########", getDecimalFormatSymbols()).format(price));
+
+      params.put(EXCHANGE, "bitfinex");
+
+      if (orderType == OrderType.BUY) {
+        params.put("side", "buy");
+      } else if (orderType == OrderType.SELL) {
+        params.put("side", "sell");
+      } else {
+        final String errorMsg =
+            "Invalid order type: "
+                + orderType
+                + " - Can only be "
+                + OrderType.BUY.getStringValue()
+                + " or "
+                + OrderType.SELL.getStringValue();
+        LOG.error(errorMsg);
+        throw new IllegalArgumentException(errorMsg);
+      }
+
+      // 'type' is either "market" / "limit" / "st
