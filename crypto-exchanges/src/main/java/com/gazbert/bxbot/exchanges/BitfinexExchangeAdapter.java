@@ -288,4 +288,28 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
         throw new IllegalArgumentException(errorMsg);
       }
 
-      // 'type' is either "market" / "limit" / "st
+      // 'type' is either "market" / "limit" / "stop" / "trailing-stop" / "fill-or-kill" / "exchange
+      // market" /
+      // "exchange limit" / "exchange stop" / "exchange trailing-stop" / "exchange fill-or-kill".
+      // (type starting by "exchange " are exchange orders, others are margin trading orders)
+
+      // this adapter only supports 'exchange limit orders'
+      params.put("type", "exchange limit");
+
+      // This adapter does not currently support hidden orders.
+      // Exchange API notes: "true if the order should be hidden. Default is false."
+      // If you try and set "is_hidden" to false, the exchange barfs and sends a 401 back. Nice.
+      // params.put("is_hidden", "false");
+
+      final ExchangeHttpResponse response = sendAuthenticatedRequestToExchange("order/new", params);
+      LOG.debug(() -> "Create Order response: " + response);
+
+      final BitfinexNewOrderResponse createOrderResponse =
+          gson.fromJson(response.getPayload(), BitfinexNewOrderResponse.class);
+      final long id = createOrderResponse.orderId;
+      if (id == 0) {
+        final String errorMsg = "Failed to place order on exchange. Error response: " + response;
+        LOG.error(errorMsg);
+        throw new TradingApiException(errorMsg);
+      } else {
+     
