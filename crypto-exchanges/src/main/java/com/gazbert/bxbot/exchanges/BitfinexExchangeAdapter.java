@@ -312,4 +312,37 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
         LOG.error(errorMsg);
         throw new TradingApiException(errorMsg);
       } else {
-     
+        return Long.toString(createOrderResponse.orderId);
+      }
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  /*
+   * marketId is not needed for cancelling orders on this exchange.
+   */
+  @Override
+  public boolean cancelOrder(String orderId, String marketIdNotNeeded)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final Map<String, Object> params = createRequestParamMap();
+      params.put("order_id", Long.parseLong(orderId));
+
+      final ExchangeHttpResponse response =
+          sendAuthenticatedRequestToExchange("order/cancel", params);
+      LOG.debug(() -> "Cancel Order response: " + response);
+
+      // Exchange returns order id and other details if successful, a 400 HTTP Status if the order
+      // id was not recognised.
+      gson.fromJson(response.getPayload(), BitfinexCancelOrderResponse.class);
+      return true;
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      if (e.getCause() != null && e.getCause().getMessage().contains("400")) {
+  
