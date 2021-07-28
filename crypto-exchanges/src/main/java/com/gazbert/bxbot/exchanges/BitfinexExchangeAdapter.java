@@ -345,4 +345,40 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
     } catch (ExchangeNetworkException | TradingApiException e) {
       if (e.getCause() != null && e.getCause().getMessage().contains("400")) {
-  
+        final String errorMsg =
+            "Failed to cancel order on exchange. Did not recognise Order Id: " + orderId;
+        LOG.error(errorMsg, e);
+        return false;
+      } else {
+        throw e;
+      }
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public BigDecimal getLatestMarketPrice(String marketId)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final ExchangeHttpResponse response = sendPublicRequestToExchange("pubticker/" + marketId);
+      LOG.debug(() -> "Latest Market Price response: " + response);
+
+      final BitfinexTicker ticker = gson.fromJson(response.getPayload(), BitfinexTicker.class);
+      return ticker.lastPrice;
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public BalanceInfo getBalanceInfo() throws TradingApiException, ExchangeNetworkException {
+    try {
+      final ExchangeHt
