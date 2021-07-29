@@ -381,4 +381,28 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
   @Override
   public BalanceInfo getBalanceInfo() throws TradingApiException, ExchangeNetworkException {
     try {
-      final ExchangeHt
+      final ExchangeHttpResponse response = sendAuthenticatedRequestToExchange("balances", null);
+      LOG.debug(() -> "Balance Info response: " + response);
+
+      final BitfinexBalances allAccountBalances =
+          gson.fromJson(response.getPayload(), BitfinexBalances.class);
+      final HashMap<String, BigDecimal> balancesAvailable = new HashMap<>();
+
+      /*
+       * The adapter only fetches the 'exchange' account balance details - this is the Bitfinex
+       * 'exchange' account, i.e. the limit order trading account balance.
+       */
+      if (allAccountBalances != null) {
+        allAccountBalances.stream()
+            .filter(accountBalance -> accountBalance.type.equalsIgnoreCase(EXCHANGE))
+            .forEach(
+                accountBalance -> {
+                  if (accountBalance.currency.equalsIgnoreCase("usd")) {
+                    balancesAvailable.put("USD", accountBalance.available);
+                  } else if (accountBalance.currency.equalsIgnoreCase("btc")) {
+                    balancesAvailable.put("BTC", accountBalance.available);
+                  }
+                });
+      }
+
+      // 2nd arg of BalanceInfo constructor for reserved/on-hold balances is not pr
