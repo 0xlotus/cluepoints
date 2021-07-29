@@ -405,4 +405,38 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
                 });
       }
 
-      // 2nd arg of BalanceInfo constructor for reserved/on-hold balances is not pr
+      // 2nd arg of BalanceInfo constructor for reserved/on-hold balances is not provided by
+      // exchange.
+      return new BalanceInfoImpl(balancesAvailable, new HashMap<>());
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public BigDecimal getPercentageOfBuyOrderTakenForExchangeFee(String marketId)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final ExchangeHttpResponse response =
+          sendAuthenticatedRequestToExchange("account_infos", null);
+      LOG.debug(() -> "Buy Fee response: " + response);
+
+      // Nightmare to adapt! Just take the top-level taker fees.
+      final BitfinexAccountInfos bitfinexAccountInfos =
+          gson.fromJson(response.getPayload(), BitfinexAccountInfos.class);
+      final BigDecimal fee = bitfinexAccountInfos.get(0).takerFees;
+
+      // adapt the % into BigDecimal format
+      return fee.divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_M
