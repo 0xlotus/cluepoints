@@ -439,4 +439,40 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
     } catch (Exception e) {
       LOG.error(UNEXPECTED_ERROR_MSG, e);
-      throw new TradingApiException(UNEXPECTED_ERROR_M
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public BigDecimal getPercentageOfSellOrderTakenForExchangeFee(String marketId)
+      throws TradingApiException, ExchangeNetworkException {
+    try {
+      final ExchangeHttpResponse response =
+          sendAuthenticatedRequestToExchange("account_infos", null);
+      LOG.debug(() -> "Sell Fee response: " + response);
+
+      // Nightmare to adapt! Just take the top-level taker fees.
+      final BitfinexAccountInfos bitfinexAccountInfos =
+          gson.fromJson(response.getPayload(), BitfinexAccountInfos.class);
+      final BigDecimal fee = bitfinexAccountInfos.get(0).takerFees;
+
+      // adapt the % into BigDecimal format
+      return fee.divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  @Override
+  public String getImplName() {
+    return "Bitfinex API v1";
+  }
+
+  @Override
+  public Ticker getTicker(String marketId) throws TradingApiException, ExchangeNetworkException {
+    try
