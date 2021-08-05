@@ -475,4 +475,35 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
   @Override
   public Ticker getTicker(String marketId) throws TradingApiException, ExchangeNetworkException {
-    try
+    try {
+      final ExchangeHttpResponse response = sendPublicRequestToExchange("pubticker/" + marketId);
+      LOG.debug(() -> "Latest Market Price response: " + response);
+
+      final BitfinexTicker ticker = gson.fromJson(response.getPayload(), BitfinexTicker.class);
+      return new TickerImpl(
+          ticker.lastPrice,
+          ticker.bid,
+          ticker.ask,
+          ticker.low,
+          ticker.high,
+          null, // open not supplied by Bitfinex
+          ticker.volume,
+          null, // vwap not supplied by Bitfinex
+          // for some reason 'finex adds decimal point to long date value, e.g. "1513631756.0798516"
+          //  - grrrr!
+          Date.from(Instant.ofEpochMilli(Integer.parseInt(ticker.timestamp.split("\\.")[0])))
+              .getTime());
+
+    } catch (ExchangeNetworkException | TradingApiException e) {
+      throw e;
+
+    } catch (Exception e) {
+      LOG.error(UNEXPECTED_ERROR_MSG, e);
+      throw new TradingApiException(UNEXPECTED_ERROR_MSG, e);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  GSON classes for JSON responses.
+  //  See https://www.bitfinex.com/pages/api
+  // -----
