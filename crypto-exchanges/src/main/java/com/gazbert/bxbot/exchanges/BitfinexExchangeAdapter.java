@@ -547,4 +547,51 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
     long id;
     String symbol;
-    Strin
+    String exchange;
+    BigDecimal price;
+
+    @SerializedName("avg_execution_price")
+    BigDecimal avgExecutionPrice;
+
+    String side; // e.g. "sell"
+    String type; // e.g. "exchange limit"
+    String timestamp;
+
+    @SerializedName("is_live")
+    boolean isLive;
+
+    @SerializedName("is_cancelled")
+    boolean isCancelled;
+
+    @SerializedName("is_hidden")
+    boolean isHidden;
+
+    @SerializedName("was_forced")
+    boolean wasForced;
+
+    @SerializedName("original_amount")
+    BigDecimal originalAmount;
+
+    @SerializedName("remaining_amount")
+    BigDecimal remainingAmount;
+
+    @SerializedName("executed_amount")
+    BigDecimal executedAmount;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add(ID, id)
+          .add(SYMBOL, symbol)
+          .add(EXCHANGE, exchange)
+          .add(PRICE, price)
+          .add(AVG_EXECUTION_PRICE, avgExecutionPrice)
+          .add("side", side)
+          .add("type", type)
+          .add(TIMESTAMP, timestamp)
+          .add(IS_LIVE, isLive)
+          .add(IS_CANCELLED, isCancelled)
+          .add(IS_HIDDEN, isHidden)
+          .add(WAS_FORCED, wasForced)
+          .add(ORIGINAL_AMOUNT, originalAmount)
+          .add(REMAINING_AMO
