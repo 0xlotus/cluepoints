@@ -506,4 +506,45 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
   // --------------------------------------------------------------------------
   //  GSON classes for JSON responses.
   //  See https://www.bitfinex.com/pages/api
-  // -----
+  // --------------------------------------------------------------------------
+
+  /** GSON class for a market Order Book. */
+  private static class BitfinexOrderBook {
+
+    BitfinexMarketOrder[] bids;
+    BitfinexMarketOrder[] asks;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this).add("bids", bids).add("asks", asks).toString();
+    }
+  }
+
+  /** GSON class for a Market Order. */
+  private static class BitfinexMarketOrder {
+
+    BigDecimal price;
+    BigDecimal amount;
+    String timestamp;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add(PRICE, price)
+          .add(AMOUNT, amount)
+          .add(TIMESTAMP, timestamp)
+          .toString();
+    }
+  }
+
+  /** GSON class for receiving your open orders in 'orders' API call response. */
+  private static class BitfinexOpenOrders extends ArrayList<BitfinexOpenOrder> {
+    private static final long serialVersionUID = 5516523641153401953L;
+  }
+
+  /** GSON class for mapping returned order from 'orders' API call response. */
+  private static class BitfinexOpenOrder {
+
+    long id;
+    String symbol;
+    Strin
