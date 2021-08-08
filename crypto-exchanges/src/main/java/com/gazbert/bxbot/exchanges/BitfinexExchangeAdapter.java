@@ -594,4 +594,56 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
           .add(IS_HIDDEN, isHidden)
           .add(WAS_FORCED, wasForced)
           .add(ORIGINAL_AMOUNT, originalAmount)
-          .add(REMAINING_AMO
+          .add(REMAINING_AMOUNT, remainingAmount)
+          .add(EXECUTED_AMOUNT, executedAmount)
+          .toString();
+    }
+  }
+
+  /** GSON class for a Bitfinex 'pubticker' API call response. */
+  private static class BitfinexTicker {
+
+    BigDecimal mid;
+    BigDecimal bid;
+    BigDecimal ask;
+
+    @SerializedName("last_price")
+    BigDecimal lastPrice;
+
+    BigDecimal low;
+    BigDecimal high;
+    BigDecimal volume;
+    String timestamp;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add("mid", mid)
+          .add("bid", bid)
+          .add("ask", ask)
+          .add("lastPrice", lastPrice)
+          .add("low", low)
+          .add("high", high)
+          .add("volume", volume)
+          .add(TIMESTAMP, timestamp)
+          .toString();
+    }
+  }
+
+  /**
+   * GSON class for holding Bitfinex response from 'account_infos' API call.
+   *
+   * <p>This is a lot of work to just get the exchange fees!
+   *
+   * <p>We want the taker fees.
+   *
+   * <pre>
+   *  [
+   *      {
+   *          "maker_fees": "0.1",
+   *          "taker_fees": "0.2",
+   *          "fees": [
+   *              {
+   *                  "pairs": "BTC",
+   *                  "maker_fees": "0.1",
+   *       
