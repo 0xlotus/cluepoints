@@ -646,4 +646,47 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
    *              {
    *                  "pairs": "BTC",
    *                  "maker_fees": "0.1",
-   *       
+   *                  "taker_fees": "0.2"
+   *              },
+   *              {
+   *                  "pairs": "LTC",
+   *                  "maker_fees": "0.1",
+   *                  "taker_fees": "0.2"
+   *              },
+   *              {
+   *                  "pairs": "DRK",
+   *                  "maker_fees": "0.1",
+   *                  "taker_fees": "0.2"
+   *              }
+   *          ]
+   *      }
+   *  ]
+   * </pre>
+   */
+  private static class BitfinexAccountInfos extends ArrayList<BitfinexAccountInfo> {
+    private static final long serialVersionUID = 5516521641453401953L;
+  }
+
+  /** GSON class for holding Bitfinex Account Info. */
+  private static class BitfinexAccountInfo {
+
+    @SerializedName("maker_fees")
+    BigDecimal makerFees;
+
+    @SerializedName("taker_fees")
+    BigDecimal takerFees;
+
+    BitfinexPairFees fees;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add("makerFees", makerFees)
+          .add("takerFees", takerFees)
+          .add("fees", fees)
+          .toString();
+    }
+  }
+
+  /** GSON class for holding Bitfinex Pair Fees. */
+  private static class BitfinexPairFees extends ArrayList<Bitfinex
