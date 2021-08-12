@@ -689,4 +689,41 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
   }
 
   /** GSON class for holding Bitfinex Pair Fees. */
-  private static class BitfinexPairFees extends ArrayList<Bitfinex
+  private static class BitfinexPairFees extends ArrayList<BitfinexPairFee> {
+    private static final long serialVersionUID = 1516526641473401953L;
+  }
+
+  /** GSON class for holding Bitfinex Pair Fee. */
+  private static class BitfinexPairFee {
+
+    String pairs;
+
+    @SerializedName("maker_fees")
+    BigDecimal makerFees;
+
+    @SerializedName("taker_fees")
+    BigDecimal takerFees;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add("pairs", pairs)
+          .add("makerFees", makerFees)
+          .add("takerFees", takerFees)
+          .toString();
+    }
+  }
+
+  /**
+   * GSON class for holding Bitfinex response from 'balances' API call.
+   *
+   * <p>Basically an array of BitfinexAccountBalance types.
+   *
+   * <pre>
+   * [
+   * {"type":"deposit","currency":"btc","amount":"0.12347175","available":"0.001"},
+   * {"type":"deposit","currency":"usd","amount":"0.0","available":"0.0"},
+   * {"type":"exchange","currency":"btc","amount":"0.0","available":"0.0"},
+   * {"type":"exchange","currency":"usd","amount":"0.0","available":"0.0"},
+   * {"type":"trading","currency":"btc","amount":"0.0","available":"0.0"},
+   * {"type":"trading","currency":"usd","amount":"0.0","available":
