@@ -726,4 +726,41 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
    * {"type":"exchange","currency":"btc","amount":"0.0","available":"0.0"},
    * {"type":"exchange","currency":"usd","amount":"0.0","available":"0.0"},
    * {"type":"trading","currency":"btc","amount":"0.0","available":"0.0"},
-   * {"type":"trading","currency":"usd","amount":"0.0","available":
+   * {"type":"trading","currency":"usd","amount":"0.0","available":"0.0"}
+   * ]
+   * </pre>
+   */
+  private static class BitfinexBalances extends ArrayList<BitfinexAccountBalance> {
+    private static final long serialVersionUID = 5516523641953401953L;
+  }
+
+  /**
+   * GSON class for holding a Bitfinex account type balance info.
+   *
+   * <p>There are 3 types of account: 'deposit' (swaps), 'exchange' (limit orders), 'trading'
+   * (margin).
+   *
+   * <pre>
+   * [
+   * {"type":"deposit","currency":"btc","amount":"0.12347175","available":"0.001"},
+   * {"type":"deposit","currency":"usd","amount":"0.0","available":"0.0"},
+   * {"type":"exchange","currency":"btc","amount":"0.0","available":"0.0"},
+   * {"type":"exchange","currency":"usd","amount":"0.0","available":"0.0"},
+   * {"type":"trading","currency":"btc","amount":"0.0","available":"0.0"},
+   * {"type":"trading","currency":"usd","amount":"0.0","available":"0.0"}
+   * ]
+   * </pre>
+   */
+  private static class BitfinexAccountBalance {
+
+    String type;
+    String currency;
+    BigDecimal amount;
+    BigDecimal available;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add("type", type)
+          .add("currency", currency)
+    
