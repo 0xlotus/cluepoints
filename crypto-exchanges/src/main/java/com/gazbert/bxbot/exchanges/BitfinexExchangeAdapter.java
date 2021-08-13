@@ -763,4 +763,56 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
       return MoreObjects.toStringHelper(this)
           .add("type", type)
           .add("currency", currency)
-    
+          .add(AMOUNT, amount)
+          .add("available", available)
+          .toString();
+    }
+  }
+
+  /** GSON class for Bitfinex 'order/new' response. */
+  private static class BitfinexNewOrderResponse {
+
+    long id; // same as order_id
+    String symbol;
+    String exchange;
+    BigDecimal price;
+
+    @SerializedName("avg_execution_price")
+    BigDecimal avgExecutionPrice;
+
+    String side; // e.g. "sell"
+    String type; // e.g. "exchange limit"
+    String timestamp;
+
+    @SerializedName("is_live")
+    boolean isLive;
+
+    @SerializedName("is_cancelled")
+    boolean isCancelled;
+
+    @SerializedName("is_hidden")
+    boolean isHidden;
+
+    @SerializedName("was_forced")
+    boolean wasForced;
+
+    @SerializedName("original_amount")
+    BigDecimal originalAmount;
+
+    @SerializedName("remaining_amount")
+    BigDecimal remainingAmount;
+
+    @SerializedName("executed_amount")
+    BigDecimal executedAmount;
+
+    @SerializedName("order_id")
+    long orderId; // same as id
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add(ID, id)
+          .add(SYMBOL, symbol)
+          .add(EXCHANGE, exchange)
+          .add(PRICE, price)
+          .a
