@@ -815,4 +815,47 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
           .add(SYMBOL, symbol)
           .add(EXCHANGE, exchange)
           .add(PRICE, price)
-          .a
+          .add(AVG_EXECUTION_PRICE, avgExecutionPrice)
+          .add("side", side)
+          .add("type", type)
+          .add(TIMESTAMP, timestamp)
+          .add(IS_LIVE, isLive)
+          .add(IS_CANCELLED, isCancelled)
+          .add(IS_HIDDEN, isHidden)
+          .add(WAS_FORCED, wasForced)
+          .add(ORIGINAL_AMOUNT, originalAmount)
+          .add(REMAINING_AMOUNT, remainingAmount)
+          .add(EXECUTED_AMOUNT, executedAmount)
+          .add("orderId", orderId)
+          .toString();
+    }
+  }
+
+  /** GSON class for Bitfinex 'order/cancel' response. */
+  private static class BitfinexCancelOrderResponse {
+
+    long id; // only get this param; there is no order_id
+    String symbol;
+    String exchange;
+    BigDecimal price;
+
+    @SerializedName("avg_execution_price")
+    BigDecimal avgExecutionPrice;
+
+    String side; // e.g. "sell"
+    String type; // e.g. "exchange limit"
+    String timestamp;
+
+    @SerializedName("is_live")
+    boolean isLive;
+
+    @SerializedName("is_cancelled")
+    boolean isCancelled;
+
+    @SerializedName("is_hidden")
+    boolean isHidden;
+
+    @SerializedName("was_forced")
+    boolean wasForced;
+
+    @SerializedName("original_amoun
