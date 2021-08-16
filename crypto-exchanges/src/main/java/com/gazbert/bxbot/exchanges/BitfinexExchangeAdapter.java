@@ -858,4 +858,42 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
     @SerializedName("was_forced")
     boolean wasForced;
 
-    @SerializedName("original_amoun
+    @SerializedName("original_amount")
+    BigDecimal originalAmount;
+
+    @SerializedName("remaining_amount")
+    BigDecimal remainingAmount;
+
+    @SerializedName("executed_amount")
+    BigDecimal executedAmount;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add(ID, id)
+          .add(SYMBOL, symbol)
+          .add(EXCHANGE, exchange)
+          .add(PRICE, price)
+          .add(AVG_EXECUTION_PRICE, avgExecutionPrice)
+          .add("side", side)
+          .add("type", type)
+          .add(TIMESTAMP, timestamp)
+          .add(IS_LIVE, isLive)
+          .add(IS_CANCELLED, isCancelled)
+          .add(IS_HIDDEN, isHidden)
+          .add(WAS_FORCED, wasForced)
+          .add(ORIGINAL_AMOUNT, originalAmount)
+          .add(REMAINING_AMOUNT, remainingAmount)
+          .add(EXECUTED_AMOUNT, executedAmount)
+          .toString();
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  Transport layer methods
+  // --------------------------------------------------------------------------
+
+  private ExchangeHttpResponse sendPublicRequestToExchange(String apiMethod)
+      throws ExchangeNetworkException, TradingApiException {
+    try {
+      final URL url = new URL(PUBLIC_API_BASE_URL 
