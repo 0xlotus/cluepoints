@@ -896,4 +896,42 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
   private ExchangeHttpResponse sendPublicRequestToExchange(String apiMethod)
       throws ExchangeNetworkException, TradingApiException {
     try {
-      final URL url = new URL(PUBLIC_API_BASE_URL 
+      final URL url = new URL(PUBLIC_API_BASE_URL + apiMethod);
+      return makeNetworkRequest(url, "GET", null, createHeaderParamMap());
+
+    } catch (MalformedURLException e) {
+      final String errorMsg = UNEXPECTED_IO_ERROR_MSG;
+      LOG.error(errorMsg, e);
+      throw new TradingApiException(errorMsg, e);
+    }
+  }
+
+  /*
+   * Makes an authenticated API call to the Bitfinex exchange.
+   *
+   * Bitfinex Example:
+   *
+   * POST https://api.bitfinex.com/v1/order/new
+   *
+   * With JSON payload of:
+   * {
+   *    "request": "/v1/<request-type>
+   *    "nonce": "1234",
+   *    "other-params : "for the request if any..."
+   * }
+   *
+   * To authenticate a request, we must calculate the following:
+   *
+   * payload = request-parameters-dictionary -> JSON encode -> base64
+   * signature = HMAC-SHA384(payload, api-secret) as hexadecimal in lowercase (MUST be lowercase)
+   * send (api-key, payload, signature)
+   *
+   * These are sent as HTTP headers named:
+   *
+   * X-BFX-APIKEY
+   * X-BFX-PAYLOAD
+   * X-BFX-SIGNATURE
+   */
+  private ExchangeHttpResponse sendAuthenticatedRequestToExchange(
+      String apiMethod, Map<String, Object> params)
+      throws ExchangeNetworkException, TradingApiExc
