@@ -934,4 +934,38 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
    */
   private ExchangeHttpResponse sendAuthenticatedRequestToExchange(
       String apiMethod, Map<String, Object> params)
-      throws ExchangeNetworkException, TradingApiExc
+      throws ExchangeNetworkException, TradingApiException {
+
+    if (!initializedMacAuthentication) {
+      final String errorMsg = "MAC Message security layer has not been initialized.";
+      LOG.error(errorMsg);
+      throw new IllegalStateException(errorMsg);
+    }
+
+    try {
+      if (params == null) {
+        // create empty map for non param API calls, e.g. "balances"
+        params = createRequestParamMap();
+      }
+
+      // nonce is required by Bitfinex in every request
+      params.put("nonce", Long.toString(nonce));
+      nonce++; // increment ready for next call.
+
+      // must include the method in request param too
+      params.put("request", "/" + BITFINEX_API_VERSION + "/" + apiMethod);
+
+      // JSON-ify the param dictionary
+      final String paramsInJson = gson.toJson(params);
+
+      // Need to base64 encode payload as per API
+      final String base64payload =
+          DatatypeConverter.printBase64Binary(paramsInJson.getBytes(StandardCharsets.UTF_8));
+
+      // Request headers required by Exchange
+      final Map<String, String> requestHeaders = createHeaderParamMap();
+      requestHeaders.put("X-BFX-APIKEY", key);
+      requestHeaders.put("X-BFX-PAYLOAD", base64payload);
+
+      // Add the signature
+      ma
