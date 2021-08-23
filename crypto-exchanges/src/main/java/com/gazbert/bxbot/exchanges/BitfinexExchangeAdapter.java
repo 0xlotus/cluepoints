@@ -1002,3 +1002,28 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
   /*
    * Initialises the secure messaging layer.
+   * Sets up the MAC to safeguard the data we send to the exchange.
+   * Used to encrypt the hash of the entire message with the private key to ensure message
+   * integrity. We fail hard n fast if any of this stuff blows.
+   */
+  private void initSecureMessageLayer() {
+    try {
+      final SecretKeySpec keyspec =
+          new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA384");
+      mac = Mac.getInstance("HmacSHA384");
+      mac.init(keyspec);
+      initializedMacAuthentication = true;
+    } catch (NoSuchAlgorithmException e) {
+      final String errorMsg = "Failed to setup MAC security. HINT: Is HMAC-SHA384 installed?";
+      LOG.error(errorMsg, e);
+      throw new IllegalStateException(errorMsg, e);
+    } catch (InvalidKeyException e) {
+      final String errorMsg = "Failed to setup MAC security. Secret key seems invalid!";
+      LOG.error(errorMsg, e);
+      throw new IllegalArgumentException(errorMsg, e);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  Config methods
+  // -------------------------------------------------------------------
