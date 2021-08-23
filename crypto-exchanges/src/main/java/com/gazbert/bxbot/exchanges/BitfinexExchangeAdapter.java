@@ -968,4 +968,37 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
       requestHeaders.put("X-BFX-PAYLOAD", base64payload);
 
       // Add the signature
-      ma
+      mac.reset(); // force reset
+      mac.update(base64payload.getBytes(StandardCharsets.UTF_8));
+
+      /*
+       * signature = HMAC-SHA384(payload, api-secret) as hexadecimal - MUST be in LOWERCASE else
+       * signature fails. See:
+       * http://bitcoin.stackexchange.com/questions/25835/bitfinex-api-call-returns-400-bad-request
+       */
+      final String signature = toHex(mac.doFinal()).toLowerCase();
+      requestHeaders.put("X-BFX-SIGNATURE", signature);
+
+      // payload is JSON for this exchange
+      requestHeaders.put("Content-Type", "application/json");
+
+      final URL url = new URL(AUTHENTICATED_API_URL + apiMethod);
+      return makeNetworkRequest(url, "POST", paramsInJson, requestHeaders);
+
+    } catch (MalformedURLException e) {
+      final String errorMsg = UNEXPECTED_IO_ERROR_MSG;
+      LOG.error(errorMsg, e);
+      throw new TradingApiException(errorMsg, e);
+    }
+  }
+
+  private String toHex(byte[] byteArrayToConvert) {
+    final StringBuilder hexString = new StringBuilder();
+    for (final byte aByte : byteArrayToConvert) {
+      hexString.append(String.format("%02x", aByte & 0xff));
+    }
+    return hexString.toString();
+  }
+
+  /*
+   * Initialises the secure messaging layer.
