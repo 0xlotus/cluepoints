@@ -1026,4 +1026,40 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
 
   // --------------------------------------------------------------------------
   //  Config methods
-  // -------------------------------------------------------------------
+  // --------------------------------------------------------------------------
+
+  private void setAuthenticationConfig(ExchangeConfig exchangeConfig) {
+    final AuthenticationConfig authenticationConfig = getAuthenticationConfig(exchangeConfig);
+    key = getAuthenticationConfigItem(authenticationConfig, KEY_PROPERTY_NAME);
+    secret = getAuthenticationConfigItem(authenticationConfig, SECRET_PROPERTY_NAME);
+  }
+
+  // --------------------------------------------------------------------------
+  //  Util methods
+  // --------------------------------------------------------------------------
+
+  private void initGson() {
+    final GsonBuilder gsonBuilder = new GsonBuilder();
+    gson = gsonBuilder.create();
+  }
+
+  /*
+   * Hack for unit-testing map params passed to transport layer.
+   */
+  private Map<String, Object> createRequestParamMap() {
+    return new HashMap<>();
+  }
+
+  /*
+   * Hack for unit-testing header params passed to transport layer.
+   */
+  private Map<String, String> createHeaderParamMap() {
+    return new HashMap<>();
+  }
+
+  /*
+   * Hack for unit-testing transport layer.
+   */
+  private ExchangeHttpResponse makeNetworkRequest(
+      URL url, String httpMethod, String postData, Map<String, String> requestHeaders)
+      throws TradingApiExc
