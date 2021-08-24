@@ -1062,4 +1062,7 @@ public final class BitfinexExchangeAdapter extends AbstractExchangeAdapter
    */
   private ExchangeHttpResponse makeNetworkRequest(
       URL url, String httpMethod, String postData, Map<String, String> requestHeaders)
-      throws TradingApiExc
+      throws TradingApiException, ExchangeNetworkException {
+    return super.sendNetworkRequest(url, httpMethod, postData, requestHeaders);
+  }
+}
