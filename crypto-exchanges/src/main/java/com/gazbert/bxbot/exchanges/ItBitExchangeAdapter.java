@@ -737,3 +737,379 @@ public final class ItBitExchangeAdapter extends AbstractExchangeAdapter implemen
 
     String id;
     String userId;
+    String name;
+    List<ItBitBalance> balances;
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add("id", id)
+          .add(USER_ID_PROPERTY_NAME, userId)
+          .add("name", name)
+          .add("balances", balances)
+          .toString();
+    }
+  }
+
+  /** GSON class for holding itBit wallet balances. */
+  private static class ItBitBalance {
+
+    BigDecimal availableBalance;
+    BigDecimal totalBalance;
+    String currency; // e.g. USD
+
+    @Override
+    public String toString() {
+      return MoreObjects.toStringHelper(this)
+          .add("availableBalance", availableBalance)
+          .add("totalBalance", totalBalance)
+          .add("currency", currency)
+          .toString();
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  Transport layer
+  // --------------------------------------------------------------------------
+
+  private ExchangeHttpResponse sendPublicRequestToExchange(String apiMethod)
+      throws ExchangeNetworkException, TradingApiException {
+    try {
+      final URL url = new URL(PUBLIC_API_BASE_URL + apiMethod);
+      return makeNetworkRequest(url, "GET", null, createHeaderParamMap());
+
+    } catch (MalformedURLException e) {
+      final String errorMsg = UNEXPECTED_IO_ERROR_MSG;
+      LOG.error(errorMsg, e);
+      throw new TradingApiException(errorMsg, e);
+    }
+  }
+
+  /*
+   * Makes an authenticated API call to the itBit exchange.
+   *
+   * Quite complex, but well documented: https://api.itbit.com/docs#faq-2.-how-do-i-sign-a-request
+   */
+  private ExchangeHttpResponse sendAuthenticatedRequestToExchange(
+      String httpMethod, String apiMethod, Map<String, String> params)
+      throws ExchangeNetworkException, TradingApiException {
+
+    if (!initializedMacAuthentication) {
+      final String errorMsg = "MAC Message security layer has not been initialized.";
+      LOG.error(errorMsg);
+      throw new IllegalStateException(errorMsg);
+    }
+
+    try {
+      // Generate new UNIX time in secs
+      final String unixTime = Long.toString(System.currentTimeMillis());
+
+      // increment nonce for use in this call
+      nonce++;
+
+      if (params == null) {
+        // create empty map for non-param API calls
+        params = createRequestParamMap();
+      }
+
+      /*
+       * Construct an array of UTF-8 encoded strings. That array should contain, in order,
+       * the http verb of the request being signed (e.g. “GET”), the full url of the request,
+       * the body of the message being sent, the nonce as a string, and the timestamp as a string.
+       * If the request has no body, an empty string should be used.
+       */
+      final String invocationUrl;
+      String requestBody = "";
+      String requestBodyForSignature = "";
+      final List<String> signatureParamList = new ArrayList<>();
+      signatureParamList.add(httpMethod);
+
+      switch (httpMethod) {
+        case "GET":
+          LOG.debug(() -> "Building secure GET request...");
+
+          // Build (optional) query param string
+          final StringBuilder queryParamBuilder = new StringBuilder();
+          for (final Map.Entry<String, String> param : params.entrySet()) {
+            if (queryParamBuilder.length() > 0) {
+              queryParamBuilder.append("&");
+            }
+            queryParamBuilder.append(param.getKey());
+            queryParamBuilder.append("=");
+            queryParamBuilder.append(param.getValue());
+          }
+
+          final String queryParams = queryParamBuilder.toString();
+          LOG.debug(() -> "Query param string: " + queryParams);
+
+          if (params.isEmpty()) {
+            invocationUrl = AUTHENTICATED_API_URL + apiMethod;
+            signatureParamList.add(invocationUrl);
+          } else {
+            invocationUrl = AUTHENTICATED_API_URL + apiMethod + "?" + queryParams;
+            signatureParamList.add(invocationUrl);
+          }
+
+          signatureParamList.add(
+              requestBodyForSignature); // request body is empty JSON string for a GET
+          break;
+
+        case "POST":
+          LOG.debug(() -> "Building secure POST request...");
+
+          invocationUrl = AUTHENTICATED_API_URL + apiMethod;
+          signatureParamList.add(invocationUrl);
+
+          requestBody = gson.toJson(params);
+          signatureParamList.add(requestBody);
+          break;
+
+        case "DELETE":
+          LOG.debug(() -> "Building secure DELETE request...");
+
+          invocationUrl = AUTHENTICATED_API_URL + apiMethod;
+          signatureParamList.add(invocationUrl);
+          signatureParamList.add(
+              requestBodyForSignature); // request body is empty JSON string for a DELETE
+          break;
+
+        default:
+          throw new IllegalArgumentException(
+              "Don't know how to build secure [" + httpMethod + "] request!");
+      }
+
+      // Add the nonce
+      signatureParamList.add(Long.toString(nonce));
+
+      // Add the UNIX time
+      signatureParamList.add(unixTime);
+
+      /*
+       * Convert that array to JSON, encoded as UTF-8. The resulting JSON should contain no
+       * spaces or other whitespace characters. For example, a valid JSON-encoded array might look
+       * like:
+       * '["GET","https://api.itbit.com/v1/wallets/7e037345-1288-4c39-12fe-d0f99a475a98","","5",
+       * "1405385860202"]'
+       */
+      final String signatureParamsInJson = gson.toJson(signatureParamList);
+      LOG.debug(() -> "Signature params in JSON: " + signatureParamsInJson);
+
+      // Prepend the string version of the nonce to the JSON-encoded array string
+      final String noncePrependedToJson = nonce + signatureParamsInJson;
+
+      // Construct the SHA-256 hash of the noncePrependedToJson. Call this the message hash.
+      final MessageDigest md = MessageDigest.getInstance("SHA-256");
+      md.update(noncePrependedToJson.getBytes(StandardCharsets.UTF_8));
+      final byte[] messageHash = md.digest();
+
+      // Prepend the UTF-8 encoded request URL to the message hash.
+      // Generate the SHA-512 HMAC of the prependRequestUrlToMsgHash using your API secret as the
+      // key.
+      mac.reset(); // force reset
+      mac.update(invocationUrl.getBytes(StandardCharsets.UTF_8));
+      mac.update(messageHash);
+
+      final String signature = DatatypeConverter.printBase64Binary(mac.doFinal());
+
+      // Request headers required by Exchange
+      final Map<String, String> requestHeaders = createHeaderParamMap();
+      requestHeaders.put("Content-Type", "application/json");
+
+      // Add Authorization header
+      // Generate the authorization header by concatenating the client key with a colon separator
+      // (‘:’)
+      // and the signature. The resulting string should look like "clientkey:signature".
+      requestHeaders.put("Authorization", key + ":" + signature);
+
+      requestHeaders.put("X-Auth-Timestamp", unixTime);
+      requestHeaders.put("X-Auth-Nonce", Long.toString(nonce));
+
+      final URL url = new URL(invocationUrl);
+      return makeNetworkRequest(url, httpMethod, requestBody, requestHeaders);
+
+    } catch (MalformedURLException e) {
+      final String errorMsg = UNEXPECTED_IO_ERROR_MSG;
+      LOG.error(errorMsg, e);
+      throw new TradingApiException(errorMsg, e);
+
+    } catch (NoSuchAlgorithmException e) {
+      final String errorMsg = "Failed to create SHA-256 digest when building message signature.";
+      LOG.error(errorMsg, e);
+      throw new TradingApiException(errorMsg, e);
+    }
+  }
+
+  /*
+   * Initialises the secure messaging layer.
+   * Sets up the MAC to safeguard the data we send to the exchange.
+   * Used to encrypt the hash of the entire message with the private key to ensure message
+   * integrity. We fail hard n fast if any of this stuff blows.
+   */
+  private void initSecureMessageLayer() {
+    try {
+      final SecretKeySpec keyspec =
+          new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
+      mac = Mac.getInstance("HmacSHA512");
+      mac.init(keyspec);
+      initializedMacAuthentication = true;
+    } catch (NoSuchAlgorithmException e) {
+      final String errorMsg = "Failed to setup MAC security. HINT: Is HMAC-SHA512 installed?";
+      LOG.error(errorMsg, e);
+      throw new IllegalStateException(errorMsg, e);
+    } catch (InvalidKeyException e) {
+      final String errorMsg = "Failed to setup MAC security. Secret key seems invalid!";
+      LOG.error(errorMsg, e);
+      throw new IllegalArgumentException(errorMsg, e);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  Config methods
+  // --------------------------------------------------------------------------
+
+  private void setAuthenticationConfig(ExchangeConfig exchangeConfig) {
+    final AuthenticationConfig authenticationConfig = getAuthenticationConfig(exchangeConfig);
+    userId = getAuthenticationConfigItem(authenticationConfig, USER_ID_PROPERTY_NAME);
+    key = getAuthenticationConfigItem(authenticationConfig, KEY_PROPERTY_NAME);
+    secret = getAuthenticationConfigItem(authenticationConfig, SECRET_PROPERTY_NAME);
+  }
+
+  private void setOtherConfig(ExchangeConfig exchangeConfig) {
+    final OtherConfig otherConfig = getOtherConfig(exchangeConfig);
+
+    final String buyFeeInConfig = getOtherConfigItem(otherConfig, BUY_FEE_PROPERTY_NAME);
+    buyFeePercentage =
+        new BigDecimal(buyFeeInConfig).divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
+    LOG.info(() -> "Buy fee % in BigDecimal format: " + buyFeePercentage);
+
+    final String sellFeeInConfig = getOtherConfigItem(otherConfig, SELL_FEE_PROPERTY_NAME);
+    sellFeePercentage =
+        new BigDecimal(sellFeeInConfig).divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
+    LOG.info(() -> "Sell fee % in BigDecimal format: " + sellFeePercentage);
+
+    final String keepAliveDuringMaintenanceConfig =
+        getOtherConfigItem(otherConfig, KEEP_ALIVE_DURING_MAINTENANCE_PROPERTY_NAME);
+    if (keepAliveDuringMaintenanceConfig != null && !keepAliveDuringMaintenanceConfig.isEmpty()) {
+      keepAliveDuringMaintenance = Boolean.valueOf(keepAliveDuringMaintenanceConfig);
+      LOG.info(() -> "Keep Alive During Maintenance: " + keepAliveDuringMaintenance);
+    } else {
+      LOG.info(() -> KEEP_ALIVE_DURING_MAINTENANCE_PROPERTY_NAME + " is not set in exchange.yaml");
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  Util methods
+  // --------------------------------------------------------------------------
+
+  private List<OpenOrder> adaptItBitOpenOrders(ItBitYourOrder[] itBitOpenOrders, String marketId)
+      throws TradingApiException {
+
+    final List<OpenOrder> ordersToReturn = new ArrayList<>();
+    for (final ItBitYourOrder itBitOpenOrder : itBitOpenOrders) {
+
+      if (!marketId.equalsIgnoreCase(itBitOpenOrder.instrument)) {
+        continue;
+      }
+
+      OrderType orderType;
+      switch (itBitOpenOrder.side) {
+        case "buy":
+          orderType = OrderType.BUY;
+          break;
+        case "sell":
+          orderType = OrderType.SELL;
+          break;
+        default:
+          throw new TradingApiException(
+              "Unrecognised order type received in getYourOpenOrders(). Value: "
+                  + itBitOpenOrder.side);
+      }
+
+      final OpenOrder order =
+          new OpenOrderImpl(
+              itBitOpenOrder.id,
+              Date.from(
+                  Instant.parse(
+                      itBitOpenOrder.createdTime)), // format: 2015-10-01T18:10:39.3930000Z
+              marketId,
+              orderType,
+              itBitOpenOrder.price,
+              itBitOpenOrder.amount.subtract(
+                  itBitOpenOrder.amountFilled), // remaining - not provided by itBit
+              itBitOpenOrder.amount,
+              itBitOpenOrder.price.multiply(
+                  itBitOpenOrder.amount)); // total - not provided by itBit
+
+      ordersToReturn.add(order);
+    }
+    return ordersToReturn;
+  }
+
+  private BalanceInfoImpl adaptItBitBalanceInfo(ItBitWallet[] itBitWallets) {
+    // assume only 1 trading account wallet being used on exchange
+    final ItBitWallet exchangeWallet = itBitWallets[0];
+
+    /*
+     * If this is the first time to fetch the balance/wallet info, store the wallet UUID for
+     * future calls. The Trading Engine will always call this method first, before any user
+     * Trading Strategies are invoked, so any of the other Trading API methods that rely on the
+     * wallet UUID will be satisfied.
+     */
+    if (walletId == null) {
+      walletId = exchangeWallet.id;
+    }
+
+    // adapt
+    final Map<String, BigDecimal> balancesAvailable = new HashMap<>();
+    final List<ItBitBalance> balances = exchangeWallet.balances;
+    if (balances != null) {
+      for (final ItBitBalance balance : balances) {
+        balancesAvailable.put(balance.currency, balance.availableBalance);
+      }
+    }
+
+    // 2nd arg of BalanceInfo constructor for reserved/on-hold balances is not provided by
+    // exchange.
+    return new BalanceInfoImpl(balancesAvailable, new HashMap<>());
+  }
+
+  private void initGson() {
+    // We need to disable HTML escaping for this adapter else GSON will change = to unicode for
+    // query strings, e.g.
+    // https://api.itbit.com/v1/wallets?userId=56DA621F -->
+    // https://api.itbit.com/v1/wallets?userId\u003d56DA621F
+    final GsonBuilder gsonBuilder = new GsonBuilder().disableHtmlEscaping();
+    gson = gsonBuilder.create();
+  }
+
+  private static boolean isExchangeUndergoingMaintenance(ExchangeHttpResponse response) {
+    if (response != null) {
+      final String payload = response.getPayload();
+      return payload != null && payload.contains(EXCHANGE_UNDERGOING_MAINTENANCE_RESPONSE);
+    }
+    return false;
+  }
+
+  /*
+   * Hack for unit-testing map params passed to transport layer.
+   */
+  private Map<String, String> createRequestParamMap() {
+    return new HashMap<>();
+  }
+
+  /*
+   * Hack for unit-testing header params passed to transport layer.
+   */
+  private Map<String, String> createHeaderParamMap() {
+    return new HashMap<>();
+  }
+
+  /*
+   * Hack for unit-testing transport layer.
+   */
+  private ExchangeHttpResponse makeNetworkRequest(
+      URL url, String httpMethod, String postData, Map<String, String> requestHeaders)
+      throws TradingApiException, ExchangeNetworkException {
+    return super.sendNetworkRequest(url, httpMethod, postData, requestHeaders);
+  }
+}
