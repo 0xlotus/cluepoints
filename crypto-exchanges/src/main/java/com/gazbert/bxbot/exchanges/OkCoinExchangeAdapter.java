@@ -774,3 +774,127 @@ public final class OkCoinExchangeAdapter extends AbstractExchangeAdapter
 
       // Add secret key to Query String
       sortedQueryString += "&secret_key=" + secret;
+
+      final String signature = createMd5HashAndReturnAsUpperCaseString(sortedQueryString);
+      params.put("sign", signature);
+
+      // Build the payload with all the param args in it
+      final StringBuilder payload = new StringBuilder();
+      for (final Map.Entry<String, String> param : params.entrySet()) {
+        if (payload.length() > 0) {
+          payload.append("&");
+        }
+        payload.append(param.getKey());
+        payload.append("=");
+        payload.append(URLEncoder.encode(param.getValue(), StandardCharsets.UTF_8));
+      }
+      LOG.debug(() -> "Using following URL encoded POST payload for API call: " + payload);
+
+      final Map<String, String> requestHeaders = createHeaderParamMap();
+      requestHeaders.put("Content-Type", "application/x-www-form-urlencoded");
+
+      final URL url = new URL(AUTHENTICATED_API_URL + apiMethod);
+      return makeNetworkRequest(url, "POST", payload.toString(), requestHeaders);
+
+    } catch (MalformedURLException e) {
+      final String errorMsg = UNEXPECTED_IO_ERROR_MSG;
+      LOG.error(errorMsg, e);
+      throw new TradingApiException(errorMsg, e);
+    }
+  }
+
+  private String createMd5HashAndReturnAsUpperCaseString(String stringToHash) {
+    final char[] hexDigits = {
+      '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+    };
+    if (stringToHash == null || stringToHash.isEmpty()) {
+      return "";
+    }
+
+    messageDigest.update(stringToHash.getBytes(StandardCharsets.UTF_8));
+    final byte[] md5HashInBytes = messageDigest.digest();
+
+    final StringBuilder md5HashAsUpperCaseString = new StringBuilder();
+    for (final byte md5HashByte : md5HashInBytes) {
+      md5HashAsUpperCaseString
+          .append(hexDigits[(md5HashByte & 0xf0) >> 4])
+          .append(hexDigits[md5HashByte & 0xf]);
+    }
+    return md5HashAsUpperCaseString.toString();
+  }
+
+  /*
+   * Initialises the secure messaging layer.
+   * Sets up the MAC to safeguard the data we send to the exchange.
+   * Used to encrypt the hash of the entire message with the private key to ensure message
+   * integrity. We fail hard n fast if any of this stuff blows.
+   */
+  private void initSecureMessageLayer() {
+    try {
+      messageDigest = MessageDigest.getInstance("MD5");
+      initializedSecureMessagingLayer = true;
+    } catch (NoSuchAlgorithmException e) {
+      final String errorMsg =
+          "Failed to setup MessageDigest for secure message layer. Details: " + e.getMessage();
+      LOG.error(errorMsg, e);
+      throw new IllegalStateException(errorMsg, e);
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  //  Config methods
+  // --------------------------------------------------------------------------
+
+  private void setAuthenticationConfig(ExchangeConfig exchangeConfig) {
+    final AuthenticationConfig authenticationConfig = getAuthenticationConfig(exchangeConfig);
+    key = getAuthenticationConfigItem(authenticationConfig, KEY_PROPERTY_NAME);
+    secret = getAuthenticationConfigItem(authenticationConfig, SECRET_PROPERTY_NAME);
+  }
+
+  private void setOtherConfig(ExchangeConfig exchangeConfig) {
+    final OtherConfig otherConfig = getOtherConfig(exchangeConfig);
+
+    final String buyFeeInConfig = getOtherConfigItem(otherConfig, BUY_FEE_PROPERTY_NAME);
+    buyFeePercentage =
+        new BigDecimal(buyFeeInConfig).divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
+    LOG.info(() -> "Buy fee % in BigDecimal format: " + buyFeePercentage);
+
+    final String sellFeeInConfig = getOtherConfigItem(otherConfig, SELL_FEE_PROPERTY_NAME);
+    sellFeePercentage =
+        new BigDecimal(sellFeeInConfig).divide(new BigDecimal("100"), 8, RoundingMode.HALF_UP);
+    LOG.info(() -> "Sell fee % in BigDecimal format: " + sellFeePercentage);
+  }
+
+  // --------------------------------------------------------------------------
+  //  Util methods
+  // --------------------------------------------------------------------------
+
+  /** Initialises the GSON layer. */
+  private void initGson() {
+    final GsonBuilder gsonBuilder = new GsonBuilder();
+    gson = gsonBuilder.create();
+  }
+
+  /*
+   * Hack for unit-testing map params passed to transport layer.
+   */
+  private Map<String, String> createRequestParamMap() {
+    return new HashMap<>();
+  }
+
+  /*
+   * Hack for unit-testing header params passed to transport layer.
+   */
+  private Map<String, String> createHeaderParamMap() {
+    return new HashMap<>();
+  }
+
+  /*
+   * Hack for unit-testing transport layer.
+   */
+  private ExchangeHttpResponse makeNetworkRequest(
+      URL url, String httpMethod, String postData, Map<String, String> requestHeaders)
+      throws TradingApiException, ExchangeNetworkException {
+    return super.sendNetworkRequest(url, httpMethod, postData, requestHeaders);
+  }
+}
