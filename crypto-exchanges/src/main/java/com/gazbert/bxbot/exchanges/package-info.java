@@ -22,4 +22,7 @@
  *
  * <p>See the project README "How do I write my own Exchange Adapter?" section.
  *
- * @a
+ * @author gazbert
+ * @since 1.0
+ */
+package com.gazbert.crypto.exchanges;
