@@ -1165,3 +1165,167 @@ public class TestBitfinexExchangeAdapter extends AbstractExchangeAdapterTest {
     expect(requestParamMap.put("type", "exchange limit")).andStubReturn(null);
     expect(requestParamMap.put(eq("nonce"), anyString())).andStubReturn(null);
     expect(requestParamMap.put("request", "/v1/order/new")).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("X-BFX-APIKEY", KEY)).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("X-BFX-PAYLOAD"), anyString())).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("X-BFX-SIGNATURE"), anyString())).andStubReturn(null);
+    expect(requestHeaderMap.put("Content-Type", "application/json")).andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final BitfinexExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            BitfinexExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + ORDER_NEW);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            eq(new GsonBuilder().create().toJson(requestParamMap)),
+            eq(requestHeaderMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final String orderId =
+        exchangeAdapter.createOrder(
+            MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+    assertEquals("425116929", orderId);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeHandlesExchangeNetworkException()
+      throws Exception {
+    final Map<String, Object> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "amount",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(requestParamMap.put("exchange", "bitfinex")).andStubReturn(null);
+    expect(requestParamMap.put("side", "sell")).andStubReturn(null);
+    expect(requestParamMap.put("type", "exchange limit")).andStubReturn(null);
+    expect(requestParamMap.put(eq("nonce"), anyString())).andStubReturn(null);
+    expect(requestParamMap.put("request", "/v1/order/new")).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("X-BFX-APIKEY", KEY)).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("X-BFX-PAYLOAD"), anyString())).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("X-BFX-SIGNATURE"), anyString())).andStubReturn(null);
+    expect(requestHeaderMap.put("Content-Type", "application/json")).andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final BitfinexExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            BitfinexExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + ORDER_NEW);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andThrow(new ExchangeNetworkException("The road goes ever on and on..."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeHandlesTradingApiException()
+      throws Exception {
+    final Map<String, Object> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "amount",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(requestParamMap.put("exchange", "bitfinex")).andStubReturn(null);
+    expect(requestParamMap.put("side", "sell")).andStubReturn(null);
+    expect(requestParamMap.put("type", "exchange limit")).andStubReturn(null);
+    expect(requestParamMap.put(eq("nonce"), anyString())).andStubReturn(null);
+    expect(requestParamMap.put("request", "/v1/order/new")).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("X-BFX-APIKEY", KEY)).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("X-BFX-PAYLOAD"), anyString())).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("X-BFX-SIGNATURE"), anyString())).andStubReturn(null);
+    expect(requestHeaderMap.put("Content-Type", "application/json")).andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final BitfinexExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            BitfinexExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + ORDER_NEW);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andThrow(
+            new TradingApiException(
+                "Do you wish me a good morning, or mean that it is a good morning whether I want "
+                    + "it or not; or that you feel good this morning; or that it is a morning to "
+                    + "be good on?"));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+
+    PowerMock.verifyAll();
+  }
+}
