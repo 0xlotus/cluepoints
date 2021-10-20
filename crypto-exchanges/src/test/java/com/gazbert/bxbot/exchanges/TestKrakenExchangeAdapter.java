@@ -880,3 +880,555 @@ public class TestKrakenExchangeAdapter extends AbstractExchangeAdapterTest {
 
     PowerMock.replayAll();
     exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  public void testGettingLatestMarketPriceHandlesExchangeNetworkException() throws Exception {
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(
+            new ExchangeNetworkException(
+                "As long as you can still grab a breath, you fight. You breathe. "
+                    + "Keep breathing. When there is a storm and you stand in front of a tree, "
+                    + "if you look at its branches, you swear it will fall. But if you watch the "
+                    + "trunk, you will see its stability."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingLatestMarketPriceHandlesUnexpectedException() throws Exception {
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(
+            new IllegalArgumentException(
+                "Yes, you have information. You can find out all about a man, "
+                    + "track him down, keep an eye on him. But you have to look him in the eye. "
+                    + "All the tech you have can't help you with that. A license to kill also "
+                    + "means a license NOT to kill."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Get Latest Market Price tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testGettingTickerSuccessfully() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TICKER_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID);
+    assertEquals(0, ticker.getLast().compareTo(new BigDecimal("657.99900")));
+    assertEquals(0, ticker.getAsk().compareTo(new BigDecimal("657.99900")));
+    assertEquals(0, ticker.getBid().compareTo(new BigDecimal("655.20100")));
+    assertEquals(0, ticker.getHigh().compareTo(new BigDecimal("659.13000")));
+    assertEquals(0, ticker.getLow().compareTo(new BigDecimal("642.50000")));
+    assertEquals(0, ticker.getOpen().compareTo(new BigDecimal("651.73600")));
+    assertEquals(0, ticker.getVolume().compareTo(new BigDecimal("1152.99666422")));
+    assertEquals(0, ticker.getVwap().compareTo(new BigDecimal("652.64807")));
+    assertNull(ticker.getTimestamp()); // timestamp not supplied by Kraken
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingTickerHandlesExchangeErrorResponse() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TICKER_ERROR_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getTicker(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  public void testGettingTickerHandlesExchangeNetworkException() throws Exception {
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(new ExchangeNetworkException("KHAAANNN!"));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getTicker(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingTickerHandlesUnexpectedException() throws Exception {
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(new IllegalArgumentException("Resistance is futile."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getTicker(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Non Exchange visiting tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void testGettingImplNameIsAsExpected() {
+    PowerMock.replayAll();
+    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    assertEquals("Kraken API v1", exchangeAdapter.getImplName());
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void testGettingExchangeSellingFeeIsAsExpected() throws Exception {
+    PowerMock.replayAll();
+
+    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal sellPercentageFee =
+        exchangeAdapter.getPercentageOfSellOrderTakenForExchangeFee(MARKET_ID);
+    assertEquals(0, sellPercentageFee.compareTo(new BigDecimal("0.002")));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void testGettingExchangeBuyingFeeIsAsExpected() throws Exception {
+    PowerMock.replayAll();
+
+    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal buyPercentageFee =
+        exchangeAdapter.getPercentageOfBuyOrderTakenForExchangeFee(MARKET_ID);
+    assertEquals(0, buyPercentageFee.compareTo(new BigDecimal("0.001")));
+
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Initialisation tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void testExchangeAdapterInitialisesSuccessfully() {
+    PowerMock.replayAll();
+    final ExchangeAdapter exchangeAdapter = new KrakenExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    assertNotNull(exchangeAdapter);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfPublicKeyConfigIsMissing() {
+    PowerMock.reset(authenticationConfig);
+    expect(authenticationConfig.getItem("key")).andReturn(null);
+    expect(authenticationConfig.getItem("secret")).andReturn("your_client_secret");
+    PowerMock.replayAll();
+
+    new KrakenExchangeAdapter().init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfSecretConfigIsMissing() {
+    PowerMock.reset(authenticationConfig);
+    expect(authenticationConfig.getItem("key")).andReturn("your_client_key");
+    expect(authenticationConfig.getItem("secret")).andReturn(null);
+    PowerMock.replayAll();
+
+    new KrakenExchangeAdapter().init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfTimeoutConfigIsMissing() {
+    PowerMock.reset(networkConfig);
+    expect(networkConfig.getConnectionTimeout()).andReturn(0);
+    PowerMock.replayAll();
+
+    new KrakenExchangeAdapter().init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Request sending tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSendingPublicRequestToExchangeSuccessfully() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TICKER_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(PUBLIC_API_BASE_URL + TICKER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("GET"),
+            eq(null),
+            eq(new HashMap<>()))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal lastMarketPrice = exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    assertEquals(0, lastMarketPrice.compareTo(new BigDecimal("657.99900")));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingPublicRequestToExchangeHandlesExchangeNetworkException() throws Exception {
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(PUBLIC_API_BASE_URL + TICKER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("GET"),
+            eq(null),
+            eq(new HashMap<>()))
+        .andThrow(
+            new ExchangeNetworkException(
+                "And from his own flesh Hades gave birth to an"
+                    + " unspeakable horror... the Kraken."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingPublicRequestToExchangeHandlesTradingApiException() throws Exception {
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(PUBLIC_API_BASE_URL + TICKER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("GET"),
+            eq(null),
+            eq(new HashMap<>()))
+        .andThrow(
+            new TradingApiException(
+                "In 10 days, when the sun is eclipsed, I will unleash the Kraken. "
+                    + "Argos will be swept from the earth and all of you with it. Unless you "
+                    + "sacrifice the princess you so foolish compare to the gods. Only her blood "
+                    + "will sate the Kraken and Zeus, who you have so offended. Choose your "
+                    + "penance, Argos. Destruction of sacrifice."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeSuccessfully() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(ADD_ORDER_SELL_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, Object> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+    expect(requestParamMap.put("type", "sell")).andStubReturn(null);
+    expect(requestParamMap.put("ordertype", "limit")).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "volume",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(requestParamMap.put(eq("nonce"), anyString())).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Content-Type", "application/x-www-form-urlencoded"))
+        .andStubReturn(null);
+    expect(requestHeaderMap.put(eq("API-Key"), eq(KEY))).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("API-Sign"), anyString())).andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + ADD_ORDER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final String orderId =
+        exchangeAdapter.createOrder(
+            MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+    assertEquals("OLD2Z4-L4C7H-MKH5BW", orderId);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeHandlesExchangeNetworkException()
+      throws Exception {
+    final Map<String, Object> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+    expect(requestParamMap.put("type", "sell")).andStubReturn(null);
+    expect(requestParamMap.put("ordertype", "limit")).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "volume",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(requestParamMap.put(eq("nonce"), anyString())).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Content-Type", "application/x-www-form-urlencoded"))
+        .andStubReturn(null);
+    expect(requestHeaderMap.put(eq("API-Key"), eq(KEY))).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("API-Sign"), anyString())).andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + ADD_ORDER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andThrow(new ExchangeNetworkException("How may a mortal man face and defeat the Kraken?"));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeHandlesTradingApiException()
+      throws Exception {
+    final Map<String, Object> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("pair", MARKET_ID)).andStubReturn(null);
+    expect(requestParamMap.put("type", "sell")).andStubReturn(null);
+    expect(requestParamMap.put("ordertype", "limit")).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "volume",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(requestParamMap.put(eq("nonce"), anyString())).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Content-Type", "application/x-www-form-urlencoded"))
+        .andStubReturn(null);
+    expect(requestHeaderMap.put(eq("API-Key"), eq(KEY))).andStubReturn(null);
+    expect(requestHeaderMap.put(eq("API-Sign"), anyString())).andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final KrakenExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            KrakenExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + ADD_ORDER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andThrow(
+            new TradingApiException(
+                "Below the thunders of the upper deep;\n"
+                    + "Far far beneath in the abysmal sea,\n"
+                    + "His ancient, dreamless, uninvaded sleep\n"
+                    + "The Kraken sleepeth: faintest sunlights flee\n"
+                    + "About his shadowy sides; above him swell..."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+
+    PowerMock.verifyAll();
+  }
+}
