@@ -36,4 +36,35 @@ import static org.junit.Assert.assertTrue;
 
 import com.gazbert.crypto.exchange.api.AuthenticationConfig;
 import com.gazbert.crypto.exchange.api.ExchangeConfig;
-import com.
+import com.gazbert.crypto.exchange.api.NetworkConfig;
+import com.gazbert.crypto.exchange.api.OtherConfig;
+import com.gazbert.crypto.trading.api.BalanceInfo;
+import com.gazbert.crypto.trading.api.ExchangeNetworkException;
+import com.gazbert.crypto.trading.api.MarketOrderBook;
+import com.gazbert.crypto.trading.api.OpenOrder;
+import com.gazbert.crypto.trading.api.OrderType;
+import com.gazbert.crypto.trading.api.Ticker;
+import com.gazbert.crypto.trading.api.TradingApiException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+/**
+ * Tests the behaviour of the OKCoin Exchange Adapter.
+ *
+ * <p>DO NOT USE: See https://github.com/gazbert/crypto/issue
