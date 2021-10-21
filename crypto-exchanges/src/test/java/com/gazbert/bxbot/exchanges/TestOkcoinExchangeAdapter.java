@@ -67,4 +67,32 @@ import org.powermock.modules.junit4.PowerMockRunner;
 /**
  * Tests the behaviour of the OKCoin Exchange Adapter.
  *
- * <p>DO NOT USE: See https://github.com/gazbert/crypto/issue
+ * <p>DO NOT USE: See https://github.com/gazbert/crypto/issues/122
+ *
+ * @author gazbert
+ * @deprecated #120 : The OKCoin V1 API is now deprecated and no longer works - adapter needs
+ *     updating to use V3 API.
+ */
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore({
+    "javax.crypto.*",
+    "javax.management.*",
+    "com.sun.org.apache.xerces.*",
+    "javax.xml.parsers.*",
+    "org.xml.sax.*",
+    "org.w3c.dom.*"
+})
+@PrepareForTest(OkCoinExchangeAdapter.class)
+@Deprecated(forRemoval = true)
+public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
+
+  private static final String DEPTH_JSON_RESPONSE = "./src/test/exchange-data/okcoin/depth.json";
+  private static final String USERINFO_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/userinfo.json";
+  private static final String USERINFO_ERROR_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/userinfo-error.json";
+  private static final String TICKER_JSON_RESPONSE = "./src/test/exchange-data/okcoin/ticker.json";
+  private static final String ORDER_INFO_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/order_info.json";
+  private static final String ORDER_INFO_ERROR_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/order
