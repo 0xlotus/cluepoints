@@ -95,4 +95,26 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
   private static final String ORDER_INFO_JSON_RESPONSE =
       "./src/test/exchange-data/okcoin/order_info.json";
   private static final String ORDER_INFO_ERROR_JSON_RESPONSE =
-      "./src/test/exchange-data/okcoin/order
+      "./src/test/exchange-data/okcoin/order_info-error.json";
+  private static final String TRADE_BUY_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/trade_buy.json";
+  private static final String TRADE_SELL_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/trade_sell.json";
+  private static final String TRADE_ERROR_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/trade-error.json";
+  private static final String CANCEL_ORDER_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/cancel_order.json";
+  private static final String CANCEL_ORDER_ERROR_JSON_RESPONSE =
+      "./src/test/exchange-data/okcoin/cancel_order-error.json";
+
+  private static final String DEPTH = "depth.do";
+  private static final String ORDER_INFO = "order_info.do";
+  private static final String USERINFO = "userinfo.do";
+  private static final String TICKER = "ticker.do";
+  private static final String TRADE = "trade.do";
+  private static final String CANCEL_ORDER = "cancel_order.do";
+
+  private static final String MARKET_ID = "btc_usd";
+  private static final BigDecimal BUY_ORDER_PRICE = new BigDecimal("200.18");
+  private static final BigDecimal BUY_ORDER_QUANTITY = new BigDecimal("0.01");
+  private sta
