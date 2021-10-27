@@ -117,4 +117,26 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
   private static final String MARKET_ID = "btc_usd";
   private static final BigDecimal BUY_ORDER_PRICE = new BigDecimal("200.18");
   private static final BigDecimal BUY_ORDER_QUANTITY = new BigDecimal("0.01");
-  private sta
+  private static final BigDecimal SELL_ORDER_PRICE = new BigDecimal("300.176");
+  private static final BigDecimal SELL_ORDER_QUANTITY = new BigDecimal("0.01");
+  private static final String ORDER_ID_TO_CANCEL = "99671870";
+
+  private static final String MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD = "createRequestParamMap";
+  private static final String MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD =
+      "sendAuthenticatedRequestToExchange";
+  private static final String MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD =
+      "sendPublicRequestToExchange";
+  private static final String MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD = "createHeaderParamMap";
+  private static final String MOCKED_MAKE_NETWORK_REQUEST_METHOD = "makeNetworkRequest";
+
+  private static final String KEY = "key123";
+  private static final String SECRET = "notGonnaTellYa";
+  private static final List<Integer> nonFatalNetworkErrorCodes = Arrays.asList(502, 503, 504);
+  private static final List<String> nonFatalNetworkErrorMessages =
+      Arrays.asList(
+          "Connection refused",
+          "Connection reset",
+          "Remote host closed connection during handshake");
+
+  private static final String OKCOIN_API_VERSION = "v1";
+  private static fi
