@@ -139,4 +139,29 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
           "Remote host closed connection during handshake");
 
   private static final String OKCOIN_API_VERSION = "v1";
-  private static fi
+  private static final String PUBLIC_API_BASE_URL =
+      "https://www.okcoin.com/api/" + OKCOIN_API_VERSION + "/";
+  private static final String AUTHENTICATED_API_URL = PUBLIC_API_BASE_URL;
+
+  private ExchangeConfig exchangeConfig;
+  private AuthenticationConfig authenticationConfig;
+  private NetworkConfig networkConfig;
+  private OtherConfig otherConfig;
+
+  /** Create some exchange config - the TradingEngine would normally do this. */
+  @Before
+  public void setupForEachTest() {
+    authenticationConfig = PowerMock.createMock(AuthenticationConfig.class);
+    expect(authenticationConfig.getItem("key")).andReturn(KEY);
+    expect(authenticationConfig.getItem("secret")).andReturn(SECRET);
+
+    networkConfig = PowerMock.createMock(NetworkConfig.class);
+    expect(networkConfig.getConnectionTimeout()).andReturn(30);
+    expect(networkConfig.getNonFatalErrorCodes()).andReturn(nonFatalNetworkErrorCodes);
+    expect(networkConfig.getNonFatalErrorMessages()).andReturn(nonFatalNetworkErrorMessages);
+
+    otherConfig = PowerMock.createMock(OtherConfig.class);
+    expect(otherConfig.getItem("buy-fee")).andReturn("0.2");
+    expect(otherConfig.getItem("sell-fee")).andReturn("0.2");
+
+    exchangeConfig = PowerMock.createMock(Exch
