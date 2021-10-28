@@ -164,4 +164,26 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     expect(otherConfig.getItem("buy-fee")).andReturn("0.2");
     expect(otherConfig.getItem("sell-fee")).andReturn("0.2");
 
-    exchangeConfig = PowerMock.createMock(Exch
+    exchangeConfig = PowerMock.createMock(ExchangeConfig.class);
+    expect(exchangeConfig.getAuthenticationConfig()).andReturn(authenticationConfig);
+    expect(exchangeConfig.getNetworkConfig()).andReturn(networkConfig);
+    expect(exchangeConfig.getOtherConfig()).andReturn(otherConfig);
+  }
+
+  // --------------------------------------------------------------------------
+  //  Cancel Order tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCancelOrderIsSuccessful() throws Exception {
+    // Load the canned response from the exchange
+    final byte[] encoded = Files.readAllBytes(Paths.get(CANCEL_ORDER_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    // Mock out param map so we can assert the contents passed to the transport layer are what we
+    // expect.
+    final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
+    expect(requestParamMap.put(
