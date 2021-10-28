@@ -186,4 +186,34 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     // Mock out param map so we can assert the contents passed to the transport layer are what we
     // expect.
     final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
-    expect(requestParamMap.put(
+    expect(requestParamMap.put("order_id", ORDER_ID_TO_CANCEL)).andStubReturn(null);
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+
+    // Partial mock so we do not send stuff down the wire
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(CANCEL_ORDER),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final boolean success = exchangeAdapter.cancelOrder(ORDER_ID_TO_CANCEL, MARKET_ID);
+    assertTrue(success);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void testCancelOrderExchangeErrorResponse() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(CANCEL_ORDER_ERROR_JSON_RESPONSE))
