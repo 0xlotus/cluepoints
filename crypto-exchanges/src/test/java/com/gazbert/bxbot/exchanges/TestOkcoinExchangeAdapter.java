@@ -243,4 +243,33 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     final OkCoinExchangeAdapter exchangeAdapter =
         PowerMock.createPartialMockAndInvokeDefaultConstructor(
             OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
-    PowerMoc
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(CANCEL_ORDER),
+            anyObject(Map.class))
+        .andThrow(
+            new ExchangeNetworkException(
+                "I’ve thought of an ending for my book – “And he lived happily "
+                    + "ever after… to the end of his days."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.cancelOrder(ORDER_ID_TO_CANCEL, MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testCancelOrderHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(CANCEL_ORDER),
+            anyObject(Map.class))
+        .andThrow(
+            new IllegalStateException(
+                "A Balrog. A demon of the ancient w
