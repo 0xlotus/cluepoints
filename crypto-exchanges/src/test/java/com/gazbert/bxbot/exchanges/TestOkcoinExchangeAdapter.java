@@ -272,4 +272,34 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             anyObject(Map.class))
         .andThrow(
             new IllegalStateException(
-                "A Balrog. A demon of the ancient w
+                "A Balrog. A demon of the ancient world. This foe is beyond any of"
+                    + " you. Run!"));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.cancelOrder(ORDER_ID_TO_CANCEL, MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Create Orders tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCreateOrderToBuyIsSuccessful() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TRADE_BUY_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "amount",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(BUY_ORDER_QUANTITY)))
+        .andStubReturn(null);
+   
