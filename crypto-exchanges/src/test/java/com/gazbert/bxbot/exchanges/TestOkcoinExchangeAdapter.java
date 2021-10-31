@@ -302,4 +302,38 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
                 new DecimalFormat("#.########", getDecimalFormatSymbols())
                     .format(BUY_ORDER_QUANTITY)))
         .andStubReturn(null);
-   
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols()).format(BUY_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(requestParamMap.put("type", "buy")).andStubReturn(null);
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TRADE),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final String orderId =
+        exchangeAdapter.createOrder(MARKET_ID, OrderType.BUY, BUY_ORDER_QUANTITY, BUY_ORDER_PRICE);
+    assertEquals("99646259", orderId);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testCreateOrd
