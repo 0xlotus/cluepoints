@@ -336,4 +336,29 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
 
   @Test
   @SuppressWarnings("unchecked")
-  public void testCreateOrd
+  public void testCreateOrderToSellIsSuccessful() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TRADE_SELL_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "amount",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(requestParamMap.put("type", "sell")).andStubReturn(null);
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_SEND_AUTHE
