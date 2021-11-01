@@ -361,4 +361,34 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     final OkCoinExchangeAdapter exchangeAdapter =
         PowerMock.createPartialMockAndInvokeDefaultConstructor(
             OkCoinExchangeAdapter.class,
-            MOCKED_SEND_AUTHE
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TRADE),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final String orderId =
+        exchangeAdapter.createOrder(
+            MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+    assertEquals("99646257", orderId);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testCreateOrderExchangeErrorResponse() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TRADE_ERROR_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final
