@@ -420,4 +420,27 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             anyObject(Map.class))
         .andThrow(
             new ExchangeNetworkException(
-         
+                "It’s like in the great stories, Mr. Frodo, the ones that really mattered. "
+                    + "Full of darkness and danger, they were... Those were the stories "
+                    + "that stayed with you, that meant something, even if you were too small to "
+                    + "understand why. But I think, Mr. Frodo, I do understand... There’s some "
+                    + "good in this world, Mr. Frodo, and it’s worth fighting for."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testCreateOrderHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TRADE),
+            anyObject(Map.class))
+  
