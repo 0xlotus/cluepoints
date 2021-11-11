@@ -466,4 +466,32 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
   @SuppressWarnings("unchecked")
   public void testGettingYourOpenOrdersSuccessfully() throws Exception {
     final byte[] encoded = Files.readAllBytes(Paths.get(ORDER_INFO_JSON_RESPONSE));
-    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeRes
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
+    expect(requestParamMap.put("order_id", "-1")).andStubReturn(null);
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(ORDER_INFO),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final List<OpenOrder> openOrders = exchangeAdapter.getYourOpenOrders(MARKET_ID);
+
+    // assert some key stuff;
