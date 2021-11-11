@@ -443,4 +443,27 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
             eq(TRADE),
             anyObject(Map.class))
-  
+        .andThrow(
+            new IllegalArgumentException(
+                "We needs it. Must have the precious. They stole it from us. "
+                    + "Sneaky little hobbitses, wicked, tricksy, false. No, not master... "
+                    + "Master’s my friend. You don’t have any friends. Nobody likes you. "
+                    + "Not listening. I’m not listening. You’re a liar. And a thief. Murderer. "
+                    + "Go away... I hate you... Leave now and never come back."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.BUY, BUY_ORDER_QUANTITY, BUY_ORDER_PRICE);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Get Your Open Orders tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testGettingYourOpenOrdersSuccessfully() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(ORDER_INFO_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeRes
