@@ -494,4 +494,29 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
 
     final List<OpenOrder> openOrders = exchangeAdapter.getYourOpenOrders(MARKET_ID);
 
-    // assert some key stuff;
+    // assert some key stuff; we're not testing GSON here.
+    assertEquals(2, openOrders.size());
+    assertEquals(MARKET_ID, openOrders.get(0).getMarketId());
+    assertEquals("99031951", openOrders.get(0).getId());
+    assertSame(OrderType.SELL, openOrders.get(0).getType());
+    assertEquals(1442949893000L, openOrders.get(0).getCreationDate().getTime());
+    assertEquals(0, openOrders.get(0).getPrice().compareTo(new BigDecimal("255")));
+    assertEquals(0, openOrders.get(0).getQuantity().compareTo(new BigDecimal("0.015")));
+    assertEquals(
+        0,
+        openOrders
+            .get(0)
+            .getTotal()
+            .compareTo(openOrders.get(0).getPrice().multiply(openOrders.get(0).getQuantity())));
+
+    // the values below are not provided by OKCoin
+    assertNull(openOrders.get(0).getOriginalQuantity());
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingYourOpenOrdersExchangeErrorResponse() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(ORDER_INFO_ERROR_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new Abstra
