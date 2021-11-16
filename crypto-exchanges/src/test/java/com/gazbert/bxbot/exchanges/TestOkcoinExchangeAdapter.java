@@ -548,4 +548,35 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             exchangeAdapter,
             MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
             eq(ORDER_INFO),
-            anyObject(Map.class
+            anyObject(Map.class))
+        .andThrow(
+            new ExchangeNetworkException(
+                "If more of us valued food and cheer and"
+                    + " song above hoarded gold, it would be a merrier world."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getYourOpenOrders(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingYourOpenOrdersHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(ORDER_INFO),
+            anyObject(Map.class))
+        .andThrow(
+            new IllegalStateException(
+                "The Road goes ever on and on\n"
+                    + "Down from the door where it began.\n"
+                    + "Now far ahead the Road has gone,\n"
+                    + "And I must follow, if I can"));
+
+    PowerMock.replayAll();
+    excha
