@@ -579,4 +579,32 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
                     + "And I must follow, if I can"));
 
     PowerMock.replayAll();
-    excha
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getYourOpenOrders(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Get Market Orders tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testGettingMarketOrders() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(DEPTH_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createMock(Map.class);
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andRet
