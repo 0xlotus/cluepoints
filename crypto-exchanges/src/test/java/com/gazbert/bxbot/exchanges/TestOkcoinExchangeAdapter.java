@@ -607,4 +607,31 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
 
     PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
-        .andRet
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(DEPTH),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final MarketOrderBook marketOrderBook = exchangeAdapter.getMarketOrders(MARKET_ID);
+
+    // assert some key stuff; we're not testing GSON here.
+    assertEquals(MARKET_ID, marketOrderBook.getMarketId());
+
+    final BigDecimal buyPrice = new BigDecimal("228.3");
+    final BigDecimal buyQuantity = new BigDecimal("52.995");
+    final BigDecimal buyTotal = buyPrice.multiply(buyQuantity);
+
+    assertEquals(200, marketOrderBook.getBuyOrders().size());
+    assertSame(OrderType.BUY, marketOrderBook.getBuyOrders().get(0).getType());
+    assertEquals(0, marketOrderBook.getBuyOrders().get(0).getPrice().compareTo(buyPrice));
+    assertEquals(0, marketOrderBook.getBuyOrders().get(0).getQuantity().compareTo(buyQuantity));
+    assertEquals(0, marketOrderBook.getBuyOrders().get(0).getTotal().compareTo(buyTotal));
+
+    final BigDecimal sellPrice = new BigDecimal("228.36");
+    final BigDecimal sellQuant
