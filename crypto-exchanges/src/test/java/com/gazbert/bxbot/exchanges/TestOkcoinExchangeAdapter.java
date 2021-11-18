@@ -634,4 +634,28 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     assertEquals(0, marketOrderBook.getBuyOrders().get(0).getTotal().compareTo(buyTotal));
 
     final BigDecimal sellPrice = new BigDecimal("228.36");
-    final BigDecimal sellQuant
+    final BigDecimal sellQuantity = new BigDecimal("0.01");
+    final BigDecimal sellTotal = sellPrice.multiply(sellQuantity);
+
+    assertEquals(200, marketOrderBook.getSellOrders().size());
+    assertSame(OrderType.SELL, marketOrderBook.getSellOrders().get(0).getType());
+    assertEquals(0, marketOrderBook.getSellOrders().get(0).getPrice().compareTo(sellPrice));
+    assertEquals(0, marketOrderBook.getSellOrders().get(0).getQuantity().compareTo(sellQuantity));
+    assertEquals(0, marketOrderBook.getSellOrders().get(0).getTotal().compareTo(sellTotal));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  public void testGettingMarketOrdersHandlesExchangeNetworkException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(DEPTH),
+            anyObject(Map.class))
+        .andThrow(
+            new ExchangeNetworkException(
+                "Al
