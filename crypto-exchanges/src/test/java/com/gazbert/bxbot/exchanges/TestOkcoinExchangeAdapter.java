@@ -658,4 +658,35 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             anyObject(Map.class))
         .andThrow(
             new ExchangeNetworkException(
-                "Al
+                "All we have to decide is what to do with the time that is given" + " to us."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getMarketOrders(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingMarketOrdersHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(DEPTH),
+            anyObject(Map.class))
+        .andThrow(
+            new IllegalArgumentException(
+                "The board is set, the pieces are moving. We come to it at last, "
+                    + "the great battle of our time."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getMarketOrders(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // -----------------------------------------------------------------------
