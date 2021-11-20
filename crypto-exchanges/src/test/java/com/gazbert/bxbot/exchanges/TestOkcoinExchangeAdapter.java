@@ -747,4 +747,29 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     exchangeAdapter.init(exchangeConfig);
 
     exchangeAdapter.getLatestMarketPrice(MARKET_ID);
-    Power
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingLatestMarketPriceHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(
+            new IllegalArgumentException(
+                "What has happened before will happen again. What has been done "
+                    + "before will be done again. There is nothing new in the whole world. "
+                    + "\"Look,\" they say, \"here is something new!\" But no, it has all happened "
+                    + "before, long before we were born. No one remembers what has happened in the "
+                    + "past, and no one in days to come will remember what happens between now "
+                    + "and then."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMark
