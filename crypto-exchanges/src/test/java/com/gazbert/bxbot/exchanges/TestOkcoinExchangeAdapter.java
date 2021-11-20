@@ -715,4 +715,36 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     PowerMock.expectPrivate(
             exchangeAdapter,
             MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
-            eq(TICK
+            eq(TICKER),
+            eq(requestParamMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal latestMarketPrice =
+        exchangeAdapter.getLatestMarketPrice(MARKET_ID).setScale(8, RoundingMode.HALF_UP);
+    assertEquals(0, latestMarketPrice.compareTo(new BigDecimal("231.35")));
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  public void testGettingLatestMarketPriceHandlesExchangeNetworkException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(
+            new ExchangeNetworkException(
+                "I would rather share one lifetime with you than face all the"
+                    + " Ages of this world alone."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    Power
