@@ -772,4 +772,33 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     PowerMock.replayAll();
     exchangeAdapter.init(exchangeConfig);
 
-    exchangeAdapter.getLatestMark
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Get Balance Info tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void testGettingBalanceInfoSuccessfully() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(USERINFO_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(USERINFO),
+            eq(null))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BalanceInfo balanceInfo =
