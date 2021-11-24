@@ -826,4 +826,35 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
         PowerMock.createPartialMockAndInvokeDefaultConstructor(
             OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
     PowerMock.expectPrivate(
-        
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(USERINFO),
+            anyObject(Map.class))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getBalanceInfo();
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  public void testGettingBalanceInfoHandlesExchangeNetworkException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(USERINFO),
+            eq(null))
+        .andThrow(
+            new ExchangeNetworkException(
+                "There is only one Lord of the Ring, only one who can"
+                    + " bend it to his will. And he does not share power."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapt
