@@ -801,4 +801,29 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     PowerMock.replayAll();
     exchangeAdapter.init(exchangeConfig);
 
-    final BalanceInfo balanceInfo =
+    final BalanceInfo balanceInfo = exchangeAdapter.getBalanceInfo();
+
+    // assert some key stuff; we're not testing GSON here.
+    assertEquals(
+        0, balanceInfo.getBalancesAvailable().get("BTC").compareTo(new BigDecimal("0.06")));
+    assertEquals(
+        0, balanceInfo.getBalancesAvailable().get("USD").compareTo(new BigDecimal("0.0608")));
+
+    assertEquals(0, balanceInfo.getBalancesOnHold().get("BTC").compareTo(new BigDecimal("0.03")));
+    assertEquals(0, balanceInfo.getBalancesOnHold().get("USD").compareTo(new BigDecimal("2.25")));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingBalanceInfoExchangeErrorResponse() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(USERINFO_ERROR_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+        
