@@ -857,4 +857,32 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     PowerMock.replayAll();
     exchangeAdapter.init(exchangeConfig);
 
-    exchangeAdapt
+    exchangeAdapter.getBalanceInfo();
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingBalanceInfoHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_AUTHENTICATED_REQUEST_TO_EXCHANGE_METHOD,
+            eq(USERINFO),
+            eq(null))
+        .andThrow(
+            new IllegalStateException(
+                "It's a dangerous business, Frodo, going out your door. You step onto the road, "
+                    + "and if you don't keep your feet, there's no knowing where you might be "
+                    + "swept off to."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getBalanceInfo();
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Get Ticker 
