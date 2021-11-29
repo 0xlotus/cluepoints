@@ -912,4 +912,28 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
             eq(TICKER),
             eq(requestParamMap))
-        .andRetu
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final Ticker ticker = exchangeAdapter.getTicker(MARKET_ID);
+    assertEquals(0, ticker.getLast().compareTo(new BigDecimal("231.35")));
+    assertEquals(0, ticker.getAsk().compareTo(new BigDecimal("231.4")));
+    assertEquals(0, ticker.getBid().compareTo(new BigDecimal("231.32")));
+    assertEquals(0, ticker.getHigh().compareTo(new BigDecimal("233.6")));
+    assertEquals(0, ticker.getLow().compareTo(new BigDecimal("231.01")));
+    assertNull(ticker.getOpen()); // open not supplied by OKCoin
+    assertEquals(0, ticker.getVolume().compareTo(new BigDecimal("5465.046")));
+    assertNull(ticker.getVwap()); // vwap not supplied by OKCoin
+    assertEquals(1442673698L, (long) ticker.getTimestamp());
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  public void testGettingTickerHandlesExchangeNetworkException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+  
