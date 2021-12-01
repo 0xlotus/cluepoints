@@ -966,4 +966,43 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
                     + "But it ain't me you gotta worry about now."));
 
     PowerMock.replayAll();
-    exchan
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getTicker(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Non Exchange visiting tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void testGettingExchangeSellingFeeIsAsExpected() {
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal sellPercentageFee =
+        exchangeAdapter.getPercentageOfSellOrderTakenForExchangeFee(MARKET_ID);
+    assertEquals(0, sellPercentageFee.compareTo(new BigDecimal("0.002")));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void testGettingExchangeBuyingFeeIsAsExpected() {
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal buyPercentageFee =
+        exchangeAdapter.getPercentageOfBuyOrderTakenForExchangeFee(MARKET_ID);
+    assertEquals(0, buyPercentageFee.compareTo(new BigDecimal("0.002")));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  publi
