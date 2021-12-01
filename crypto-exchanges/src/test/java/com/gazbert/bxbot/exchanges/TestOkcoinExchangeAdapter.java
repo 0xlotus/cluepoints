@@ -1005,4 +1005,34 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
   }
 
   @Test
-  publi
+  public void testGettingImplNameIsAsExpected() {
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+
+    assertEquals("OKCoin REST Spot Trading API v1", exchangeAdapter.getImplName());
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Initialisation tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  public void testExchangeAdapterInitialisesSuccessfully() {
+    PowerMock.replayAll();
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    assertNotNull(exchangeAdapter);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfPublicKeyConfigIsMissing() {
+    PowerMock.reset(authenticationConfig);
+    expect(authenticationConfig.getItem("key")).andReturn(null);
+    expect(authenticationConfig.getItem("secret")).andReturn("your_client_secret");
+
+    PowerMock.replayAll();
+ 
