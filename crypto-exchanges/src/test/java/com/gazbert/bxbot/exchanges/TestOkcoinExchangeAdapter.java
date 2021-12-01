@@ -936,4 +936,34 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     final OkCoinExchangeAdapter exchangeAdapter =
         PowerMock.createPartialMockAndInvokeDefaultConstructor(
             OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
-  
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(new ExchangeNetworkException("Where the hell can I get eyes like that?"));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getTicker(MARKET_ID);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  public void testGettingTickerHandlesUnexpectedException() throws Exception {
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class, MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_SEND_PUBLIC_REQUEST_TO_EXCHANGE_METHOD,
+            eq(TICKER),
+            anyObject(Map.class))
+        .andThrow(
+            new IllegalArgumentException(
+                "All you people are so scared of me. Most days I'd take that as a compliment. "
+                    + "But it ain't me you gotta worry about now."));
+
+    PowerMock.replayAll();
+    exchan
