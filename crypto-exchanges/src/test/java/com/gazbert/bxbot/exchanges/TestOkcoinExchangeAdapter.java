@@ -1035,4 +1035,33 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
     expect(authenticationConfig.getItem("secret")).andReturn("your_client_secret");
 
     PowerMock.replayAll();
- 
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfSecretConfigIsMissing() {
+    PowerMock.reset(authenticationConfig);
+    expect(authenticationConfig.getItem("key")).andReturn("your_client_key");
+    expect(authenticationConfig.getItem("secret")).andReturn(null);
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfTimeoutConfigIsMissing() {
+    PowerMock.reset(networkConfig);
+    expect(networkConfig.getConnectionTimeout()).andReturn(0);
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfBuyFeeIsMis
