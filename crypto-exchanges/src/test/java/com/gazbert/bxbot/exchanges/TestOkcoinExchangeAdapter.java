@@ -1094,4 +1094,25 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
   @Test
   @SuppressWarnings("unchecked")
   public void testSendingPublicRequestToExchangeSuccessfully() throws Exception {
-    final byte[] encoded =
+    final byte[] encoded = Files.readAllBytes(Paths.get(TICKER_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Content-Type", "application/x-www-form-urlencoded"))
+        .andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEAD
