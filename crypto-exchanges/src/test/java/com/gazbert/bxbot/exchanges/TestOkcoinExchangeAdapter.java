@@ -1115,4 +1115,33 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD);
     PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
         .andReturn(requestParamMap);
-    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEAD
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+
+    final URL url = new URL(PUBLIC_API_BASE_URL + TICKER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("GET"),
+            eq(null),
+            eq(requestHeaderMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final BigDecimal lastMarketPrice = exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+    assertEquals(0, lastMarketPrice.compareTo(new BigDecimal("231.35")));
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingPublicRequestToExchangeHandlesExchangeNetworkException() throws Exception {
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Conten
