@@ -1064,4 +1064,34 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void testExchangeAdapterThrowsExceptionIfBuyFeeIsMis
+  public void testExchangeAdapterThrowsExceptionIfBuyFeeIsMissing() {
+    PowerMock.reset(otherConfig);
+    expect(otherConfig.getItem("buy-fee")).andReturn("");
+    expect(otherConfig.getItem("sell-fee")).andReturn("0.2");
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testExchangeAdapterThrowsExceptionIfSellFeeIsMissing() {
+    PowerMock.reset(otherConfig);
+    expect(otherConfig.getItem("buy-fee")).andReturn("0.2");
+    expect(otherConfig.getItem("sell-fee")).andReturn(null);
+    PowerMock.replayAll();
+
+    final OkCoinExchangeAdapter exchangeAdapter = new OkCoinExchangeAdapter();
+    exchangeAdapter.init(exchangeConfig);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  //  Request sending tests
+  // --------------------------------------------------------------------------
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSendingPublicRequestToExchangeSuccessfully() throws Exception {
+    final byte[] encoded =
