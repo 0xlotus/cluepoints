@@ -1169,4 +1169,32 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             eq(requestHeaderMap))
         .andThrow(
             new ExchangeNetworkException(
-                "It's called a Zune. It's what everybody's listening to on Eart
+                "It's called a Zune. It's what everybody's listening to on Earth nowadays."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = TradingApiException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingPublicRequestToExchangeHandlesTradingApiException() throws Exception {
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Content-Type", "application/x-www-form-urlencoded"))
+        .andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andR
