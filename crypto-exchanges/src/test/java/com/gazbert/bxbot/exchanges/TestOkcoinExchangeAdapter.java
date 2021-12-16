@@ -1197,4 +1197,36 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
             MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD,
             MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD);
     PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
-        .andR
+        .andReturn(requestParamMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+
+    final URL url = new URL(PUBLIC_API_BASE_URL + TICKER);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("GET"),
+            eq(null),
+            eq(requestHeaderMap))
+        .andThrow(new TradingApiException("I am Groot."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.getLatestMarketPrice(MARKET_ID);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeSuccessfully() throws Exception {
+    final byte[] encoded = Files.readAllBytes(Paths.get(TRADE_SELL_JSON_RESPONSE));
+    final AbstractExchangeAdapter.ExchangeHttpResponse exchangeResponse =
+        new AbstractExchangeAdapter.ExchangeHttpResponse(
+            200, "OK", new String(encoded, StandardCharsets.UTF_8));
+
+    final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
+    ex
