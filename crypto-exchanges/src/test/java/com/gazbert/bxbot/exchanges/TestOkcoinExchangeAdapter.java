@@ -1229,4 +1229,29 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
 
     final Map<String, String> requestParamMap = PowerMock.createPartialMock(HashMap.class, "put");
     expect(requestParamMap.put("symbol", MARKET_ID)).andStubReturn(null);
-    ex
+    expect(
+            requestParamMap.put(
+                "amount",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_QUANTITY)))
+        .andStubReturn(null);
+    expect(
+            requestParamMap.put(
+                "price",
+                new DecimalFormat("#.########", getDecimalFormatSymbols())
+                    .format(SELL_ORDER_PRICE)))
+        .andStubReturn(null);
+    expect(requestParamMap.put("type", "sell")).andStubReturn(null);
+    expect(requestParamMap.put("api_key", KEY)).andStubReturn(null);
+    expect(requestParamMap.put(eq("sign"), anyString())).andStubReturn(null);
+
+    final Map<String, String> requestHeaderMap = PowerMock.createPartialMock(HashMap.class, "put");
+    expect(requestHeaderMap.put("Content-Type", "application/x-www-form-urlencoded"))
+        .andStubReturn(null);
+    PowerMock.replay(requestHeaderMap); // map needs to be in play early
+
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_
