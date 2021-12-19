@@ -1254,4 +1254,36 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
         PowerMock.createPartialMockAndInvokeDefaultConstructor(
             OkCoinExchangeAdapter.class,
             MOCKED_MAKE_NETWORK_REQUEST_METHOD,
-            MOCKED_
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + TRADE);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andReturn(exchangeResponse);
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    final String orderId =
+        exchangeAdapter.createOrder(
+            MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+    assertEquals("99646257", orderId);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test(expected = ExchangeNetworkException.class)
+  @SuppressWarnings("unchecked")
+  public void testSendingAuthenticatedRequestToExchangeHandlesExchangeNetworkException()
+      throws Exception {
+    final Map<String, String> requestParamM
