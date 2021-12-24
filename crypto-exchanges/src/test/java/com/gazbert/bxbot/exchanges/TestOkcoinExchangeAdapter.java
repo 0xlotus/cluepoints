@@ -1365,4 +1365,33 @@ public class TestOkcoinExchangeAdapter extends AbstractExchangeAdapterTest {
         .andStubReturn(null);
     PowerMock.replay(requestHeaderMap); // map needs to be in play early
 
-    final OkCoinExchangeAdap
+    final OkCoinExchangeAdapter exchangeAdapter =
+        PowerMock.createPartialMockAndInvokeDefaultConstructor(
+            OkCoinExchangeAdapter.class,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD,
+            MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_HEADER_MAP_METHOD)
+        .andReturn(requestHeaderMap);
+    PowerMock.expectPrivate(exchangeAdapter, MOCKED_CREATE_REQUEST_PARAM_MAP_METHOD)
+        .andReturn(requestParamMap);
+
+    final URL url = new URL(AUTHENTICATED_API_URL + TRADE);
+    PowerMock.expectPrivate(
+            exchangeAdapter,
+            MOCKED_MAKE_NETWORK_REQUEST_METHOD,
+            eq(url),
+            eq("POST"),
+            anyString(),
+            eq(requestHeaderMap))
+        .andThrow(
+            new TradingApiException("I guess I prefer to make people the old-fashioned way."));
+
+    PowerMock.replayAll();
+    exchangeAdapter.init(exchangeConfig);
+
+    exchangeAdapter.createOrder(MARKET_ID, OrderType.SELL, SELL_ORDER_QUANTITY, SELL_ORDER_PRICE);
+
+    PowerMock.verifyAll();
+  }
+}
