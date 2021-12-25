@@ -24,4 +24,42 @@
 package com.gazbert.crypto.exchanges.trading.api.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.juni
+import static org.junit.Assert.assertNull;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * Test the Balance Info impl behaves as expected.
+ *
+ * @author gazbert
+ */
+public class TestBalanceInfoImpl {
+
+  private static final String BTC_CURRENCY_ID = "BTC";
+  private static final BigDecimal BTC_BALANCE_AVAILABLE = new BigDecimal("1000.24546282");
+  private static final BigDecimal BTC_BALANCE_ON_HOLD = new BigDecimal("100.63825573");
+
+  private static final String USD_CURRENCY_ID = "USD";
+  private static final BigDecimal USD_BALANCE_AVAILABLE = new BigDecimal("2000.57573495");
+  private static final BigDecimal USD_BALANCE_ON_HOLD = new BigDecimal("200.45834593");
+
+  /*
+   * Map of wallet balances available to trade.
+   * Key is currency id, e.g. BTC, USD
+   */
+  private Map<String, BigDecimal> balancesAvailable;
+
+  /*
+   * Map of wallet balances currently on-hold for open orders.
+   * Key is currency id, e.g. BTC, USD
+   */
+  private Map<String, BigDecimal> balancesOnHold;
+
+  /** Sets up some test balances. */
+  @Before
+  public void setupBalancesBeforeEachTest() {
+    balancesAvailable = new 
