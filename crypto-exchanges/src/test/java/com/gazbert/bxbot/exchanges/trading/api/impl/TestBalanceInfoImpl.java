@@ -62,4 +62,32 @@ public class TestBalanceInfoImpl {
   /** Sets up some test balances. */
   @Before
   public void setupBalancesBeforeEachTest() {
-    balancesAvailable = new 
+    balancesAvailable = new HashMap<>();
+    balancesAvailable.put(BTC_CURRENCY_ID, BTC_BALANCE_AVAILABLE);
+    balancesAvailable.put(USD_CURRENCY_ID, USD_BALANCE_AVAILABLE);
+
+    balancesOnHold = new HashMap<>();
+    balancesOnHold.put(BTC_CURRENCY_ID, BTC_BALANCE_ON_HOLD);
+    balancesOnHold.put(USD_CURRENCY_ID, USD_BALANCE_ON_HOLD);
+  }
+
+  @Test
+  public void testBalanceInfoIsInitialisedAsExpected() {
+    final BalanceInfoImpl balanceInfo = new BalanceInfoImpl(balancesAvailable, balancesOnHold);
+
+    assertEquals(balancesAvailable, balanceInfo.getBalancesAvailable());
+    assertEquals(BTC_BALANCE_AVAILABLE, balancesAvailable.get(BTC_CURRENCY_ID));
+    assertEquals(USD_BALANCE_AVAILABLE, balancesAvailable.get(USD_CURRENCY_ID));
+
+    assertEquals(balancesOnHold, balanceInfo.getBalancesOnHold());
+    assertEquals(BTC_BALANCE_ON_HOLD, balancesOnHold.get(BTC_CURRENCY_ID));
+    assertEquals(USD_BALANCE_ON_HOLD, balancesOnHold.get(USD_CURRENCY_ID));
+  }
+
+  @Test
+  public void testSettersWorkAsExpected() {
+    final BalanceInfoImpl balanceInfo = new BalanceInfoImpl(null, null);
+    assertNull(balanceInfo.getBalancesAvailable());
+    assertNull(balanceInfo.getBalancesOnHold());
+
+    balanceInfo.setBalancesAvailable(ba
