@@ -90,4 +90,14 @@ public class TestBalanceInfoImpl {
     assertNull(balanceInfo.getBalancesAvailable());
     assertNull(balanceInfo.getBalancesOnHold());
 
-    balanceInfo.setBalancesAvailable(ba
+    balanceInfo.setBalancesAvailable(balancesAvailable);
+    assertEquals(balancesAvailable, balanceInfo.getBalancesAvailable());
+    assertEquals(BTC_BALANCE_AVAILABLE, balancesAvailable.get(BTC_CURRENCY_ID));
+    assertEquals(USD_BALANCE_AVAILABLE, balancesAvailable.get(USD_CURRENCY_ID));
+
+    balanceInfo.setBalancesOnHold(balancesOnHold);
+    assertEquals(balancesOnHold, balanceInfo.getBalancesOnHold());
+    assertEquals(BTC_BALANCE_ON_HOLD, balancesOnHold.get(BTC_CURRENCY_ID));
+    assertEquals(USD_BALANCE_ON_HOLD, balancesOnHold.get(USD_CURRENCY_ID));
+  }
+}
