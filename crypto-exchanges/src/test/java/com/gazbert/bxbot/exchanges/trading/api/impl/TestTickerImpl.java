@@ -58,4 +58,46 @@ public class TestTickerImpl {
     assertEquals(BID, ticker.getBid());
     assertEquals(ASK, ticker.getAsk());
     assertEquals(LOW, ticker.getLow());
-    assertEquals(H
+    assertEquals(HIGH, ticker.getHigh());
+    assertEquals(OPEN, ticker.getOpen());
+    assertEquals(VOLUME, ticker.getVolume());
+    assertEquals(VWAP, ticker.getVwap());
+    assertEquals(TIMESTAMP, ticker.getTimestamp());
+  }
+
+  @Test
+  public void testSettersWorkAsExpected() {
+    final TickerImpl ticker = new TickerImpl(null, null, null, null, null, null, null, null, null);
+    assertNull(ticker.getLast());
+    assertNull(ticker.getBid());
+    assertNull(ticker.getAsk());
+    assertNull(ticker.getLow());
+    assertNull(ticker.getHigh());
+    assertNull(ticker.getOpen());
+    assertNull(ticker.getVolume());
+    assertNull(ticker.getVwap());
+    assertNull(ticker.getTimestamp());
+
+    ticker.setLast(LAST);
+    assertEquals(LAST, ticker.getLast());
+
+    ticker.setBid(BID);
+    assertEquals(BID, ticker.getBid());
+
+    ticker.setAsk(ASK);
+    assertEquals(ASK, ticker.getAsk());
+
+    ticker.setLow(LOW);
+    assertEquals(LOW, ticker.getLow());
+
+    ticker.setHigh(HIGH);
+    assertEquals(HIGH, ticker.getHigh());
+
+    ticker.setOpen(OPEN);
+    assertEquals(OPEN, ticker.getOpen());
+
+    ticker.setVolume(VOLUME);
+    assertEquals(VOLUME, ticker.getVolume());
+
+    ticker.setVwap(VWAP);
+    asse
