@@ -26,4 +26,16 @@ jacocoTestCoverageVerification {
                     // "... right now there is NO WAY TO USE PowerMock with JaCoCo On-the-fly instrumentation."
                     // See https://github.com/powermock/powermock/wiki/Code-coverage-with-JaCoCo
                     'com.gazbert.crypto.repository.yaml.MarketConfigYamlRepository',
-       
+                    'com.gazbert.crypto.repository.yaml.StrategyConfigYamlRepository',
+                    'com.gazbert.crypto.repository.yaml.EngineConfigYamlRepository',
+                    'com.gazbert.crypto.repository.yaml.ExchangeConfigYamlRepository',
+                    'com.gazbert.crypto.repository.yaml.EmailAlertsConfigYamlRepository'
+            ]
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.8
+            }
+        }
+    }
+}
