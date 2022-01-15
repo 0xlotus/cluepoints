@@ -100,4 +100,9 @@ public class TestTickerImpl {
     assertEquals(VOLUME, ticker.getVolume());
 
     ticker.setVwap(VWAP);
-    asse
+    assertEquals(VWAP, ticker.getVwap());
+
+    ticker.setTimestamp(TIMESTAMP);
+    assertEquals(TIMESTAMP, ticker.getTimestamp());
+  }
+}
