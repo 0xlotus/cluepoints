@@ -16,4 +16,36 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.repository.yaml;
+
+import static com.gazbert.crypto.datastore.yaml.FileLocations.EMAIL_ALERTS_CONFIG_YAML_FILENAME;
+
+import com.gazbert.crypto.datastore.yaml.ConfigurationManager;
+import com.gazbert.crypto.datastore.yaml.emailalerts.EmailAlertsType;
+import com.gazbert.crypto.domain.emailalerts.EmailAlertsConfig;
+import com.gazbert.crypto.repository.EmailAlertsConfigRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * An Email Alerts config repo that uses a YAML backed datastore.
+ *
+ * @author gazbert
+ */
+@Repository("emailAlertsConfigYamlRepository")
+@Transactional
+public class EmailAlertsConfigYamlRepository implements EmailAlertsConfigRepository {
+
+  private static final Logger LOG = LogManager.getLogger();
+
+  @Override
+  public EmailAlertsConfig get() {
+    LOG.info(() -> "Fetching EmailAlertsConfig...");
+    
