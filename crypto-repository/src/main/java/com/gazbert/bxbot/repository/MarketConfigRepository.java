@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,16 +24,21 @@
 
 package com.gazbert.crypto.repository;
 
-import com.gazbert.crypto.domain.engine.EngineConfig;
+import com.gazbert.crypto.domain.market.MarketConfig;
+import java.util.List;
 
 /**
- * The Engine configuration repository.
+ * The Market configuration repository.
  *
  * @author gazbert
  */
-public interface EngineConfigRepository {
+public interface MarketConfigRepository {
 
-  EngineConfig get();
+  List<MarketConfig> findAll();
 
-  EngineConfig save(EngineConfig config);
+  MarketConfig findById(String id);
+
+  MarketConfig save(MarketConfig config);
+
+  MarketConfig delete(String id);
 }

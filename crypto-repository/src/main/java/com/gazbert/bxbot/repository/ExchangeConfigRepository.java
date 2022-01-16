@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,16 +24,16 @@
 
 package com.gazbert.crypto.repository;
 
-import com.gazbert.crypto.domain.engine.EngineConfig;
+import com.gazbert.crypto.domain.exchange.ExchangeConfig;
 
 /**
- * The Engine configuration repository.
+ * The Exchange configuration repository.
  *
  * @author gazbert
  */
-public interface EngineConfigRepository {
+public interface ExchangeConfigRepository {
 
-  EngineConfig get();
+  ExchangeConfig get();
 
-  EngineConfig save(EngineConfig config);
+  ExchangeConfig save(ExchangeConfig config);
 }
