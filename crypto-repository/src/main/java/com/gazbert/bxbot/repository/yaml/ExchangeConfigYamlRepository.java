@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,45 +24,45 @@
 
 package com.gazbert.crypto.repository.yaml;
 
-import static com.gazbert.crypto.datastore.yaml.FileLocations.EMAIL_ALERTS_CONFIG_YAML_FILENAME;
+import static com.gazbert.crypto.datastore.yaml.FileLocations.EXCHANGE_CONFIG_YAML_FILENAME;
 
 import com.gazbert.crypto.datastore.yaml.ConfigurationManager;
-import com.gazbert.crypto.datastore.yaml.emailalerts.EmailAlertsType;
-import com.gazbert.crypto.domain.emailalerts.EmailAlertsConfig;
-import com.gazbert.crypto.repository.EmailAlertsConfigRepository;
+import com.gazbert.crypto.datastore.yaml.exchange.ExchangeType;
+import com.gazbert.crypto.domain.exchange.ExchangeConfig;
+import com.gazbert.crypto.repository.ExchangeConfigRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * An Email Alerts config repo that uses a YAML backed datastore.
+ * An Exchange config repo that uses a YAML backed datastore.
  *
  * @author gazbert
  */
-@Repository("emailAlertsConfigYamlRepository")
+@Repository("exchangeConfigYamlRepository")
 @Transactional
-public class EmailAlertsConfigYamlRepository implements EmailAlertsConfigRepository {
+public class ExchangeConfigYamlRepository implements ExchangeConfigRepository {
 
   private static final Logger LOG = LogManager.getLogger();
 
   @Override
-  public EmailAlertsConfig get() {
-    LOG.info(() -> "Fetching EmailAlertsConfig...");
-    return ConfigurationManager.loadConfig(EmailAlertsType.class, EMAIL_ALERTS_CONFIG_YAML_FILENAME)
-        .getEmailAlerts();
+  public ExchangeConfig get() {
+    LOG.info(() -> "Fetching ExchangeConfig...");
+    return ConfigurationManager.loadConfig(ExchangeType.class, EXCHANGE_CONFIG_YAML_FILENAME)
+        .getExchange();
   }
 
   @Override
-  public EmailAlertsConfig save(EmailAlertsConfig config) {
-    LOG.info(() -> "About to save EmailAlertsConfig: " + config);
+  public ExchangeConfig save(ExchangeConfig config) {
+    LOG.info(() -> "About to save ExchangeConfig: " + config);
 
-    final EmailAlertsType emailAlertsType = new EmailAlertsType();
-    emailAlertsType.setEmailAlerts(config);
+    final ExchangeType exchangeType = new ExchangeType();
+    exchangeType.setExchange(config);
     ConfigurationManager.saveConfig(
-        EmailAlertsType.class, emailAlertsType, EMAIL_ALERTS_CONFIG_YAML_FILENAME);
+        ExchangeType.class, exchangeType, EXCHANGE_CONFIG_YAML_FILENAME);
 
-    return ConfigurationManager.loadConfig(EmailAlertsType.class, EMAIL_ALERTS_CONFIG_YAML_FILENAME)
-        .getEmailAlerts();
+    return ConfigurationManager.loadConfig(ExchangeType.class, EXCHANGE_CONFIG_YAML_FILENAME)
+        .getExchange();
   }
 }

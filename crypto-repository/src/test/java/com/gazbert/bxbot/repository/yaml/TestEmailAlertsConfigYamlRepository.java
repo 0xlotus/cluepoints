@@ -1,0 +1,6 @@
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2019 gazbert
+ *
+ * Permission is hereb
