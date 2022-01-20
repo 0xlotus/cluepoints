@@ -24,4 +24,37 @@
 package com.gazbert.crypto.repository.yaml;
 
 import static com.gazbert.crypto.datastore.yaml.FileLocations.EMAIL_ALERTS_CONFIG_YAML_FILENAME;
-import 
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+
+import com.gazbert.crypto.datastore.yaml.ConfigurationManager;
+import com.gazbert.crypto.datastore.yaml.emailalerts.EmailAlertsType;
+import com.gazbert.crypto.domain.emailalerts.EmailAlertsConfig;
+import com.gazbert.crypto.domain.emailalerts.SmtpConfig;
+import com.gazbert.crypto.repository.EmailAlertsConfigRepository;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+/**
+ * Tests YAML backed Email Alerts configuration repository behaves as expected.
+ *
+ * @author gazbert
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ConfigurationManager.class})
+@PowerMockIgnore({
+    "javax.crypto.*",
+    "javax.management.*",
+    "com.sun.org.apache.xerces.*",
+    "javax.xml.parsers.*",
+    "org.xml.sax.*",
+    "org.w3c.dom.*"
+})
+public class TestEma
