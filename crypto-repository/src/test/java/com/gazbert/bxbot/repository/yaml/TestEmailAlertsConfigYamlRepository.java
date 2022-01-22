@@ -57,4 +57,29 @@ import org.powermock.modules.junit4.PowerMockRunner;
     "org.xml.sax.*",
     "org.w3c.dom.*"
 })
-public class TestEma
+public class TestEmailAlertsConfigYamlRepository {
+
+  private static final boolean ENABLED = true;
+  private static final String HOST = "smtp.host.deathstar.com";
+  private static final int TLS_PORT = 573;
+  private static final String ACCOUNT_USERNAME = "boba@google.com";
+  private static final String ACCOUNT_PASSWORD = "b0b4InD4H0u53";
+  private static final String FROM_ADDRESS = "boba.fett@Mandalore.com";
+  private static final String TO_ADDRESS = "darth.vader@deathstar.com";
+
+  private static final String UPDATED_HOST = "updated.smtp.host.deathstar.com";
+  private static final int UPDATED_PORT = 588;
+  private static final String UPDATED_ACCOUNT_USERNAME = "updated-boba@google.com";
+  private static final String UPDATED_ACCOUNT_PASSWORD = "updated-b0b4InD4H0u53";
+  private static final String UPDATED_FROM_ADDRESS = "updated-boba.fett@Mandalore.com";
+  private static final String UPDATED_TO_ADDRESS = "updated-darth.vader@deathstar.com";
+
+  @Before
+  public void setup() {
+    PowerMock.mockStatic(ConfigurationManager.class);
+  }
+
+  @Test
+  public void whenGetCalledThenExpectEmailAlertsConfigToBeReturned() {
+    expect(
+            ConfigurationManager.loadCo
