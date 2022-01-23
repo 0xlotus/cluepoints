@@ -82,4 +82,26 @@ public class TestEmailAlertsConfigYamlRepository {
   @Test
   public void whenGetCalledThenExpectEmailAlertsConfigToBeReturned() {
     expect(
-            ConfigurationManager.loadCo
+            ConfigurationManager.loadConfig(
+                eq(EmailAlertsType.class), eq(EMAIL_ALERTS_CONFIG_YAML_FILENAME)))
+        .andReturn(someEmailAlertsConfig());
+
+    PowerMock.replayAll();
+
+    final EmailAlertsConfigRepository emailAlertsConfigRepository =
+        new EmailAlertsConfigYamlRepository();
+    final EmailAlertsConfig emailAlertsConfig = emailAlertsConfigRepository.get();
+    assertThat(emailAlertsConfig.isEnabled()).isEqualTo(ENABLED);
+    assertThat(emailAlertsConfig.getSmtpConfig().getHost()).isEqualTo(HOST);
+    assertThat(emailAlertsConfig.getSmtpConfig().getTlsPort()).isEqualTo(TLS_PORT);
+    assertThat(emailAlertsConfig.getSmtpConfig().getFromAddress()).isEqualTo(FROM_ADDRESS);
+    assertThat(emailAlertsConfig.getSmtpConfig().getToAddress()).isEqualTo(TO_ADDRESS);
+    assertThat(emailAlertsConfig.getSmtpConfig().getAccountUsername()).isEqualTo(ACCOUNT_USERNAME);
+    assertThat(emailAlertsConfig.getSmtpConfig().getAccountPassword()).isEqualTo(ACCOUNT_PASSWORD);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void whenSaveCalledThenExpectRepositoryToSaveItAndReturnSavedEmailAlertsConfig() {
+    ConfigurationManager.saveConfig(
