@@ -105,3 +105,27 @@ public class TestEmailAlertsConfigYamlRepository {
   @Test
   public void whenSaveCalledThenExpectRepositoryToSaveItAndReturnSavedEmailAlertsConfig() {
     ConfigurationManager.saveConfig(
+        eq(EmailAlertsType.class),
+        anyObject(EmailAlertsType.class),
+        eq(EMAIL_ALERTS_CONFIG_YAML_FILENAME));
+
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(EmailAlertsType.class), eq(EMAIL_ALERTS_CONFIG_YAML_FILENAME)))
+        .andReturn(adaptExternalToInternalConfig(someUpdatedEmailAlertsConfig()));
+
+    PowerMock.replayAll();
+
+    final EmailAlertsConfigRepository emailAlertsConfigRepository =
+        new EmailAlertsConfigYamlRepository();
+    final EmailAlertsConfig savedConfig =
+        emailAlertsConfigRepository.save(someUpdatedEmailAlertsConfig());
+
+    assertThat(savedConfig.isEnabled()).isEqualTo(ENABLED);
+    assertThat(savedConfig.getSmtpConfig().getHost()).isEqualTo(UPDATED_HOST);
+    assertThat(savedConfig.getSmtpConfig().getTlsPort()).isEqualTo(UPDATED_PORT);
+    assertThat(savedConfig.getSmtpConfig().getFromAddress()).isEqualTo(UPDATED_FROM_ADDRESS);
+    assertThat(savedConfig.getSmtpConfig().getToAddress()).isEqualTo(UPDATED_TO_ADDRESS);
+    assertThat(savedConfig.getSmtpConfig().getAccountUsername())
+        .isEqualTo(UPDATED_ACCOUNT_USERNAME);
+    assertThat(savedConfig.getSmtpConfig().get
