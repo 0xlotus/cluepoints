@@ -128,4 +128,39 @@ public class TestEmailAlertsConfigYamlRepository {
     assertThat(savedConfig.getSmtpConfig().getToAddress()).isEqualTo(UPDATED_TO_ADDRESS);
     assertThat(savedConfig.getSmtpConfig().getAccountUsername())
         .isEqualTo(UPDATED_ACCOUNT_USERNAME);
-    assertThat(savedConfig.getSmtpConfig().get
+    assertThat(savedConfig.getSmtpConfig().getAccountPassword())
+        .isEqualTo(UPDATED_ACCOUNT_PASSWORD);
+
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  // Private utils
+  // --------------------------------------------------------------------------
+
+  private static EmailAlertsType someEmailAlertsConfig() {
+    final SmtpConfig smtpConfig = new SmtpConfig();
+    smtpConfig.setHost(HOST);
+    smtpConfig.setTlsPort(TLS_PORT);
+    smtpConfig.setToAddress(TO_ADDRESS);
+    smtpConfig.setFromAddress(FROM_ADDRESS);
+    smtpConfig.setAccountUsername(ACCOUNT_USERNAME);
+    smtpConfig.setAccountPassword(ACCOUNT_PASSWORD);
+
+    final EmailAlertsConfig emailAlertsConfig = new EmailAlertsConfig();
+    emailAlertsConfig.setEnabled(ENABLED);
+    emailAlertsConfig.setSmtpConfig(smtpConfig);
+
+    final EmailAlertsType emailAlertsType = new EmailAlertsType();
+    emailAlertsType.setEmailAlerts(emailAlertsConfig);
+    return emailAlertsType;
+  }
+
+  private static EmailAlertsConfig someUpdatedEmailAlertsConfig() {
+    final EmailAlertsConfig emailAlertsConfig = new EmailAlertsConfig();
+    emailAlertsConfig.setEnabled(true);
+
+    final SmtpConfig smtpConfig =
+        new SmtpConfig(
+            UPDATED_HOST,
+ 
