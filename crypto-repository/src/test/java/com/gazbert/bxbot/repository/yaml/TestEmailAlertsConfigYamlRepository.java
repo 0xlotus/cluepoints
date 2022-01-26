@@ -163,4 +163,20 @@ public class TestEmailAlertsConfigYamlRepository {
     final SmtpConfig smtpConfig =
         new SmtpConfig(
             UPDATED_HOST,
- 
+            UPDATED_PORT,
+            UPDATED_ACCOUNT_USERNAME,
+            UPDATED_ACCOUNT_PASSWORD,
+            UPDATED_FROM_ADDRESS,
+            UPDATED_TO_ADDRESS);
+    emailAlertsConfig.setSmtpConfig(smtpConfig);
+
+    return emailAlertsConfig;
+  }
+
+  private static EmailAlertsType adaptExternalToInternalConfig(
+      EmailAlertsConfig externalEmailAlertsConfig) {
+    final EmailAlertsType emailAlertsType = new EmailAlertsType();
+    emailAlertsType.setEmailAlerts(externalEmailAlertsConfig);
+    return emailAlertsType;
+  }
+}
