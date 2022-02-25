@@ -38,4 +38,35 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.easymock.PowerMock;
-import org.powermock.core.classloader.annotations.Powe
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+/**
+ * Tests YAML backed Engine configuration repository behaves as expected.
+ *
+ * @author gazbert
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ConfigurationManager.class})
+@PowerMockIgnore({"javax.crypto.*", "javax.management.*",
+    "com.sun.org.apache.xerces.*", "javax.xml.parsers.*", "org.xml.sax.*", "org.w3c.dom.*"})
+public class TestEngineConfigYamlRepository {
+
+  private static final String BOT_ID = "avro-707_1";
+  private static final String BOT_NAME = "Avro 707";
+  private static final String ENGINE_EMERGENCY_STOP_CURRENCY = "BTC";
+  private static final BigDecimal ENGINE_EMERGENCY_STOP_BALANCE = new BigDecimal("0.5");
+  private static final int ENGINE_TRADE_CYCLE_INTERVAL = 60;
+
+  @Before
+  public void setup() {
+    PowerMock.mockStatic(ConfigurationManager.class);
+  }
+
+  @Test
+  public void whenGetCalledThenExpectEngineConfigToBeReturned() {
+    expect(ConfigurationManager.loadConfig(
+        eq(EngineType.class),
+        eq(ENGINE_CONFIG_YAML_FILENAME)))
+        .andReturn(someInternalE
