@@ -96,4 +96,28 @@ public class TestEngineConfigYamlRepository {
 
     PowerMock.replayAll();
 
-    final EngineConfigRepository engineConfigRepository = new EngineConfigYamlRepo
+    final EngineConfigRepository engineConfigRepository = new EngineConfigYamlRepository();
+    final EngineConfig savedConfig = engineConfigRepository.save(someExternalEngineConfig());
+
+    assertThat(savedConfig.getBotId()).isEqualTo(BOT_ID);
+    assertThat(savedConfig.getBotName()).isEqualTo(BOT_NAME);
+    assertThat(savedConfig.getEmergencyStopCurrency()).isEqualTo(ENGINE_EMERGENCY_STOP_CURRENCY);
+    assertThat(savedConfig.getEmergencyStopBalance()).isEqualTo(ENGINE_EMERGENCY_STOP_BALANCE);
+    assertThat(savedConfig.getTradeCycleInterval()).isEqualTo(ENGINE_TRADE_CYCLE_INTERVAL);
+
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  // Private utils
+  // --------------------------------------------------------------------------
+
+  private static EngineType someInternalEngineConfig() {
+    final EngineConfig engineConfig = new EngineConfig();
+    engineConfig.setBotId(BOT_ID);
+    engineConfig.setBotName(BOT_NAME);
+    engineConfig.setEmergencyStopBalance(ENGINE_EMERGENCY_STOP_BALANCE);
+    engineConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
+    engineConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
+
+    final EngineType internalConfig = n
