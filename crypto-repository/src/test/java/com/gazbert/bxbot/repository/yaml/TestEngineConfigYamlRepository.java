@@ -69,4 +69,31 @@ public class TestEngineConfigYamlRepository {
     expect(ConfigurationManager.loadConfig(
         eq(EngineType.class),
         eq(ENGINE_CONFIG_YAML_FILENAME)))
-        .andReturn(someInternalE
+        .andReturn(someInternalEngineConfig());
+
+    PowerMock.replayAll();
+
+    final EngineConfigRepository engineConfigRepository = new EngineConfigYamlRepository();
+    final EngineConfig engineConfig = engineConfigRepository.get();
+    assertThat(engineConfig.getBotId()).isEqualTo(BOT_ID);
+    assertThat(engineConfig.getBotName()).isEqualTo(BOT_NAME);
+    assertThat(engineConfig.getEmergencyStopCurrency()).isEqualTo(ENGINE_EMERGENCY_STOP_CURRENCY);
+    assertThat(engineConfig.getEmergencyStopBalance()).isEqualTo(ENGINE_EMERGENCY_STOP_BALANCE);
+    assertThat(engineConfig.getTradeCycleInterval()).isEqualTo(ENGINE_TRADE_CYCLE_INTERVAL);
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void whenSaveCalledThenExpectRepositoryToSaveItAndReturnSavedEngineConfig() {
+    ConfigurationManager.saveConfig(eq(EngineType.class), anyObject(EngineType.class),
+        eq(ENGINE_CONFIG_YAML_FILENAME));
+
+    expect(ConfigurationManager.loadConfig(
+        eq(EngineType.class),
+        eq(ENGINE_CONFIG_YAML_FILENAME)))
+        .andReturn(someInternalEngineConfig());
+
+    PowerMock.replayAll();
+
+    final EngineConfigRepository engineConfigRepository = new EngineConfigYamlRepo
