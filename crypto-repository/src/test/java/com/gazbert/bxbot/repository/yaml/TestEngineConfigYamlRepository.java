@@ -120,4 +120,18 @@ public class TestEngineConfigYamlRepository {
     engineConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
     engineConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
 
-    final EngineType internalConfig = n
+    final EngineType internalConfig = new EngineType();
+    internalConfig.setEngine(engineConfig);
+    return internalConfig;
+  }
+
+  private static EngineConfig someExternalEngineConfig() {
+    final EngineConfig externalConfig = new EngineConfig();
+    externalConfig.setBotId(BOT_ID);
+    externalConfig.setBotName(BOT_NAME);
+    externalConfig.setEmergencyStopBalance(ENGINE_EMERGENCY_STOP_BALANCE);
+    externalConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
+    externalConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
+    return externalConfig;
+  }
+}
