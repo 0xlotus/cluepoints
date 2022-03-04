@@ -55,4 +55,29 @@ import org.powermock.modules.junit4.PowerMockRunner;
     "javax.crypto.*",
     "javax.management.*",
     "com.sun.org.apache.xerces.*",
-    "javax.x
+    "javax.xml.parsers.*",
+    "org.xml.sax.*",
+    "org.w3c.dom.*"
+})
+public class TestStrategyConfigYamlRepository {
+
+  private static final String MOCKED_GENERATE_UUID_METHOD = "generateUuid";
+
+  private static final String UNKNOWN_STRAT_ID = "unknown-or-new-strat-id";
+  private static final String GENERATED_STRAT_ID = "new-strat-id-123";
+
+  private static final String STRAT_ID_1 = "macd-long-position";
+  private static final String STRAT_NAME_1 = "MACD Long Position Algo";
+  private static final String STRAT_DESCRIPTION_1 =
+      "Uses MACD as indicator and takes long position in base currency.";
+  private static final String STRAT_CLASSNAME_1 = "com.gazbert.nova.algos.MacdLongBase";
+  private static final String STRAT_BEANAME_1 = "macdLongBase";
+
+  private static final String STRAT_ID_2 = "long-scalper";
+  private static final String STRAT_NAME_2 = "Long Position Scalper Algo";
+  private static final String STRAT_DESCRIPTION_2 = "Scalps and goes long...";
+  private static final String STRAT_CLASSNAME_2 = "com.gazbert.nova.algos.LongScalper";
+  private static final String STRAT_BEANAME_2 = "longScalper";
+
+  private static final String NEW_STRAT_NAME = "Short Position Scalper Algo";
+  p
