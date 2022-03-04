@@ -80,4 +80,32 @@ public class TestStrategyConfigYamlRepository {
   private static final String STRAT_BEANAME_2 = "longScalper";
 
   private static final String NEW_STRAT_NAME = "Short Position Scalper Algo";
-  p
+  private static final String NEW_STRAT_DESCRIPTION = "Scalps and goes short...";
+  private static final String NEW_STRAT_CLASSNAME = "com.gazbert.nova.algos.ShortScalper";
+
+  private static final String BUY_PRICE_CONFIG_ITEM_KEY = "buy-price";
+  private static final String BUY_PRICE_CONFIG_ITEM_VALUE = "671.15";
+  private static final String AMOUNT_TO_BUY_CONFIG_ITEM_KEY = "buy-amount";
+  private static final String AMOUNT_TO_BUY_CONFIG_ITEM_VALUE = "0.5";
+
+  @Before
+  public void setup() {
+    PowerMock.mockStatic(ConfigurationManager.class);
+  }
+
+  @Test
+  public void whenFindAllCalledThenExpectServiceToReturnAllStrategyConfigs() {
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    PowerMock.replayAll();
+
+    final StrategyConfigRepository strategyConfigRepository = new StrategyConfigYamlRepository();
+    final List<StrategyConfig> strategyConfigItems = strategyConfigRepository.findAll();
+
+    assertThat(strategyConfigItems.size()).isEqualTo(2);
+
+    assertThat(strategyConfigItems.get(0).getId()).isEqualTo(STRAT_ID_1);
+    assertThat(strategyConfigItems.get(0).
