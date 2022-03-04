@@ -23,4 +23,36 @@
 
 package com.gazbert.crypto.repository.yaml;
 
-import static com.gazbert.crypto.datastore.yaml.FileLocations.STRATEGIES_CONFIG_YAML_
+import static com.gazbert.crypto.datastore.yaml.FileLocations.STRATEGIES_CONFIG_YAML_FILENAME;
+import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+
+import com.gazbert.crypto.datastore.yaml.ConfigurationManager;
+import com.gazbert.crypto.datastore.yaml.strategy.StrategiesType;
+import com.gazbert.crypto.domain.strategy.StrategyConfig;
+import com.gazbert.crypto.repository.StrategyConfigRepository;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.easymock.PowerMock;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+/**
+ * Tests YAML backed Strategy configuration repository behaves as expected.
+ *
+ * @author gazbert
+ */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ConfigurationManager.class, StrategyConfigYamlRepository.class})
+@PowerMockIgnore({
+    "javax.crypto.*",
+    "javax.management.*",
+    "com.sun.org.apache.xerces.*",
+    "javax.x
