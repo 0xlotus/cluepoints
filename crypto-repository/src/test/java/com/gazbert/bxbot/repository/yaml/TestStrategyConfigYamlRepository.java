@@ -108,4 +108,28 @@ public class TestStrategyConfigYamlRepository {
     assertThat(strategyConfigItems.size()).isEqualTo(2);
 
     assertThat(strategyConfigItems.get(0).getId()).isEqualTo(STRAT_ID_1);
-    assertThat(strategyConfigItems.get(0).
+    assertThat(strategyConfigItems.get(0).getName()).isEqualTo(STRAT_NAME_1);
+    assertThat(strategyConfigItems.get(0).getDescription()).isEqualTo(STRAT_DESCRIPTION_1);
+    assertThat(strategyConfigItems.get(0).getClassName()).isEqualTo(STRAT_CLASSNAME_1);
+    assertThat(strategyConfigItems.get(0).getConfigItems().containsKey(BUY_PRICE_CONFIG_ITEM_KEY))
+        .isTrue();
+    assertThat(
+            strategyConfigItems.get(0).getConfigItems().containsValue(BUY_PRICE_CONFIG_ITEM_VALUE))
+        .isTrue();
+    assertThat(
+            strategyConfigItems.get(0).getConfigItems().containsKey(AMOUNT_TO_BUY_CONFIG_ITEM_KEY))
+        .isTrue();
+    assertThat(
+            strategyConfigItems
+                .get(0)
+                .getConfigItems()
+                .containsValue(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE))
+        .isTrue();
+
+    assertThat(strategyConfigItems.get(1).getId()).isEqualTo(STRAT_ID_2);
+    assertThat(strategyConfigItems.get(1).getName()).isEqualTo(STRAT_NAME_2);
+    assertThat(strategyConfigItems.get(1).getDescription()).isEqualTo(STRAT_DESCRIPTION_2);
+    assertThat(strategyConfigItems.get(1).getClassName()).isEqualTo(STRAT_CLASSNAME_2);
+    assertThat(strategyConfigItems.get(1).getConfigItems().containsKey(BUY_PRICE_CONFIG_ITEM_KEY))
+        .isTrue();
+    asse
