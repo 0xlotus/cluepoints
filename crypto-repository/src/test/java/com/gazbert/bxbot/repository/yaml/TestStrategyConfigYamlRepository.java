@@ -132,4 +132,34 @@ public class TestStrategyConfigYamlRepository {
     assertThat(strategyConfigItems.get(1).getClassName()).isEqualTo(STRAT_CLASSNAME_2);
     assertThat(strategyConfigItems.get(1).getConfigItems().containsKey(BUY_PRICE_CONFIG_ITEM_KEY))
         .isTrue();
-    asse
+    assertThat(
+            strategyConfigItems.get(1).getConfigItems().containsValue(BUY_PRICE_CONFIG_ITEM_VALUE))
+        .isTrue();
+    assertThat(
+            strategyConfigItems.get(1).getConfigItems().containsKey(AMOUNT_TO_BUY_CONFIG_ITEM_KEY))
+        .isTrue();
+    assertThat(
+            strategyConfigItems
+                .get(1)
+                .getConfigItems()
+                .containsValue(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE))
+        .isTrue();
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void whenFindByIdCalledWithKnownIdThenReturnMatchingStrategyConfig() {
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    PowerMock.replayAll();
+
+    final StrategyConfigRepository strategyConfigRepository = new StrategyConfigYamlRepository();
+    final StrategyConfig strategyConfig = strategyConfigRepository.findById(STRAT_ID_1);
+
+    assertThat(strategyConfig.getId()).isEqualTo(STRAT_ID_1);
+    assertThat(strategyConfig.getName()).isEqualTo(STRAT_NAME_1);
+    assertThat(strate
