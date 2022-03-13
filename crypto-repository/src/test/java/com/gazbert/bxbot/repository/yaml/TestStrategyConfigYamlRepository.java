@@ -190,3 +190,30 @@ public class TestStrategyConfigYamlRepository {
   }
 
   @Test
+  public void whenSaveCalledWithKnownIdThenReturnUpdatedStrategyConfig() {
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    ConfigurationManager.saveConfig(
+        eq(StrategiesType.class),
+        anyObject(StrategiesType.class),
+        eq(STRATEGIES_CONFIG_YAML_FILENAME));
+
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    PowerMock.replayAll();
+
+    final StrategyConfigRepository strategyConfigRepository = new StrategyConfigYamlRepository();
+    final StrategyConfig strategyConfig =
+        strategyConfigRepository.save(someExternalStrategyConfig());
+
+    assertThat(strategyConfig.getId()).isEqualTo(STRAT_ID_1);
+    assertThat(strategyConfig.getName()).isEqualTo(STRAT_NAME_1);
+    assertThat(strategyConfig.getDescription()).isEqualTo(STRAT_DESCRIPTION_1);
+    assertThat(strategyConfig.getClassName()).isEqualTo(STRAT_CLASSNAME_1);
+    assertThat(strategyConfig.getConfigItems().contai
