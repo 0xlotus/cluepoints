@@ -216,4 +216,33 @@ public class TestStrategyConfigYamlRepository {
     assertThat(strategyConfig.getName()).isEqualTo(STRAT_NAME_1);
     assertThat(strategyConfig.getDescription()).isEqualTo(STRAT_DESCRIPTION_1);
     assertThat(strategyConfig.getClassName()).isEqualTo(STRAT_CLASSNAME_1);
-    assertThat(strategyConfig.getConfigItems().contai
+    assertThat(strategyConfig.getConfigItems().containsKey(BUY_PRICE_CONFIG_ITEM_KEY)).isTrue();
+    assertThat(strategyConfig.getConfigItems().containsValue(BUY_PRICE_CONFIG_ITEM_VALUE)).isTrue();
+    assertThat(strategyConfig.getConfigItems().containsKey(AMOUNT_TO_BUY_CONFIG_ITEM_KEY)).isTrue();
+    assertThat(strategyConfig.getConfigItems().containsValue(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE))
+        .isTrue();
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void whenSaveCalledWithUnknownIdThenReturnEmptyStrategyConfig() {
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    PowerMock.replayAll();
+
+    final StrategyConfigRepository strategyConfigRepository = new StrategyConfigYamlRepository();
+    final StrategyConfig strategyConfig =
+        strategyConfigRepository.save(someExternalStrategyConfigWithUnknownId());
+
+    assertThat(strategyConfig).isEqualTo(null);
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void whenSaveCalledWithEmptyIdThenExpectCreatedStrategyConfigToBeReturned()
+      throws Exception {
+    expect
