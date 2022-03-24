@@ -245,4 +245,32 @@ public class TestStrategyConfigYamlRepository {
   @Test
   public void whenSaveCalledWithEmptyIdThenExpectCreatedStrategyConfigToBeReturned()
       throws Exception {
-    expect
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    ConfigurationManager.saveConfig(
+        eq(StrategiesType.class),
+        anyObject(StrategiesType.class),
+        eq(STRATEGIES_CONFIG_YAML_FILENAME));
+
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfigPlusNewOne());
+
+    final StrategyConfigRepository strategyConfigRepository =
+        PowerMock.createPartialMock(
+            StrategyConfigYamlRepository.class, MOCKED_GENERATE_UUID_METHOD);
+    PowerMock.expectPrivate(strategyConfigRepository, MOCKED_GENERATE_UUID_METHOD)
+        .andReturn(GENERATED_STRAT_ID);
+
+    PowerMock.replayAll();
+
+    final StrategyConfig strategyConfig =
+        strategyConfigRepository.save(someNewExternalStrategyConfig());
+
+    assertThat(strategyConfig.getId()).isEqualTo(GENERATED_STRAT_ID);
+    assertThat(strategyConfig.getName()).isEqualTo(NEW_STRAT_NAME);
+    assertThat(strategyConfig.getDescri
