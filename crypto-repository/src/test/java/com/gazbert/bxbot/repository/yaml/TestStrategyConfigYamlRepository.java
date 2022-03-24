@@ -273,4 +273,30 @@ public class TestStrategyConfigYamlRepository {
 
     assertThat(strategyConfig.getId()).isEqualTo(GENERATED_STRAT_ID);
     assertThat(strategyConfig.getName()).isEqualTo(NEW_STRAT_NAME);
-    assertThat(strategyConfig.getDescri
+    assertThat(strategyConfig.getDescription()).isEqualTo(NEW_STRAT_DESCRIPTION);
+    assertThat(strategyConfig.getClassName()).isEqualTo(NEW_STRAT_CLASSNAME);
+    assertThat(strategyConfig.getConfigItems().containsKey(BUY_PRICE_CONFIG_ITEM_KEY)).isTrue();
+    assertThat(strategyConfig.getConfigItems().containsValue(BUY_PRICE_CONFIG_ITEM_VALUE)).isTrue();
+    assertThat(strategyConfig.getConfigItems().containsKey(AMOUNT_TO_BUY_CONFIG_ITEM_KEY)).isTrue();
+    assertThat(strategyConfig.getConfigItems().containsValue(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE))
+        .isTrue();
+
+    PowerMock.verifyAll();
+  }
+
+  @Test
+  public void whenDeleteCalledWithKnownIdThenReturnDeletedStrategyConfig() {
+    expect(
+            ConfigurationManager.loadConfig(
+                eq(StrategiesType.class), eq(STRATEGIES_CONFIG_YAML_FILENAME)))
+        .andReturn(allTheInternalStrategiesConfig());
+
+    ConfigurationManager.saveConfig(
+        eq(StrategiesType.class),
+        anyObject(StrategiesType.class),
+        eq(STRATEGIES_CONFIG_YAML_FILENAME));
+
+    PowerMock.replayAll();
+
+    final StrategyConfigRepository strategyConfigRepository = new StrategyConfigYamlRepository();
+    final StrategyConfig strategyConfig = strategyConfigRepository.delete(STRAT_ID
