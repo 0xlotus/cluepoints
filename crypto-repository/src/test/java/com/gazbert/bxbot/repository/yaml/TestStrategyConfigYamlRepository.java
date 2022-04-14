@@ -324,4 +324,33 @@ public class TestStrategyConfigYamlRepository {
     PowerMock.replayAll();
 
     final StrategyConfigRepository strategyConfigRepository = new StrategyConfigYamlRepository();
-    final StrategyConfig strategyC
+    final StrategyConfig strategyConfig = strategyConfigRepository.delete(UNKNOWN_STRAT_ID);
+
+    assertThat(strategyConfig).isEqualTo(null);
+    PowerMock.verifyAll();
+  }
+
+  // --------------------------------------------------------------------------
+  // Private utils
+  // --------------------------------------------------------------------------
+
+  private static StrategiesType allTheInternalStrategiesConfig() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+
+    final StrategyConfig strategyConfig1 = new StrategyConfig();
+    strategyConfig1.setId(STRAT_ID_1);
+    strategyConfig1.setName(STRAT_NAME_1);
+    strategyConfig1.setDescription(STRAT_DESCRIPTION_1);
+    strategyConfig1.setClassName(STRAT_CLASSNAME_1);
+    strategyConfig1.setConfigItems(configItems);
+
+    final StrategyConfig strategyConfig2 = new StrategyConfig();
+    strategyConfig2.setId(STRAT_ID_2);
+    strategyConfig2.setName(STRAT_NAME_2);
+    strategyConfig2.setDescription(STRAT_DESCRIPTION_2);
+    strategyConfig2.setClassName(STRAT_CLASSNAME_2);
+    strategyConfig2.setConfigItems(configItems);
+
+    fin
