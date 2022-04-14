@@ -353,4 +353,30 @@ public class TestStrategyConfigYamlRepository {
     strategyConfig2.setClassName(STRAT_CLASSNAME_2);
     strategyConfig2.setConfigItems(configItems);
 
-    fin
+    final StrategiesType strategiesType = new StrategiesType();
+    strategiesType.getStrategies().add(strategyConfig1);
+    strategiesType.getStrategies().add(strategyConfig2);
+
+    return strategiesType;
+  }
+
+  private static StrategiesType allTheInternalStrategiesConfigPlusNewOne() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+
+    final StrategyConfig newStrat = new StrategyConfig();
+    newStrat.setId(GENERATED_STRAT_ID);
+    newStrat.setName(NEW_STRAT_NAME);
+    newStrat.setDescription(NEW_STRAT_DESCRIPTION);
+    newStrat.setClassName(NEW_STRAT_CLASSNAME);
+    newStrat.setConfigItems(configItems);
+
+    final StrategiesType existingStatsPlusNewOne = allTheInternalStrategiesConfig();
+    existingStatsPlusNewOne.getStrategies().add(newStrat);
+    return existingStatsPlusNewOne;
+  }
+
+  private static StrategyConfig someExternalStrategyConfig() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM
