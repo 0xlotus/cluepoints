@@ -379,4 +379,37 @@ public class TestStrategyConfigYamlRepository {
 
   private static StrategyConfig someExternalStrategyConfig() {
     final Map<String, String> configItems = new HashMap<>();
-    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+    return new StrategyConfig(
+        STRAT_ID_1,
+        STRAT_NAME_1,
+        STRAT_DESCRIPTION_1,
+        STRAT_CLASSNAME_1,
+        STRAT_BEANAME_1,
+        configItems);
+  }
+
+  private static StrategyConfig someNewExternalStrategyConfig() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+    return new StrategyConfig(
+        null,
+        NEW_STRAT_NAME,
+        NEW_STRAT_DESCRIPTION,
+        NEW_STRAT_CLASSNAME,
+        STRAT_BEANAME_2,
+        configItems);
+  }
+
+  private static StrategyConfig someExternalStrategyConfigWithUnknownId() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+    return new StrategyConfig(
+        UNKNOWN_STRAT_ID,
+        STRAT_NAME_1,
+        STRAT_DESCRIPTION_1,
+        STRAT_CLASSNAME_1,
+        STRAT_BEANAME
