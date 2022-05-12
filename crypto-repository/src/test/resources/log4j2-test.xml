@@ -22,4 +22,7 @@
         <!-- debug | info | warn | error | fatal -->
         <Root level="fatal">
             <AppenderRef ref="STDOUT"/>
-            <!--<AppenderRef ref="crypto
+            <!--<AppenderRef ref="crypto_RollingFile"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
