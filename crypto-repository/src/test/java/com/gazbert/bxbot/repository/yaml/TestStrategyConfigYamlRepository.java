@@ -412,4 +412,7 @@ public class TestStrategyConfigYamlRepository {
         STRAT_NAME_1,
         STRAT_DESCRIPTION_1,
         STRAT_CLASSNAME_1,
-        STRAT_BEANAME
+        STRAT_BEANAME_1,
+        configItems);
+  }
+}
