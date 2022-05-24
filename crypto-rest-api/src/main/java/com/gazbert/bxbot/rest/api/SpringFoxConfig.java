@@ -68,4 +68,26 @@ public class SpringFoxConfig {
                 + System.lineSeparator()
                 + "1. Copy the token value (without the quotes) out of the response. "
                 + System.lineSeparator()
-                + "1. Click the 'Authorize' padlock button, enter the 
+                + "1. Click the 'Authorize' padlock button, enter the token value, "
+                + "click 'Authorize', click 'Close'."
+                + System.lineSeparator()
+                + "1. You should now be able to call the API operations."
+                + System.lineSeparator()
+                + System.lineSeparator()
+                + "_\"Had I the heaven's embroidered cloths,"
+                + System.lineSeparator()
+                + "Enwrought with golden and silver light,"
+                + System.lineSeparator()
+                + "The blue and the dim and the dark cloths"
+                + System.lineSeparator()
+                + "Of night and light and the half-light;"
+                + System.lineSeparator()
+                + "I would spread the cloths under your feet:"
+                + System.lineSeparator()
+                + "But I, being poor, have only my dreams;"
+                + System.lineSeparator()
+                + "I have spread my dreams under your feet;"
+                + System.lineSeparator()
+                + "Tread softly because you tread on my dreams.\"_"
+                + System.lineSeparator()
+                + S
