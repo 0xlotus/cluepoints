@@ -40,3 +40,32 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.ApiKey;
 import springfox.documentation.service.AuthorizationScope;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
+/**
+ * Encapsulates the SpringFox Swagger config for documenting the bot's REST API.
+ *
+ * @author gazbert
+ */
+@Configuration
+@EnableSwagger2
+@Import(BeanValidatorPluginsConfiguration.class)
+public class SpringFoxConfig {
+
+  private ApiInfo apiInfo() {
+    return new ApiInfoBuilder()
+        .title("BX-bot REST API")
+        .description(
+            "Here is the documentation for using BX-bot's REST API."
+                + System.lineSeparator()
+                + System.lineSeparator()
+                + "1. First, you'll need to get a JWT by calling the Authentication '/api/token' "
+                + "endpoint with a valid username/password."
+                + System.lineSeparator()
+                + "1. Copy the token value (without the quotes) out of the response. "
+                + System.lineSeparator()
+                + "1. Click the 'Authorize' padlock button, enter the 
