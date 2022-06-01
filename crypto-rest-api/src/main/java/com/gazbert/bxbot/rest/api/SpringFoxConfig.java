@@ -90,4 +90,39 @@ public class SpringFoxConfig {
                 + System.lineSeparator()
                 + "Tread softly because you tread on my dreams.\"_"
                 + System.lineSeparator()
-                + S
+                + System.lineSeparator()
+                + "W.B. Yeats")
+        .termsOfServiceUrl("https://github.com/gazbert/crypto")
+        .contact(new Contact("gazbert", "https://github.com/gazbert", ""))
+        .license("MIT")
+        .licenseUrl("https://github.com/gazbert/crypto/blob/master/LICENSE")
+        .version("1.0")
+        .build();
+  }
+
+  /**
+   * Builds the SpringFox Docket for describing the bot's REST API.
+   *
+   * @return the Swagger Docket.
+   */
+  @Bean
+  public Docket api() {
+
+    final Class[] ignoredModelClasses = {
+      InputStream.class, File.class, Resource.class, URI.class, URL.class
+    };
+
+    return new Docket(DocumentationType.SWAGGER_2)
+        .securitySchemes(Collections.singletonList(new ApiKey("JWT", "Authorization", "header")))
+        .securityContexts(
+            Collections.singletonList(
+                SecurityContext.builder()
+                    .securityReferences(
+                        Collections.singletonList(
+                            SecurityReference.builder()
+                                .reference("JWT")
+                                .scopes(new AuthorizationScope[0])
+                                .build()))
+                    .build()))
+        .select()
+        .apis(RequestHa
