@@ -125,4 +125,10 @@ public class SpringFoxConfig {
                                 .build()))
                     .build()))
         .select()
-        .apis(RequestHa
+        .apis(RequestHandlerSelectors.basePackage("com.gazbert.crypto.rest.api"))
+        .paths(PathSelectors.ant("/api/**"))
+        .build()
+        .apiInfo(apiInfo())
+        .ignoredParameterTypes(ignoredModelClasses);
+  }
+}
