@@ -1,6 +1,8 @@
+
 /*
  * The MIT License (MIT)
  *
+ * Copyright (c) 2016 Stephan Zerhusen
  * Copyright (c) 2019 gazbert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -23,22 +25,48 @@
 
 package com.gazbert.crypto.rest.api.security.authentication;
 
-import org.springframework.security.core.AuthenticationException;
+import javax.validation.constraints.NotNull;
 
 /**
- * This runtime exception is thrown if JWT authentication fails.
+ * Encapsulates a JWT Authentication Request containing username/password sent from the client.
  *
- * @author glynch
+ * <p>When a client first connects, it will need to pass credentials in order to be authenticated
+ * and issued a JWT for use in subsequent requests.
+ *
+ * @author gazbert
  */
-public class JwtAuthenticationException extends AuthenticationException {
+public class JwtAuthenticationRequest {
 
-  private static final long serialVersionUID = -5066890753686004758L;
+  @NotNull(message = "Username cannot be null")
+  private String username;
 
-  public JwtAuthenticationException(String msg, Throwable e) {
-    super(msg, e);
+  @NotNull(message = "Password cannot be null")
+  private String password;
+
+  // For Jackson
+  public JwtAuthenticationRequest() {
+    username = "";
+    password = "";
   }
 
-  public JwtAuthenticationException(String msg) {
-    super(msg);
+  public JwtAuthenticationRequest(String username, String password) {
+    this.username = username;
+    this.password = password;
+  }
+
+  public String getUsername() {
+    return this.username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return this.password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 }
