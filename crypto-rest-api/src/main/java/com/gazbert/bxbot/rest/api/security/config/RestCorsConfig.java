@@ -37,3 +37,40 @@ import org.springframework.web.filter.CorsFilter;
  * CORS config for BX-bot's REST API.
  *
  * <p>Needed so that the browser will allow the REST API to be accessed on a different machine to
+ * the one hosting the BX-bot UI app.
+ *
+ * @author gazbert
+ */
+@Configuration
+public class RestCorsConfig {
+
+  private static final Logger LOG = LogManager.getLogger();
+
+  @NotNull
+  @Value("${restapi.cors.allowed_origin}")
+  private String allowedOrigin;
+
+  /**
+   * Creates the CORS filter.
+   *
+   * @return the CORS filter.
+   */
+  @Bean
+  public CorsFilter corsFilter() {
+
+    LOG.info(() -> String.format("CORS Allowed Origins: %s", allowedOrigin));
+
+    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    final CorsConfiguration config = new CorsConfiguration();
+    config.setAllowCredentials(true);
+    config.addAllowedOrigin(allowedOrigin);
+    config.addAllowedHeader("*");
+    config.addAllowedMethod("OPTIONS");
+    config.addAllowedMethod("GET");
+    config.addAllowedMethod("POST");
+    config.addAllowedMethod("PUT");
+    config.addAllowedMethod("DELETE");
+    source.registerCorsConfiguration("/**", config);
+    return new CorsFilter(source);
+  }
+}
