@@ -18,4 +18,47 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT 
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.rest.api.security.jwt;
+
+import com.gazbert.crypto.rest.api.security.model.Role;
+import com.gazbert.crypto.rest.api.security.model.User;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+/**
+ * Creates a JWT User that has been authenticated successfully.
+ *
+ * @author gazbert
+ */
+public final class JwtUserFactory {
+
+  private JwtUserFactory() {
+  }
+
+  /**
+   * Creates a JWT User.
+   *
+   * @param user the user details from the database.
+   * @return a JWT User.
+   */
+  public static JwtUser create(User user) {
+    return new JwtUser(
+        user.getId(),
+        user.getUsername(),
+        user.getFirstname(),
+        user.getLastname(),
+        user.getPassword(),
+        user.getEmail(),
+        user.getEnabled(),
+        user.getLastPasswordResetDate().getTime(),
+        mapUserRolesToGrantedAuthorities(user.getRoles()),
+        user.getRoles());
+  }
+
+  private static List<GrantedAuthor
