@@ -61,4 +61,9 @@ public final class JwtUserFactory {
         user.getRoles());
   }
 
-  private static List<GrantedAuthor
+  private static List<GrantedAuthority> mapUserRolesToGrantedAuthorities(List<Role> roles) {
+    return roles.stream()
+        .map(role -> new SimpleGrantedAuthority(role.getName().name()))
+        .collect(Collectors.toList());
+  }
+}
