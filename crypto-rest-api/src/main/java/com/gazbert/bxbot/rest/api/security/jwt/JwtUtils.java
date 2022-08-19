@@ -48,4 +48,47 @@ import org.springframework.stereotype.Component;
  *
  * <p>Properties are loaded from the config/application.properties file.
  *
- * <p>Code originated from the excellent JWT and Spring Boot example by Stephan Zerhusen
+ * <p>Code originated from the excellent JWT and Spring Boot example by Stephan Zerhusen:
+ * https://github.com/szerhusenBC/jwt-spring-security-demo
+ *
+ * @author gazbert
+ */
+@Component
+public class JwtUtils {
+
+  private static final Logger LOG = LogManager.getLogger();
+  private static final String CUSTOM_CLAIM_NAMESPACE = "https://gazbert.com/crypto/";
+
+  static final String CLAIM_KEY_LAST_PASSWORD_CHANGE_DATE =
+      CUSTOM_CLAIM_NAMESPACE + "lastPasswordChangeDate";
+  static final String CLAIM_KEY_ROLES = CUSTOM_CLAIM_NAMESPACE + "roles";
+
+  private static final String CLAIM_KEY_USERNAME = "sub";
+  private static final String CLAIM_KEY_ISSUER = "iss";
+  private static final String CLAIM_KEY_ISSUED_AT = "iat";
+  private static final String CLAIM_KEY_AUDIENCE = "aud";
+
+  @NotNull
+  @Value("${crypto.restapi.jwt.secret}")
+  private String secret;
+
+  @NotNull
+  @Value("${crypto.restapi.jwt.expiration}")
+  @Min(1)
+  private long expirationInSecs;
+
+  @NotNull
+  @Value("${crypto.restapi.jwt.allowed_clock_skew}")
+  @Min(1)
+  private long allowedClockSkewInSecs;
+
+  @NotNull
+  @Value("${crypto.restapi.jwt.issuer}")
+  private String issuer;
+
+  @NotNull
+  @Value("${crypto.restapi.jwt.audience}")
+  private String audience;
+
+  /**
+   * For simple validation, it is sufficient to check the token integrity
