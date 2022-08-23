@@ -91,4 +91,29 @@ public class JwtUtils {
   private String audience;
 
   /**
-   * For simple validation, it is sufficient to check the token integrity
+   * For simple validation, it is sufficient to check the token integrity by just decrypting it with
+   * the signing key and making sure it has not expired. We don't have to call the database for an
+   * additional User lookup/check for every request.
+   *
+   * @param token the JWT in String format.
+   * @return the token claims if the JWT was valid.
+   * @throws JwtAuthenticationException if the JWT was invalid.
+   */
+  public Claims validateTokenAndGetClaims(String token) {
+    try {
+      final Claims claims = getClaimsFromToken(token);
+      final Date created = getIssuedAtDateFromTokenClaims(claims);
+      final Date lastPasswordResetDate = getLastPasswordResetDateFromTokenClaims(claims);
+      if (!isCreatedAfterLastPasswordReset(created, lastPasswordResetDate)) {
+        final String errorMsg =
+            "Invalid token! Created date claim is before last password reset date."
+                + " Created date: "
+                + created
+                + " Password reset date: "
+                + lastPasswordResetDate;
+        LOG.error(errorMsg);
+        throw new JwtAuthenticationException(errorMsg);
+      }
+      return claims;
+    } catch (Exception e) {
+      final String er
