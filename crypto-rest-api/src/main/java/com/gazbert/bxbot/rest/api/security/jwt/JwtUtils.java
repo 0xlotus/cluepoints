@@ -116,4 +116,36 @@ public class JwtUtils {
       }
       return claims;
     } catch (Exception e) {
-      final String er
+      final String errorMsg = "Invalid token! Details: " + e.getMessage();
+      LOG.error(errorMsg, e);
+      throw new JwtAuthenticationException(errorMsg, e);
+    }
+  }
+
+  /**
+   * Creates a JWT in String format.
+   *
+   * @param userDetails the JWT User details.
+   * @return the JWT as a String.
+   */
+  public String createToken(JwtUser userDetails) {
+    final Map<String, Object> claims = new HashMap<>();
+    claims.put(CLAIM_KEY_ISSUER, issuer);
+    claims.put(CLAIM_KEY_ISSUED_AT, new Date());
+    claims.put(CLAIM_KEY_AUDIENCE, audience);
+    claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+    claims.put(CLAIM_KEY_ROLES, mapRolesFromGrantedAuthorities(userDetails.getAuthorities()));
+    claims.put(CLAIM_KEY_LAST_PASSWORD_CHANGE_DATE, userDetails.getLastPasswordResetDate());
+    return buildToken(claims);
+  }
+
+  /**
+   * Checks if a JWT can be refreshed.
+   *
+   * <p>The creation time of the current JWT must be AFTER than the last password reset date.
+   * Earlier tokens are deemed to be invalid and potentially compromised.
+   *
+   * @param claims the JWT claims.
+   * @param lastPasswordReset the last password reset date.
+   * @return true if the token can be refreshed, false otherwise.
+ 
