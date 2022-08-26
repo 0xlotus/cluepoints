@@ -148,4 +148,37 @@ public class JwtUtils {
    * @param claims the JWT claims.
    * @param lastPasswordReset the last password reset date.
    * @return true if the token can be refreshed, false otherwise.
- 
+   */
+  public boolean canTokenBeRefreshed(Claims claims, Date lastPasswordReset) {
+    final Date created = getIssuedAtDateFromTokenClaims(claims);
+    boolean canBeRefreshed = isCreatedAfterLastPasswordReset(created, lastPasswordReset);
+    if (!canBeRefreshed) {
+      LOG.warn(
+          "Token cannot be refreshed for user: "
+              + claims.get(CLAIM_KEY_USERNAME)
+              + " - token creation date is BEFORE last password reset date");
+    }
+    return canBeRefreshed;
+  }
+
+  /**
+   * Refreshes a JWT.
+   *
+   * @param token the token to refresh in String format.
+   * @return a new (refreshed) JWT token in String format.
+   * @throws JwtAuthenticationException if the token cannot be refreshed.
+   */
+  public String refreshToken(String token) {
+    try {
+      final Claims claims = getClaimsFromToken(token);
+      claims.put(CLAIM_KEY_ISSUED_AT, new Date());
+      return buildToken(claims);
+    } catch (Exception e) {
+      final String errorMsg = "Failed to refresh token!";
+      LOG.error(errorMsg, e);
+      throw new JwtAuthenticationException(errorMsg, e);
+    }
+  }
+
+  /**
+   * Extracts the username from the JW
