@@ -181,4 +181,38 @@ public class JwtUtils {
   }
 
   /**
-   * Extracts the username from the JW
+   * Extracts the username from the JWT claims.
+   *
+   * @param claims the JWT claims.
+   * @return the username.
+   */
+  public String getUsernameFromTokenClaims(Claims claims) {
+    try {
+      final String username = claims.getSubject();
+      if (username == null) {
+        final String errorMsg = "Failed to extract username claim from token!";
+        LOG.error(errorMsg);
+        throw new JwtAuthenticationException(errorMsg);
+      }
+      return username;
+    } catch (Exception e) {
+      final String errorMsg = "Failed to extract username claim from token!";
+      LOG.error(errorMsg);
+      throw new JwtAuthenticationException(errorMsg, e);
+    }
+  }
+
+  /**
+   * Extracts the user's Roles from the JWT claims.
+   *
+   * @param claims the JWT claims.
+   * @return the user's Roles.
+   * @throws JwtAuthenticationException if the user's roles cannot be extracted.
+   */
+  public List<GrantedAuthority> getRolesFromTokenClaims(Claims claims) {
+    final List<GrantedAuthority> roles = new ArrayList<>();
+    try {
+      @SuppressWarnings("unchecked")
+      final List<String> rolesFromClaim = (List<String>) claims.get(CLAIM_KEY_ROLES);
+      for (final String roleFromClaim : rolesFromClaim) {
+        roles.add(new 
