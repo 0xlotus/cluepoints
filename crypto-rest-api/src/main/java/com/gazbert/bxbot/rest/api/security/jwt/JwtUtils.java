@@ -215,4 +215,39 @@ public class JwtUtils {
       @SuppressWarnings("unchecked")
       final List<String> rolesFromClaim = (List<String>) claims.get(CLAIM_KEY_ROLES);
       for (final String roleFromClaim : rolesFromClaim) {
-        roles.add(new 
+        roles.add(new SimpleGrantedAuthority(roleFromClaim));
+      }
+      return roles;
+    } catch (Exception e) {
+      final String errorMsg = "Failed to extract roles claim from token!";
+      LOG.error(errorMsg, e);
+      throw new JwtAuthenticationException(errorMsg, e);
+    }
+  }
+
+  Date getIssuedAtDateFromTokenClaims(Claims claims) {
+    return claims.getIssuedAt();
+  }
+
+  Date getExpirationDateFromTokenClaims(Claims claims) {
+    return claims.getExpiration();
+  }
+
+  Date getLastPasswordResetDateFromTokenClaims(Claims claims) {
+    Date lastPasswordResetDate;
+    try {
+      lastPasswordResetDate = new Date((Long) claims.get(CLAIM_KEY_LAST_PASSWORD_CHANGE_DATE));
+    } catch (Exception e) {
+      final String errorMsg = "Failed to extract lastPasswordResetDate claim from token!";
+      LOG.error(errorMsg, e);
+      throw new JwtAuthenticationException(errorMsg, e);
+    }
+    return lastPasswordResetDate;
+  }
+
+  // ------------------------------------------------------------------------
+  // Private utils
+  // ------------------------------------------------------------------------
+
+  private String buildToken(Map<String, Object> claims) {
+    final Date issuedAtDate = (Date) claims.get(CLAI
