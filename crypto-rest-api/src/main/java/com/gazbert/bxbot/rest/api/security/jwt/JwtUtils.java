@@ -250,4 +250,36 @@ public class JwtUtils {
   // ------------------------------------------------------------------------
 
   private String buildToken(Map<String, Object> claims) {
-    final Date issuedAtDate = (Date) claims.get(CLAI
+    final Date issuedAtDate = (Date) claims.get(CLAIM_KEY_ISSUED_AT);
+    final Date expirationDate = new Date(issuedAtDate.getTime() + (expirationInSecs * 1000));
+
+    return Jwts.builder()
+        .setClaims(claims)
+        .setExpiration(expirationDate)
+        .setIssuedAt(issuedAtDate)
+        .signWith(SignatureAlgorithm.HS512, secret)
+        .compact();
+  }
+
+  private Claims getClaimsFromToken(String token) {
+    return Jwts.parser()
+        .setAllowedClockSkewSeconds(allowedClockSkewInSecs)
+        .setSigningKey(secret)
+        .requireIssuer(issuer)
+        .requireAudience(audience)
+        .parseClaimsJws(token)
+        .getBody();
+  }
+
+  private boolean isCreatedAfterLastPasswordReset(Date created, Date lastPasswordReset) {
+    if (lastPasswordReset == null) {
+      return true; // password not changed yet, so this is valid.
+    } else {
+      return (created.after(lastPasswordReset)); // valid only if after last password change
+    }
+  }
+
+  private List<String> mapRolesFromGrantedAuthorities(
+      Collection<? extends GrantedAuthority> grantedAuthorities) {
+    final List<String> roles = new ArrayList<>();
+    for (final GrantedAuthority grantedAuthority : grant
