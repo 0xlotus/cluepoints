@@ -282,4 +282,9 @@ public class JwtUtils {
   private List<String> mapRolesFromGrantedAuthorities(
       Collection<? extends GrantedAuthority> grantedAuthorities) {
     final List<String> roles = new ArrayList<>();
-    for (final GrantedAuthority grantedAuthority : grant
+    for (final GrantedAuthority grantedAuthority : grantedAuthorities) {
+      roles.add(grantedAuthority.getAuthority());
+    }
+    return roles;
+  }
+}
