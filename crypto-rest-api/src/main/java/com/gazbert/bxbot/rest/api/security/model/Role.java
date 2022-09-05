@@ -18,4 +18,45 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CON
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.rest.api.security.model;
+
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+/**
+ * Represents a Role for a BX-bot User.
+ *
+ * @author gazbert
+ */
+@Entity
+@Table(name = "ROLE")
+public class Role {
+
+  @Id
+  @Column(name = "ID")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
+  @SequenceGenerator(name = "role_seq", sequenceName = "role_seq", allocationSize = 1)
+  private Long id;
+
+  @Column(name = "NAME", length = 50)
+  @NotNull
+  @Enumerated(EnumType.STRING)
+  private RoleName name;
+
+  @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+  private L
