@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -22,18 +23,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gazbert.crypto.rest.api.security.repository;
+package com.gazbert.crypto.rest.api.security.service;
 
+import com.gazbert.crypto.rest.api.security.jwt.JwtUserFactory;
 import com.gazbert.crypto.rest.api.security.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import com.gazbert.crypto.rest.api.security.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
- * JPA repository for looking up User details.
+ * User Details service for loading user details from the repository.
  *
  * @author gazbert
  */
-@RepositoryRestResource(exported = false)
-public interface UserRepository extends JpaRepository<User, Long> {
-  User findByUsername(String username);
+@Service
+public class JwtUserDetailsService implements UserDetailsService {
+
+  private final UserRepository userRepository;
+
+  @Autowired
+  public JwtUserDetailsService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) {
+    final User user = userRepository.findByUsername(username);
+    if (user == null) {
+      throw new UsernameNotFoundException(
+          String.format("No user found with username '%s'.", username));
+    } else {
+      return JwtUserFactory.create(user);
+    }
+  }
 }

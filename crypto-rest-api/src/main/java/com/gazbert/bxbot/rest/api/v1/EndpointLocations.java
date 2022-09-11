@@ -1,7 +1,7 @@
+
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2016 Stephan Zerhusen
  * Copyright (c) 2019 gazbert
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -22,18 +22,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gazbert.crypto.rest.api.security.repository;
-
-import com.gazbert.crypto.rest.api.security.model.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+package com.gazbert.crypto.rest.api.v1;
 
 /**
- * JPA repository for looking up User details.
+ * Base paths for BX-bot v1 REST endpoints.
  *
  * @author gazbert
  */
-@RepositoryRestResource(exported = false)
-public interface UserRepository extends JpaRepository<User, Long> {
-  User findByUsername(String username);
+public final class EndpointLocations {
+
+  /** Base path for entire REST API. */
+  private static final String API_ENDPOINT_BASE_URI = "/api/v1";
+
+  /** Base path for configuration REST endpoints. */
+  public static final String CONFIG_ENDPOINT_BASE_URI = API_ENDPOINT_BASE_URI + "/config";
+
+  /** Base path for runtime REST endpoints. */
+  public static final String RUNTIME_ENDPOINT_BASE_URI = API_ENDPOINT_BASE_URI + "/runtime";
+
+  private EndpointLocations() {
+  }
 }
