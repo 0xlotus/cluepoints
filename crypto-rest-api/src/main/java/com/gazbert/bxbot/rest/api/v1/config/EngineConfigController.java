@@ -38,4 +38,43 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMap
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
+/**
+ * Controller for directing Engine config requests.
+ *
+ * <p>Engine config can only be fetched and updated - it cannot be deleted or created.
+ *
+ * <p>There is only 1 Trading Engine per bot.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+@Api(tags = {"Engine Configuration"})
+@RestController
+@RequestMapping(CONFIG_ENDPOINT_BASE_URI)
+public class EngineConfigController {
+
+  private static final Logger LOG = LogManager.getLogger();
+  private static final String ENGINE_RESOURCE_PATH = "/engine";
+  private final EngineConfigService engineConfigService;
+
+  @Autowired
+  public EngineConfigController(EngineConfigService engineConfigService) {
+    this.engineConfigService = engineConfigService;
+  }
+
+  /**
+   * Returns the Engine configuration for the bot.
+   *
+   * @param principal the authenticated user making the request.
+   * @return the Engine configuration.
+   */
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping(value = ENGINE_RESOURCE_PATH)
+  public EngineConfig getEngine(@ApiIgnore Principal principal) {
+
+    LOG.info(
+        () -> "GET " + E
