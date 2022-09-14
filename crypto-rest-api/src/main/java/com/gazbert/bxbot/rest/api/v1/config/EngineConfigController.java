@@ -77,4 +77,33 @@ public class EngineConfigController {
   public EngineConfig getEngine(@ApiIgnore Principal principal) {
 
     LOG.info(
-        () -> "GET " + E
+        () -> "GET " + ENGINE_RESOURCE_PATH + " - getEngine() - caller: " + principal.getName());
+
+    final EngineConfig engineConfig = engineConfigService.getEngineConfig();
+    LOG.info(() -> "Response: " + engineConfig);
+    return engineConfig;
+  }
+
+  /**
+   * Updates the Engine configuration for the bot.
+   *
+   * @param principal the authenticated user making the request.
+   * @param config the Engine config to update.
+   * @return 200 'OK' HTTP status code and updated Engine config in the response body if update
+   *     successful, some other HTTP status code otherwise.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping(value = ENGINE_RESOURCE_PATH)
+  public ResponseEntity<EngineConfig> updateEngine(
+      @ApiIgnore Principal principal, @RequestBody EngineConfig config) {
+
+    LOG.info(
+        () -> "PUT " + ENGINE_RESOURCE_PATH + " - updateEngine() - caller: " + principal.getName());
+
+    LOG.info(() -> "Request: " + config);
+
+    final EngineConfig updatedConfig = engineConfigService.updateEngineConfig(config);
+    return buildResponseEntity(updatedConfig);
+  }
+
+  private ResponseEntity<EngineConfig> buildResponseEntity(EngineConfig entity)
