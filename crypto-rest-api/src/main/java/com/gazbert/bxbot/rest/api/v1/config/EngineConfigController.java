@@ -106,4 +106,8 @@ public class EngineConfigController {
     return buildResponseEntity(updatedConfig);
   }
 
-  private ResponseEntity<EngineConfig> buildResponseEntity(EngineConfig entity)
+  private ResponseEntity<EngineConfig> buildResponseEntity(EngineConfig entity) {
+    LOG.info(() -> "Response: " + entity);
+    return new ResponseEntity<>(entity, null, HttpStatus.OK);
+  }
+}
