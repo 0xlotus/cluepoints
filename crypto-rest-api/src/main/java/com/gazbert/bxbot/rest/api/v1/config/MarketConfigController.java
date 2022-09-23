@@ -78,4 +78,40 @@ public class MarketConfigController {
 
     LOG.info(
         () ->
-            "GET " + MARKETS_RE
+            "GET " + MARKETS_RESOURCE_PATH + " - getAllMarkets() - caller: " + principal.getName());
+
+    final List<MarketConfig> marketConfigs = marketConfigService.getAllMarketConfig();
+    LOG.info(() -> "Response: " + marketConfigs);
+
+    return marketConfigs;
+  }
+
+  /**
+   * Returns the Market configuration for a given id.
+   *
+   * @param principal the authenticated user.
+   * @param marketId the id of the Market to fetch.
+   * @return the Market configuration.
+   */
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping(value = MARKETS_RESOURCE_PATH + "/{marketId}")
+  public ResponseEntity<MarketConfig> getMarket(
+      @ApiIgnore Principal principal, @PathVariable String marketId) {
+
+    LOG.info(
+        () ->
+            "GET "
+                + MARKETS_RESOURCE_PATH
+                + "/"
+                + marketId
+                + " - getMarket() - caller: "
+                + principal.getName());
+
+    final MarketConfig marketConfig = marketConfigService.getMarketConfig(marketId);
+    return marketConfig == null
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : buildResponseEntity(marketConfig, HttpStatus.OK);
+  }
+
+  /**
+   * 
