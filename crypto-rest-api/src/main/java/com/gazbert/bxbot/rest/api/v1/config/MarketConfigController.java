@@ -41,4 +41,41 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bi
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
+/**
+ * Controller for directing Market config requests.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+@Api(tags = {"Market Configuration"})
+@RestController
+@RequestMapping(CONFIG_ENDPOINT_BASE_URI)
+public class MarketConfigController {
+
+  private static final Logger LOG = LogManager.getLogger();
+  private static final String MARKETS_RESOURCE_PATH = "/markets";
+  private final MarketConfigService marketConfigService;
+
+  @Autowired
+  public MarketConfigController(MarketConfigService marketConfigService) {
+    this.marketConfigService = marketConfigService;
+  }
+
+  /**
+   * Returns all of the Market configuration for the bot.
+   *
+   * @param principal the authenticated user.
+   * @return all the Market configurations.
+   */
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping(value = MARKETS_RESOURCE_PATH)
+  public List<MarketConfig> getAllMarkets(@ApiIgnore Principal principal) {
+
+    LOG.info(
+        () ->
+            "GET " + MARKETS_RE
