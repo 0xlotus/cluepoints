@@ -114,4 +114,37 @@ public class MarketConfigController {
   }
 
   /**
-   * 
+   * Updates a given Market configuration.
+   *
+   * @param principal the authenticated user.
+   * @param marketId id of the Market config to update.
+   * @param config the updated Market config.
+   * @return 204 'No Content' HTTP status code if update successful, 404 'Not Found' HTTP status
+   *     code if Market config not found.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping(value = MARKETS_RESOURCE_PATH + "/{marketId}")
+  public ResponseEntity<MarketConfig> updateMarket(
+      @ApiIgnore Principal principal,
+      @PathVariable String marketId,
+      @RequestBody MarketConfig config) {
+
+    LOG.info(
+        () ->
+            "PUT "
+                + MARKETS_RESOURCE_PATH
+                + "/"
+                + marketId
+                + " - updateMarket() - caller: "
+                + principal.getName());
+
+    LOG.info(() -> "Request: " + config);
+
+    if (config.getId() == null || !marketId.equals(config.getId())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    final MarketConfig updatedConfig = marketConfigService.updateMarketConfig(config);
+    return updatedConfig == null
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : buildResponseEntity(updatedCo
