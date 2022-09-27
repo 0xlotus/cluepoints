@@ -147,4 +147,38 @@ public class MarketConfigController {
     final MarketConfig updatedConfig = marketConfigService.updateMarketConfig(config);
     return updatedConfig == null
         ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-        : buildResponseEntity(updatedCo
+        : buildResponseEntity(updatedConfig, HttpStatus.OK);
+  }
+
+  /**
+   * Creates a new Market configuration.
+   *
+   * @param principal the authenticated user.
+   * @param config the new Market config.
+   * @return 201 'Created' HTTP status code and created Market config in response body if create
+   *     successful, some other HTTP status code otherwise.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping(value = MARKETS_RESOURCE_PATH)
+  public ResponseEntity<MarketConfig> createMarket(
+      @ApiIgnore Principal principal, @RequestBody MarketConfig config) {
+
+    LOG.info(
+        () ->
+            "POST " + MARKETS_RESOURCE_PATH + " - createMarket() - caller: " + principal.getName());
+
+    LOG.info(() -> "Request: " + config);
+
+    final MarketConfig createdConfig = marketConfigService.createMarketConfig(config);
+    return createdConfig == null
+        ? new ResponseEntity<>(HttpStatus.BAD_REQUEST)
+        : buildResponseEntity(createdConfig, HttpStatus.CREATED);
+  }
+
+  /**
+   * Deletes a Market configuration for a given id.
+   *
+   * @param principal the authenticated user.
+   * @param marketId the id of the Market configuration to delete.
+   * @return 204 'No Content' HTTP status code if delete successful, 404 'Not Found' HTTP status
+ 
