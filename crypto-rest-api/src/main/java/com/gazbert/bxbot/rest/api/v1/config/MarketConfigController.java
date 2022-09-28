@@ -181,4 +181,34 @@ public class MarketConfigController {
    * @param principal the authenticated user.
    * @param marketId the id of the Market configuration to delete.
    * @return 204 'No Content' HTTP status code if delete successful, 404 'Not Found' HTTP status
- 
+   *     code if Market config not found.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @DeleteMapping(value = MARKETS_RESOURCE_PATH + "/{marketId}")
+  public ResponseEntity<MarketConfig> deleteMarket(
+      @ApiIgnore Principal principal, @PathVariable String marketId) {
+
+    LOG.info(
+        () ->
+            "DELETE "
+                + MARKETS_RESOURCE_PATH
+                + "/"
+                + marketId
+                + " - deleteMarket() - caller: "
+                + principal.getName());
+
+    final MarketConfig deletedConfig = marketConfigService.deleteMarketConfig(marketId);
+    return deletedConfig == null
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  // ------------------------------------------------------------------------
+  // Private utils
+  // ------------------------------------------------------------------------
+
+  private ResponseEntity<MarketConfig> buildResponseEntity(MarketConfig entity, HttpStatus status) {
+    LOG.info(() -> "Response: " + entity);
+    return new ResponseEntity<>(entity, null, status);
+  }
+}
