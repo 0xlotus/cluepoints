@@ -85,3 +85,138 @@ public class StrategyConfigController {
                 + principal.getName());
 
     final List<StrategyConfig> strategyConfigs = strategyConfigService.getAllStrategyConfig();
+
+    LOG.info(() -> "Response: " + strategyConfigs);
+    return strategyConfigs;
+  }
+
+  /**
+   * Returns the Strategy configuration for a given id.
+   *
+   * @param principal the authenticated user.
+   * @param strategyId the id of the Strategy to fetch.
+   * @return the Strategy configuration.
+   */
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping(value = STRATEGIES_RESOURCE_PATH + "/{strategyId}")
+  public ResponseEntity<StrategyConfig> getStrategy(
+      @ApiIgnore Principal principal, @PathVariable String strategyId) {
+
+    LOG.info(
+        () ->
+            "GET "
+                + STRATEGIES_RESOURCE_PATH
+                + "/"
+                + strategyId
+                + " - getStrategy() - caller: "
+                + principal.getName());
+
+    final StrategyConfig strategyConfig = strategyConfigService.getStrategyConfig(strategyId);
+    return strategyConfig == null
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : buildResponseEntity(strategyConfig, HttpStatus.OK);
+  }
+
+  /**
+   * Updates a given Strategy configuration.
+   *
+   * @param principal the authenticated user.
+   * @param strategyId id of the Strategy config to update.
+   * @param config the updated Strategy config.
+   * @return 200 'OK' HTTP status code and updated Strategy config in the body if update successful,
+   *     404 'Not Found' HTTP status code if Strategy config not found.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @PutMapping(value = STRATEGIES_RESOURCE_PATH + "/{strategyId}")
+  public ResponseEntity<StrategyConfig> updateStrategy(
+      @ApiIgnore Principal principal,
+      @PathVariable String strategyId,
+      @RequestBody StrategyConfig config) {
+
+    LOG.info(
+        () ->
+            "PUT "
+                + STRATEGIES_RESOURCE_PATH
+                + "/"
+                + strategyId
+                + " - updateStrategy() - caller: "
+                + principal.getName());
+
+    LOG.info(() -> "Request: " + config);
+
+    if (config.getId() == null || !strategyId.equals(config.getId())) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    final StrategyConfig updatedConfig = strategyConfigService.updateStrategyConfig(config);
+    return updatedConfig == null
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : buildResponseEntity(updatedConfig, HttpStatus.OK);
+  }
+
+  /**
+   * Creates a new Strategy configuration.
+   *
+   * @param principal the authenticated user.
+   * @param config the new Strategy config.
+   * @return 201 'Created' HTTP status code and created Strategy config in response body if create
+   *     successful, some other status code otherwise.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @PostMapping(value = STRATEGIES_RESOURCE_PATH)
+  public ResponseEntity<StrategyConfig> createStrategy(
+      @ApiIgnore Principal principal, @RequestBody StrategyConfig config) {
+
+    LOG.info(
+        () ->
+            "POST "
+                + STRATEGIES_RESOURCE_PATH
+                + " - createStrategy() - caller: "
+                + principal.getName());
+
+    LOG.info(() -> "Request: " + config);
+
+    final StrategyConfig createdConfig = strategyConfigService.createStrategyConfig(config);
+    return createdConfig == null
+        ? new ResponseEntity<>(HttpStatus.BAD_REQUEST)
+        : buildResponseEntity(createdConfig, HttpStatus.CREATED);
+  }
+
+  /**
+   * Deletes a Strategy configuration for a given id.
+   *
+   * @param principal the authenticated user.
+   * @param strategyId the id of the Strategy configuration to delete.
+   * @return 204 'No Content' HTTP status code if delete successful, 404 'Not Found' HTTP status
+   *     code if Strategy config not found.
+   */
+  @PreAuthorize("hasRole('ADMIN')")
+  @DeleteMapping(value = STRATEGIES_RESOURCE_PATH + "/{strategyId}")
+  public ResponseEntity<StrategyConfig> deleteStrategy(
+      @ApiIgnore Principal principal, @PathVariable String strategyId) {
+
+    LOG.info(
+        () ->
+            "DELETE "
+                + STRATEGIES_RESOURCE_PATH
+                + "/"
+                + strategyId
+                + " - deleteStrategy() - caller: "
+                + principal.getName());
+
+    final StrategyConfig deletedConfig = strategyConfigService.deleteStrategyConfig(strategyId);
+    return deletedConfig == null
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+        : new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  // ------------------------------------------------------------------------
+  // Private utils
+  // ------------------------------------------------------------------------
+
+  private ResponseEntity<StrategyConfig> buildResponseEntity(
+      StrategyConfig entity, HttpStatus status) {
+    LOG.info(() -> "Response: " + entity);
+    return new ResponseEntity<>(entity, null, status);
+  }
+}
