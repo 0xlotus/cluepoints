@@ -44,4 +44,42 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframew
+import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
+
+/**
+ * Controller for directing Bot Logfile requests.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+@Api(tags = {"Bot Logfile"})
+@RestController
+@RequestMapping(RUNTIME_ENDPOINT_BASE_URI)
+public class BotLogfileController {
+
+  private static final Logger LOG = LogManager.getLogger();
+  private static final String LOGFILE_RESOURCE_PATH = "/logfile";
+  private static final String LOGFILE_DOWNLOAD_RESOURCE_PATH = "/logfile/download";
+
+  private final RestApiConfig restApiConfig;
+  private final BotLogfileService botLogfileService;
+
+  @Autowired
+  public BotLogfileController(RestApiConfig restApiConfig, BotLogfileService botLogfileService) {
+    this.restApiConfig = restApiConfig;
+    this.botLogfileService = botLogfileService;
+  }
+
+  /**
+   * Returns the logfile as a download.
+   *
+   * <p>If the file is larger than {@link RestApiConfig#getLogfileDownloadSize()}, the end of the
+   * logfile will be truncated.
+   *
+   * @param principal the authenticated user making the request.
+   * @param request the request.
+   * @return the logfile as a download.
+   */
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping(value = L
