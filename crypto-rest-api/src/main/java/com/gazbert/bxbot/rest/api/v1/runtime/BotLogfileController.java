@@ -82,4 +82,39 @@ public class BotLogfileController {
    * @return the logfile as a download.
    */
   @PreAuthorize("hasRole('USER')")
-  @GetMapping(value = L
+  @GetMapping(value = LOGFILE_DOWNLOAD_RESOURCE_PATH)
+  public ResponseEntity<Resource> downloadLogfile(
+      @ApiIgnore Principal principal, HttpServletRequest request) {
+
+    LOG.info(
+        () ->
+            "GET "
+                + LOGFILE_RESOURCE_PATH
+                + " - downloadLogfile() - caller: "
+                + principal.getName());
+
+    Resource logfile;
+    try {
+      logfile = botLogfileService.getLogfileAsResource(restApiConfig.getLogfileDownloadSize());
+    } catch (IOException e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    String contentType = null;
+    try {
+      contentType = request.getServletContext().getMimeType(logfile.getFile().getAbsolutePath());
+    } catch (IOException ex) {
+      LOG.info(() -> "Could not determine file type.");
+    }
+    // Fallback to the default content type if type could not be determined
+    if (contentType == null) {
+      contentType = "application/octet-stream";
+    }
+
+    return ResponseEntity.ok()
+        .contentType(MediaType.parseMediaType(contentType))
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"" + logfile.getFilename() + "\"")
+        .body(logfile);
+  }
