@@ -118,3 +118,31 @@ public class BotLogfileController {
             "attachment; filename=\"" + logfile.getFilename() + "\"")
         .body(logfile);
   }
+
+  /**
+   * Returns logfile content for the bot.
+   *
+   * <p>If the file has more lines than {@link RestApiConfig#getMaxLogfileLines()}, the content will
+   * be truncated accordingly:
+   *
+   * <ul>
+   *   <li>For a head request, the end of the file will be truncated.
+   *   <li>For a tail request, the start of the file will be truncated.
+   *   <li>If head or tail param is not specified, the start of the file will be truncated.
+   *   <li>If both a head and tail param is present (just why?!!), a tail request will be actioned.
+   * </ul>
+   *
+   * @param principal the authenticated user making the request.
+   * @param head the number of lines to fetch from head of file.
+   * @param tail the number of lines to fetch from tail of file.
+   * @return the logfile.
+   */
+  @PreAuthorize("hasRole('USER')")
+  @GetMapping(value = LOGFILE_RESOURCE_PATH)
+  public ResponseEntity<String> getLogfile(
+      @ApiIgnore Principal principal,
+      @ApiParam(value = "Number of lines to fetch from head of file.", example = "100")
+          @RequestParam(required = false)
+          Integer head,
+      @ApiParam(value = "Number of lines to fetch from tail of file.", example = "100")
+   
