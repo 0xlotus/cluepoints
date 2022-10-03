@@ -145,4 +145,39 @@ public class BotLogfileController {
           @RequestParam(required = false)
           Integer head,
       @ApiParam(value = "Number of lines to fetch from tail of file.", example = "100")
-   
+          @RequestParam(required = false)
+          Integer tail) {
+
+    LOG.info(
+        () ->
+            "GET "
+                + LOGFILE_RESOURCE_PATH
+                + " - getLogfile() - caller: "
+                + principal.getName()
+                + ", head="
+                + head
+                + ", tail="
+                + tail);
+
+    String logfile;
+    final int maxLogfileLineCount = restApiConfig.getMaxLogfileLines();
+
+    try {
+      if (head != null && head > 0) {
+        if (head > maxLogfileLineCount) {
+          LOG.warn(
+              () ->
+                  "Requested head line count exceeds max line count. Using max line count: "
+                      + maxLogfileLineCount);
+          logfile = botLogfileService.getLogfileHead(maxLogfileLineCount);
+        } else {
+          logfile = botLogfileService.getLogfileHead(head);
+        }
+
+      } else if (tail != null && tail > 0) {
+        if (tail > maxLogfileLineCount) {
+          LOG.warn(
+              () ->
+                  "Requested tail line count exceeds max line count. Using max line count: "
+                      + maxLogfileLineCount);
+          logfile = botLogfileService.getLogfileTail(maxLogfileLineCount);
