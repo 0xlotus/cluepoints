@@ -181,3 +181,18 @@ public class BotLogfileController {
                   "Requested tail line count exceeds max line count. Using max line count: "
                       + maxLogfileLineCount);
           logfile = botLogfileService.getLogfileTail(maxLogfileLineCount);
+        } else {
+          logfile = botLogfileService.getLogfileTail(tail);
+        }
+
+      } else {
+        logfile = botLogfileService.getLogfile(restApiConfig.getMaxLogfileLines());
+      }
+
+      return new ResponseEntity<>(logfile, null, HttpStatus.OK);
+
+    } catch (IOException e) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+}
