@@ -53,4 +53,17 @@ public class TestRestApiConfig {
   }
 
   @Test
-  public void testMaxLogfile
+  public void testMaxLogfileDownloadSizeCanBeSetAndFetched() {
+    final RestApiConfig restApiConfig = new RestApiConfig();
+    restApiConfig.setMaxLogfileDownloadSize(MAX_LOGFILE_DOWNLOAD_SIZE);
+    assertThat(restApiConfig.getLogfileDownloadSize()).isEqualTo(MAX_LOGFILE_DOWNLOAD_SIZE);
+  }
+
+  @Test
+  public void testMaxLogfileDownloadSizeDefaultFallback() {
+    final RestApiConfig restApiConfig = new RestApiConfig();
+    restApiConfig.setMaxLogfileDownloadSize(0);
+    assertThat(restApiConfig.getLogfileDownloadSize())
+        .isEqualTo(RestApiConfig.DEFAULT_MAX_DOWNLOAD_SIZE);
+  }
+}
