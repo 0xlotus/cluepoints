@@ -16,4 +16,41 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS B
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.rest.api;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.Test;
+
+/**
+ * Tests the REST API configuration can be set and loaded as expected.
+ *
+ * @author gazbert
+ */
+public class TestRestApiConfig {
+
+  private static final int MAX_LOGFILE_LINES = 1000;
+  private static final int MAX_LOGFILE_DOWNLOAD_SIZE = 2 * 1048;
+
+  @Test
+  public void testMaxLogfileLinesCanBeSetAndFetched() {
+    final RestApiConfig restApiConfig = new RestApiConfig();
+    restApiConfig.setMaxLogfileLines(MAX_LOGFILE_LINES);
+    assertThat(restApiConfig.getMaxLogfileLines()).isEqualTo(MAX_LOGFILE_LINES);
+  }
+
+  @Test
+  public void testMaxLogfileLinesDefaultFallback() {
+    final RestApiConfig restApiConfig = new RestApiConfig();
+    restApiConfig.setMaxLogfileLines(0);
+    assertThat(restApiConfig.getMaxLogfileLines())
+        .isEqualTo(RestApiConfig.DEFAULT_MAX_LINES);
+  }
+
+  @Test
+  public void testMaxLogfile
