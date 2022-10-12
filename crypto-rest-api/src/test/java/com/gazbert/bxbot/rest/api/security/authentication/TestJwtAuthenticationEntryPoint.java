@@ -32,4 +32,30 @@ import com.gazbert.crypto.rest.api.security.jwt.JwtUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
-import org.junit.runner
+import org.junit.runner.RunWith;
+import org.springframework.boot.actuate.logging.LogFileWebEndpoint;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.context.restart.RestartEndpoint;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.test.context.junit4.SpringRunner;
+
+/**
+ * Tests the JWT Authentication Entry Point behaves as expected.
+ *
+ * @author gazbert
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class TestJwtAuthenticationEntryPoint {
+
+  @MockBean private HttpServletRequest request;
+  @MockBean private HttpServletResponse response;
+  @MockBean private AuthenticationException authException;
+
+  // Need these even though not used in the test directly because Spring loads them on startup...
+  @MockBean private EmailAlerter emailAlerter;
+  @MockBean private TradingEngine tradingEngine;
+  @MockBean private RestartEndpoint restartEndpoint;
+  @MockBean private LogFi
