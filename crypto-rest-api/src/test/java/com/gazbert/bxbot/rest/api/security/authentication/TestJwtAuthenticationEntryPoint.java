@@ -58,4 +58,15 @@ public class TestJwtAuthenticationEntryPoint {
   @MockBean private EmailAlerter emailAlerter;
   @MockBean private TradingEngine tradingEngine;
   @MockBean private RestartEndpoint restartEndpoint;
-  @MockBean private LogFi
+  @MockBean private LogFileWebEndpoint logFileWebEndpoint;
+  @MockBean private JwtUtils jwtUtils;
+  @MockBean private AuthenticationManager authenticationManager;
+
+  @Test
+  public void whenCommenceCalledThenExpectUnauthorizedResponse() throws Exception {
+    final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint =
+        new JwtAuthenticationEntryPoint();
+    jwtAuthenticationEntryPoint.commence(request, response, authException);
+    verify(response, times(1)).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+  }
+}
