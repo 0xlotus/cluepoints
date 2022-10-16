@@ -13,4 +13,35 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WAR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.rest.api.security.authentication;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+/**
+ * Tests JWT Authentication Exception is created as expected.
+ *
+ * @author gazbert
+ */
+public class TestJwtAuthenticationException {
+
+  private static final String ERROR_MSG = "Failed to extract expiration claim from token!";
+  private static final RuntimeException CAUSE = new RuntimeException("The cause of the exception");
+
+  @Test
+  public void testCreationOfExceptionIsAsExpected() {
+    final JwtAuthenticationException exception = new JwtAuthenticationException(ERROR_MSG);
+    assertEquals(ERROR_MSG, exception.getMessage());
+  }
+
+  @Test
+  public void 
