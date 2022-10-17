@@ -44,4 +44,9 @@ public class TestJwtAuthenticationException {
   }
 
   @Test
-  public void 
+  public void testCreationOfExceptionWithCauseIsAsExpected() {
+    final JwtAuthenticationException exception = new JwtAuthenticationException(ERROR_MSG, CAUSE);
+    assertEquals(ERROR_MSG, exception.getMessage());
+    assertEquals(CAUSE, exception.getCause());
+  }
+}
