@@ -14,4 +14,34 @@
  * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING B
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.rest.api.security.authentication;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
+import org.junit.Test;
+
+/**
+ * Tests a JWT Authentication Request behaves as expected.
+ *
+ * @author gazbert
+ */
+public class TestJwtAuthenticationRequest {
+
+  private static final String USERNAME = "crypto-ui";
+  private static final String PASSWORD = "InSearchOfLostTime";
+  private static final String USERNAME2 = "crypto-ui-2";
+  private static final String PASSWORD2 = "InSearchOfLostTime2";
+
+  @Test
+  public void testEmptyConstructorWorksAsExpected() {
+    final JwtAuthenticationRequest jwtAuthenticationRequest = new JwtAuthenticationRequest();
+    assertEquals("", jwtAuthenticationRequest.getUsername());
+    assertEquals("", jwtAuthenticationRequ
