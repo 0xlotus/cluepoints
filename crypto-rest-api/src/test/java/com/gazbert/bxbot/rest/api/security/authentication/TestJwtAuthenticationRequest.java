@@ -44,4 +44,24 @@ public class TestJwtAuthenticationRequest {
   public void testEmptyConstructorWorksAsExpected() {
     final JwtAuthenticationRequest jwtAuthenticationRequest = new JwtAuthenticationRequest();
     assertEquals("", jwtAuthenticationRequest.getUsername());
-    assertEquals("", jwtAuthenticationRequ
+    assertEquals("", jwtAuthenticationRequest.getPassword());
+  }
+
+  @Test
+  public void testArgsConstructorWorksAsExpected() {
+    final JwtAuthenticationRequest jwtAuthenticationRequest =
+        new JwtAuthenticationRequest(USERNAME, PASSWORD);
+    assertEquals(USERNAME, jwtAuthenticationRequest.getUsername());
+    assertEquals(PASSWORD, jwtAuthenticationRequest.getPassword());
+  }
+
+  @Test
+  public void testSettersWorkAsExpected() {
+    final JwtAuthenticationRequest jwtAuthenticationRequest =
+        new JwtAuthenticationRequest(USERNAME, PASSWORD);
+    jwtAuthenticationRequest.setUsername(USERNAME2);
+    assertEquals(USERNAME2, jwtAuthenticationRequest.getUsername());
+    jwtAuthenticationRequest.setPassword(PASSWORD2);
+    assertEquals(PASSWORD2, jwtAuthenticationRequest.getPassword());
+  }
+}
