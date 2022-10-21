@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -21,33 +22,24 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gazbert.crypto.rest.api.security.authentication;
+package com.gazbert.crypto.rest.api.security.config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
+import org.springframework.web.filter.CorsFilter;
 
 /**
- * Tests a JWT Authentication Response behaves as expected.
+ * Tests the REST CORS config filter is created as expected.
  *
  * @author gazbert
  */
-public class TestJwtAuthenticationResponse {
-
-  private static final String JWT = "the.jwt.string";
-  private static final String ANOTHER_JWT = "another.jwt.string";
+public class TestRestCorsConfig {
 
   @Test
-  public void testEmptyConstructorWorksAsExpected() {
-    final JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse();
-    assertEquals("", jwtAuthenticationResponse.getToken());
-  }
-
-  @Test
-  public void testSetterAndGettersWorkAsExpected() {
-    final JwtAuthenticationResponse jwtAuthenticationResponse = new JwtAuthenticationResponse(JWT);
-    jwtAuthenticationResponse.setToken(ANOTHER_JWT);
-    assertEquals(ANOTHER_JWT, jwtAuthenticationResponse.getToken());
+  public void testInitialisationWorksAsExpected() {
+    final RestCorsConfig restCorsConfig = new RestCorsConfig();
+    final CorsFilter corsFilter = restCorsConfig.corsFilter();
+    assertNotNull(corsFilter);
   }
 }
