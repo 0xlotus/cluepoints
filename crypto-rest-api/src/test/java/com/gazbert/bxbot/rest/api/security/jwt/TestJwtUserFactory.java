@@ -37,4 +37,35 @@ import org.junit.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 /**
- * Te
+ * Tests the behaviour of the JwtUserFactory is as expected.
+ *
+ * @author gazbert
+ */
+public class TestJwtUserFactory {
+
+  private static final Long ADMIN_ROLE_ID = Long.valueOf("213443242342");
+  private static final Long USER_ROLE_ID = Long.valueOf("21344565442342");
+
+  private static final Long USER_ID = Long.valueOf("2323267789789");
+  private static final String USERNAME = "hansolo";
+  private static final String PASSWORD = "password";
+  private static final String FIRSTNAME = "Han";
+  private static final String LASTNAME = "Solo";
+  private static final String EMAIL = "han@falcon";
+  private static final boolean USER_ENABLED = true;
+  private static final Date LAST_PASSWORD_RESET_DATE = new Date();
+
+  @Test
+  public void whenCreateCalledWithUserModelThenExpectJwtUserDetailsToBeReturned() {
+    final User user = new User();
+    user.setId(USER_ID);
+    user.setUsername(USERNAME);
+    user.setPassword(PASSWORD);
+    user.setFirstname(FIRSTNAME);
+    user.setLastname(LASTNAME);
+    user.setEmail(EMAIL);
+    user.setEnabled(USER_ENABLED);
+    user.setLastPasswordResetDate(LAST_PASSWORD_RESET_DATE);
+    user.setRoles(createRoles(user));
+
+    final JwtUser userDetails = JwtUserFactory.create
