@@ -68,4 +68,33 @@ public class TestJwtUserFactory {
     user.setLastPasswordResetDate(LAST_PASSWORD_RESET_DATE);
     user.setRoles(createRoles(user));
 
-    final JwtUser userDetails = JwtUserFactory.create
+    final JwtUser userDetails = JwtUserFactory.create(user);
+
+    assertEquals(USER_ID, userDetails.getId());
+    assertEquals(USERNAME, userDetails.getUsername());
+    assertEquals(PASSWORD, userDetails.getPassword());
+    assertEquals(FIRSTNAME, userDetails.getFirstname());
+    assertEquals(LASTNAME, userDetails.getLastname());
+    assertEquals(EMAIL, userDetails.getEmail());
+    assertEquals(USER_ENABLED, userDetails.isEnabled());
+    assertEquals(LAST_PASSWORD_RESET_DATE.getTime(), userDetails.getLastPasswordResetDate());
+
+    assertTrue(userDetails.getRoles().contains(RoleName.ROLE_ADMIN.name()));
+    assertTrue(userDetails.getRoles().contains(RoleName.ROLE_USER.name()));
+
+    assertTrue(
+        userDetails
+            .getAuthorities()
+            .contains(new SimpleGrantedAuthority(RoleName.ROLE_ADMIN.name())));
+    assertTrue(
+        userDetails
+            .getAuthorities()
+            .contains(new SimpleGrantedAuthority(RoleName.ROLE_USER.name())));
+  }
+
+  // ------------------------------------------------------------------------
+  // Private utils
+  // ------------------------------------------------------------------------
+
+  private List<Role> createRoles(User user) {
+    final
