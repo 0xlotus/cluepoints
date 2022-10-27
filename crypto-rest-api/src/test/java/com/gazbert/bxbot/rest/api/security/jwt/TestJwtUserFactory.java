@@ -97,4 +97,21 @@ public class TestJwtUserFactory {
   // ------------------------------------------------------------------------
 
   private List<Role> createRoles(User user) {
-    final
+    final List<User> users = Collections.singletonList(user);
+
+    final Role role1 = new Role();
+    role1.setId(ADMIN_ROLE_ID);
+    role1.setName(RoleName.ROLE_ADMIN);
+    role1.setUsers(users);
+
+    final Role role2 = new Role();
+    role2.setId(USER_ROLE_ID);
+    role2.setName(RoleName.ROLE_USER);
+    role2.setUsers(users);
+
+    final List<Role> roles = new ArrayList<>();
+    roles.add(role1);
+    roles.add(role2);
+    return roles;
+  }
+}
