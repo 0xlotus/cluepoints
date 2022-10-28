@@ -44,4 +44,38 @@ import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Base64Utils;
-import org.springframework.web.context.WebApplicationContex
+import org.springframework.web.context.WebApplicationContext;
+
+/**
+ * Base class for all Controller test classes.
+ *
+ * @author gazbert
+ */
+public abstract class AbstractControllerTest {
+
+  protected static final String API_ENDPOINT_BASE_URI = "/api/v1";
+  protected static final String INVALID_USER_PASSWORD = "not-valid-password";
+
+  // This must match a user's USERNAME in the user table in src/test/resources/import.sql
+  protected static final String VALID_USER_NAME = "user";
+
+  // This must match a user's PASSWORD in the user table in src/test/resources/import.sql
+  protected static final String VALID_USER_PASSWORD = "user";
+
+  // This must match a admin's USERNAME in the user table in src/test/resources/import.sql
+  protected static final String VALID_ADMIN_NAME = "admin";
+
+  // This must match a admin's PASSWORD in the user table in src/test/resources/import.sql
+  protected static final String VALID_ADMIN_PASSWORD = "admin";
+
+  // Used to convert Java objects into JSON
+  private HttpMessageConverter mappingJackson2HttpMessageConverter;
+
+  @Autowired protected WebApplicationContext ctx;
+
+  @Autowired protected FilterChainProxy springSecurityFilterChain;
+
+  protected MockMvc mockMvc;
+
+  @Autowired
+  protected vo
