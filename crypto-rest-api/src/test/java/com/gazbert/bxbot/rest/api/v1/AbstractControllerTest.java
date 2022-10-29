@@ -111,4 +111,31 @@ public abstract class AbstractControllerTest {
         mockMvc
             .perform(
                 post("/api/token")
-                    .c
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonify(new UsernameAndPassword(username, password))))
+            .andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.token", is(notNullValue())))
+            .andReturn()
+            .getResponse()
+            .getContentAsString();
+
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final JwtResponse jwtResponse = objectMapper.readValue(content, JwtResponse.class);
+    return jwtResponse.getToken();
+  }
+
+  protected String jsonify(Object objectToJsonify) throws IOException {
+    final MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
+    mappingJackson2HttpMessageConverter.write(
+        objectToJsonify, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
+    return mockHttpOutputMessage.getBodyAsString();
+  }
+
+  // --------------------------------------------------------------------------
+  // Private helpers
+  // --------------------------------------------------------------------------
+
+  private static class UsernameAndPassword {
+
+    private String username;
