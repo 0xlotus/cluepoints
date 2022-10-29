@@ -78,4 +78,37 @@ public abstract class AbstractControllerTest {
   protected MockMvc mockMvc;
 
   @Autowired
-  protected vo
+  protected void setConverters(HttpMessageConverter<?>[] converters) {
+    mappingJackson2HttpMessageConverter =
+        Arrays.stream(converters)
+            .filter(converter -> converter instanceof MappingJackson2HttpMessageConverter)
+            .findAny()
+            .orElse(null);
+
+    Assert.assertNotNull(
+        "The JSON message converter must not be null", mappingJackson2HttpMessageConverter);
+  }
+
+  // --------------------------------------------------------------------------
+  // Shared utils
+  // --------------------------------------------------------------------------
+
+  protected String buildAuthorizationHeaderValue(String username, String password) {
+    return "Basic "
+        + new String(
+            Base64Utils.encode((username + ":" + password).getBytes(StandardCharsets.UTF_8)),
+            Charset.forName("UTF-8"));
+  }
+
+  /*
+   * Builds a JWT response.
+   * Kudos to @royclarkson for his OAuth2 version:
+   * https://github.com/royclarkson/spring-rest-service-oauth
+   */
+  protected String getJwt(String username, String password) throws Exception {
+
+    final String content =
+        mockMvc
+            .perform(
+                post("/api/token")
+                    .c
