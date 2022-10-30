@@ -139,3 +139,44 @@ public abstract class AbstractControllerTest {
   private static class UsernameAndPassword {
 
     private String username;
+    private String password;
+
+    UsernameAndPassword(String username, String password) {
+      this.username = username;
+      this.password = password;
+    }
+
+    public String getUsername() {
+      return username;
+    }
+
+    public void setUsername(String username) {
+      this.username = username;
+    }
+
+    public String getPassword() {
+      return password;
+    }
+
+    public void setPassword(String password) {
+      this.password = password;
+    }
+  }
+
+  private static class JwtResponse {
+
+    private String token;
+
+    // empty constructor needed by Jackson
+    public JwtResponse() {
+    }
+
+    String getToken() {
+      return token;
+    }
+
+    void setToken(String token) {
+      this.token = token;
+    }
+  }
+}
