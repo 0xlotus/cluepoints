@@ -24,9 +24,8 @@
 
 package com.gazbert.crypto.rest.api.v1.config;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -36,9 +35,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.gazbert.crypto.core.engine.TradingEngine;
-import com.gazbert.crypto.domain.emailalerts.EmailAlertsConfig;
-import com.gazbert.crypto.domain.emailalerts.SmtpConfig;
-import com.gazbert.crypto.services.config.EmailAlertsConfigService;
+import com.gazbert.crypto.core.mail.EmailAlerter;
+import com.gazbert.crypto.domain.engine.EngineConfig;
+import com.gazbert.crypto.services.config.EngineConfigService;
+import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,30 +53,28 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 /**
- * Tests the Email Alerts config controller behaviour.
+ * Tests the Engine config controller behaviour.
  *
  * @author gazbert
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
-public class TestEmailAlertsConfigController extends AbstractConfigControllerTest {
+public class TestEngineConfigController extends AbstractConfigControllerTest {
 
-  private static final String EMAIL_ALERTS_CONFIG_ENDPOINT_URI =
-      CONFIG_ENDPOINT_BASE_URI + "/email-alerts";
+  private static final String ENGINE_CONFIG_ENDPOINT_URI = CONFIG_ENDPOINT_BASE_URI + "/engine";
 
-  private static final boolean ENABLED = true;
-  private static final String HOST = "smtp.host.deathstar.com";
-  private static final int TLS_PORT = 573;
-  private static final String ACCOUNT_USERNAME = "boba@google.com";
-  private static final String ACCOUNT_PASSWORD = "bounty";
-  private static final String FROM_ADDRESS = "boba.fett@Mandalore.com";
-  private static final String TO_ADDRESS = "darth.vader@deathstar.com";
+  private static final String BOT_ID = "avro-707_1";
+  private static final String BOT_NAME = "Avro 707";
+  private static final String ENGINE_EMERGENCY_STOP_CURRENCY = "BTC";
+  private static final BigDecimal ENGINE_EMERGENCY_STOP_BALANCE = new BigDecimal("0.9232320");
+  private static final int ENGINE_TRADE_CYCLE_INTERVAL = 60;
 
-  @MockBean private EmailAlertsConfigService emailAlertsConfigService;
+  @MockBean private EngineConfigService engineConfigService;
 
   // Need these even though not used in the test directly because Spring loads it on startup...
   @MockBean private TradingEngine tradingEngine;
+  @MockBean private EmailAlerter emailAlerter;
   @MockBean private RestartEndpoint restartEndpoint;
   @MockBean private LogFileWebEndpoint logFileWebEndpoint;
   @MockBean private AuthenticationManager authenticationManager;
@@ -87,99 +85,95 @@ public class TestEmailAlertsConfigController extends AbstractConfigControllerTes
   }
 
   @Test
-  public void testGetEmailAlertsConfigWithValidToken() throws Exception {
-    given(emailAlertsConfigService.getEmailAlertsConfig()).willReturn(someEmailAlertsConfig());
+  public void testGetEngineConfigWithValidToken() throws Exception {
+    given(engineConfigService.getEngineConfig()).willReturn(someEngineConfig());
 
     mockMvc
         .perform(
-            get(EMAIL_ALERTS_CONFIG_ENDPOINT_URI)
+            get(ENGINE_CONFIG_ENDPOINT_URI)
                 .header(
                     "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD)))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.smtpConfig.host").value(HOST))
-        .andExpect(jsonPath("$.smtpConfig.tlsPort").value(TLS_PORT))
-        .andExpect(jsonPath("$.enabled").value(ENABLED))
-        .andExpect(jsonPath("$.smtpConfig.fromAddress").value(FROM_ADDRESS))
-        .andExpect(jsonPath("$.smtpConfig.toAddress").value(TO_ADDRESS))
-        .andExpect(jsonPath("$.smtpConfig.accountUsername").value(ACCOUNT_USERNAME))
-        .andExpect(jsonPath("$.smtpConfig.accountPassword").value(ACCOUNT_PASSWORD));
+        .andExpect(jsonPath("$.botId").value(BOT_ID))
+        .andExpect(jsonPath("$.botName").value(BOT_NAME))
+        .andExpect(jsonPath("$.emergencyStopCurrency").value(ENGINE_EMERGENCY_STOP_CURRENCY))
+        .andExpect(
+            jsonPath("$.emergencyStopBalance").value(ENGINE_EMERGENCY_STOP_BALANCE.doubleValue()))
+        .andExpect(jsonPath("$.tradeCycleInterval").value(ENGINE_TRADE_CYCLE_INTERVAL));
 
-    verify(emailAlertsConfigService, atLeastOnce()).getEmailAlertsConfig();
+    verify(engineConfigService, times(1)).getEngineConfig();
   }
 
   @Test
-  public void testGetEmailAlertsConfigWhenUnauthorizedWithMissingToken() throws Exception {
+  public void testGetEngineConfigWhenUnauthorizedWithMissingToken() throws Exception {
     mockMvc
-        .perform(get(EMAIL_ALERTS_CONFIG_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
+        .perform(get(ENGINE_CONFIG_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
-  public void testGetEmailAlertsConfigWhenUnauthorizedWithInvalidToken() throws Exception {
+  public void testGetEngineConfigWhenUnauthorizedWithInvalidToken() throws Exception {
     mockMvc
         .perform(
-            get(EMAIL_ALERTS_CONFIG_ENDPOINT_URI)
+            get(ENGINE_CONFIG_ENDPOINT_URI)
                 .header("Authorization", "Bearer junk.web.token")
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
-  public void testUpdateEmailAlertsConfigWithAdminTokenAuthorized() throws Exception {
-    given(emailAlertsConfigService.updateEmailAlertsConfig(any()))
-        .willReturn(someEmailAlertsConfig());
+  public void testUpdateEngineConfigWithAdminTokenAuthorized() throws Exception {
+    given(engineConfigService.updateEngineConfig(any())).willReturn(someEngineConfig());
 
     mockMvc
         .perform(
-            put(EMAIL_ALERTS_CONFIG_ENDPOINT_URI)
+            put(ENGINE_CONFIG_ENDPOINT_URI)
                 .header(
                     "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonify(someEmailAlertsConfig())))
+                .content(jsonify(someEngineConfig())))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.smtpConfig.host").value(HOST))
-        .andExpect(jsonPath("$.smtpConfig.tlsPort").value(TLS_PORT))
-        .andExpect(jsonPath("$.enabled").value(ENABLED))
-        .andExpect(jsonPath("$.smtpConfig.fromAddress").value(FROM_ADDRESS))
-        .andExpect(jsonPath("$.smtpConfig.toAddress").value(TO_ADDRESS))
-        .andExpect(jsonPath("$.smtpConfig.accountUsername").value(ACCOUNT_USERNAME))
-        .andExpect(jsonPath("$.smtpConfig.accountPassword").value(ACCOUNT_PASSWORD));
+        .andExpect(jsonPath("$.botId").value(BOT_ID))
+        .andExpect(jsonPath("$.botName").value(BOT_NAME))
+        .andExpect(jsonPath("$.emergencyStopCurrency").value(ENGINE_EMERGENCY_STOP_CURRENCY))
+        .andExpect(
+            jsonPath("$.emergencyStopBalance").value(ENGINE_EMERGENCY_STOP_BALANCE.doubleValue()))
+        .andExpect(jsonPath("$.tradeCycleInterval").value(ENGINE_TRADE_CYCLE_INTERVAL));
 
-    verify(emailAlertsConfigService, times(1)).updateEmailAlertsConfig(any());
+    verify(engineConfigService, times(1)).updateEngineConfig(any());
   }
 
   @Test
-  public void testUpdateEmailAlertsConfigWithUserTokenForbidden() throws Exception {
-    given(emailAlertsConfigService.updateEmailAlertsConfig(any()))
-        .willReturn(someEmailAlertsConfig());
+  public void testUpdateEngineConfigWithUserTokenForbidden() throws Exception {
+    given(engineConfigService.updateEngineConfig(any())).willReturn(someEngineConfig());
 
     mockMvc
         .perform(
-            put(EMAIL_ALERTS_CONFIG_ENDPOINT_URI)
+            put(ENGINE_CONFIG_ENDPOINT_URI)
                 .header(
                     "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonify(someEmailAlertsConfig())))
+                .content(jsonify(someEngineConfig())))
         .andExpect(status().isForbidden());
 
-    verify(emailAlertsConfigService, times(0)).updateEmailAlertsConfig(any());
+    verify(engineConfigService, times(0)).updateEngineConfig(any());
   }
 
   @Test
-  public void testUpdateEmailAlertsConfigWhenUnauthorizedWithMissingToken() throws Exception {
+  public void testUpdateEngineConfigWhenUnauthorizedWithMissingToken() throws Exception {
     mockMvc
-        .perform(put(EMAIL_ALERTS_CONFIG_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
+        .perform(put(ENGINE_CONFIG_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
-  public void testUpdateEmailAlertsConfigWhenUnauthorizedWithInvalidToken() throws Exception {
+  public void testUpdateEngineConfigWhenUnauthorizedWithInvalidToken() throws Exception {
     mockMvc
         .perform(
-            put(EMAIL_ALERTS_CONFIG_ENDPOINT_URI)
-                .header("Authorization", "Authorization", "Bearer junk.web.token")
+            put(ENGINE_CONFIG_ENDPOINT_URI)
+                .header("Authorization", "Bearer junk.web.token")
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
@@ -188,13 +182,13 @@ public class TestEmailAlertsConfigController extends AbstractConfigControllerTes
   // Private utils
   // --------------------------------------------------------------------------
 
-  private static EmailAlertsConfig someEmailAlertsConfig() {
-    final EmailAlertsConfig emailAlertsConfig = new EmailAlertsConfig();
-    final SmtpConfig smtpConfig =
-        new SmtpConfig(
-            HOST, TLS_PORT, ACCOUNT_USERNAME, ACCOUNT_PASSWORD, FROM_ADDRESS, TO_ADDRESS);
-    emailAlertsConfig.setSmtpConfig(smtpConfig);
-    emailAlertsConfig.setEnabled(true);
-    return emailAlertsConfig;
+  private static EngineConfig someEngineConfig() {
+    final EngineConfig engineConfig = new EngineConfig();
+    engineConfig.setBotId(BOT_ID);
+    engineConfig.setBotName(BOT_NAME);
+    engineConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
+    engineConfig.setEmergencyStopBalance(ENGINE_EMERGENCY_STOP_BALANCE);
+    engineConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
+    return engineConfig;
   }
 }
