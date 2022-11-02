@@ -48,4 +48,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.actuate.logging.LogFileWebEndpoint;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.context.restart.RestartEndpoint;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+/**
+ * Tests the Strategies config controller behaviour.
+ *
+ * @author gazbert
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@WebAppConfiguration
+public class TestStrategyConfigController extends AbstractConfigControllerTest {
+
+  private static final String STRATEGIES_CONFIG_ENDPOINT_URI =
+      CONFIG_ENDPOINT_BASE_URI + "/strategies/";
+
+  private static final String UNKNOWN_STRAT_ID = "unknown-id";
+
+  private static final String STRAT_1_ID = "macd-long-position";
+  private static final String STRAT_1_NAME = "MACD Strat Algo";
+  private static final String STRAT_1_DESCRIPTION =
+      "Uses MACD as indicator and takes long position in base currency.";
+  private static final String STRAT_1_CLASSNAME = "com.gazbert.nova.algos.MacdLongBase";
+  private static final String STRAT_1_BEAN_NAME = "macd
