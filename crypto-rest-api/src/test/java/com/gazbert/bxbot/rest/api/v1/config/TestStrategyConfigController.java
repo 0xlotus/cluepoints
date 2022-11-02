@@ -76,4 +76,27 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
   private static final String STRAT_1_DESCRIPTION =
       "Uses MACD as indicator and takes long position in base currency.";
   private static final String STRAT_1_CLASSNAME = "com.gazbert.nova.algos.MacdLongBase";
-  private static final String STRAT_1_BEAN_NAME = "macd
+  private static final String STRAT_1_BEAN_NAME = "macdLongBase";
+
+  private static final String STRAT_2_ID = "long-scalper";
+  private static final String STRAT_2_NAME = "Long Position Scalper Algo";
+  private static final String STRAT_2_DESCRIPTION = "Scalps and goes long...";
+  private static final String STRAT_2_CLASSNAME = "com.gazbert.nova.algos.LongScalper";
+  private static final String STRAT_2_BEAN_NAME = "longScalper";
+
+  private static final String BUY_PRICE_CONFIG_ITEM_KEY = "buy-price";
+  private static final String BUY_PRICE_CONFIG_ITEM_VALUE = "671.15";
+  private static final String AMOUNT_TO_BUY_CONFIG_ITEM_KEY = "buy-amount";
+  private static final String AMOUNT_TO_BUY_CONFIG_ITEM_VALUE = "0.5";
+
+  @MockBean private StrategyConfigService strategyConfigService;
+
+  // Need these even though not used in the test directly because Spring loads it on startup...
+  @MockBean private TradingEngine tradingEngine;
+  @MockBean private EmailAlerter emailAlerter;
+  @MockBean private RestartEndpoint restartEndpoint;
+  @MockBean private LogFileWebEndpoint logFileWebEndpoint;
+  @MockBean private AuthenticationManager authenticationManager;
+
+  @Before
+  public void setupBeforeEachTest() {
