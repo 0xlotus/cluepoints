@@ -100,3 +100,27 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
 
   @Before
   public void setupBeforeEachTest() {
+    mockMvc = MockMvcBuilders.webAppContextSetup(ctx).addFilter(springSecurityFilterChain).build();
+  }
+
+  @Test
+  public void testGetAllStrategyConfigWithValidToken() throws Exception {
+    given(strategyConfigService.getAllStrategyConfig()).willReturn(allTheStrategiesConfig());
+
+    mockMvc
+        .perform(
+            get(STRATEGIES_CONFIG_ENDPOINT_URI)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD)))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.[0].id").value(STRAT_1_ID))
+        .andExpect(jsonPath("$.[0].name").value(STRAT_1_NAME))
+        .andExpect(jsonPath("$.[0].description").value(STRAT_1_DESCRIPTION))
+        .andExpect(jsonPath("$.[0].className").value(STRAT_1_CLASSNAME))
+        .andExpect(jsonPath("$.[0].configItems.buy-price").value(BUY_PRICE_CONFIG_ITEM_VALUE))
+        .andExpect(jsonPath("$.[0].configItems.buy-amount").value(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE))
+        .andExpect(jsonPath("$.[1].id").value(STRAT_2_ID))
+        .andExpect(jsonPath("$.[1].name").value(STRAT_2_NAME))
+        .andExpect(jsonPath("$.[1].description").value(STRAT_2_DESCRIPTION))
+        .andExpect(jsonPath("$.[1].className
