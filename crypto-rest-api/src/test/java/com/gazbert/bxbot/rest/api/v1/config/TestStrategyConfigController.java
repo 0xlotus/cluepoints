@@ -123,4 +123,34 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
         .andExpect(jsonPath("$.[1].id").value(STRAT_2_ID))
         .andExpect(jsonPath("$.[1].name").value(STRAT_2_NAME))
         .andExpect(jsonPath("$.[1].description").value(STRAT_2_DESCRIPTION))
-        .andExpect(jsonPath("$.[1].className
+        .andExpect(jsonPath("$.[1].className").value(STRAT_2_CLASSNAME))
+        .andExpect(jsonPath("$.[1].configItems.buy-price").value(BUY_PRICE_CONFIG_ITEM_VALUE))
+        .andExpect(jsonPath("$.[1].configItems.buy-amount").value(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE));
+
+    verify(strategyConfigService, times(1)).getAllStrategyConfig();
+  }
+
+  @Test
+  public void testGetAllStrategyConfigWhenUnauthorizedWithMissingToken() throws Exception {
+    mockMvc
+        .perform(get(STRATEGIES_CONFIG_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testGetAllStrategyConfigWhenUnauthorizedWithInvalidToken() throws Exception {
+    mockMvc
+        .perform(
+            get(STRATEGIES_CONFIG_ENDPOINT_URI)
+                .header("Authorization", "Bearer junk.web.token")
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testGetStrategyConfigWithValidToken() throws Exception {
+    given(strategyConfigService.getStrategyConfig(STRAT_1_ID)).willReturn(someStrategyConfig());
+
+    mockMvc
+        .perform(
+            get(STRATEGIES_CONFIG_ENDPOINT_URI + S
