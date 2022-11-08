@@ -180,4 +180,34 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
   public void testGetStrategyConfigByIdWhenUnauthorizedWithInvalidToken() throws Exception {
     mockMvc
         .perform(
-            get(STRATEGIES_CONFIG_ENDPOINT
+            get(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header("Authorization", "Bearer junk.web.token")
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testGetStrategyConfigByIdWhenNotRecognized() throws Exception {
+    given(strategyConfigService.getStrategyConfig(UNKNOWN_STRAT_ID)).willReturn(null);
+
+    mockMvc
+        .perform(
+            get(STRATEGIES_CONFIG_ENDPOINT_URI + UNKNOWN_STRAT_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD))
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void testUpdateStrategyConfigWithAdminTokenAuthorized() throws Exception {
+    given(strategyConfigService.updateStrategyConfig(someStrategyConfig()))
+        .willReturn(someStrategyConfig());
+
+    mockMvc
+        .perform(
+            put(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON)
+              
