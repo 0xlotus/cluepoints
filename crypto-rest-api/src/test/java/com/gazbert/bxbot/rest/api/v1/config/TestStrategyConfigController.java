@@ -210,4 +210,28 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
                 .header(
                     "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
-              
+                .content(jsonify(someStrategyConfig())))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(STRAT_1_ID))
+        .andExpect(jsonPath("$.name").value(STRAT_1_NAME))
+        .andExpect(jsonPath("$.description").value(STRAT_1_DESCRIPTION))
+        .andExpect(jsonPath("$.className").value(STRAT_1_CLASSNAME))
+        .andExpect(jsonPath("$.configItems.buy-price").value(BUY_PRICE_CONFIG_ITEM_VALUE))
+        .andExpect(jsonPath("$.configItems.buy-amount").value(AMOUNT_TO_BUY_CONFIG_ITEM_VALUE));
+
+    verify(strategyConfigService, times(1)).updateStrategyConfig(any());
+  }
+
+  @Test
+  public void testUpdateStrategyConfigWithUserTokenForbidden() throws Exception {
+    given(strategyConfigService.updateStrategyConfig(someStrategyConfig()))
+        .willReturn(someStrategyConfig());
+
+    mockMvc
+        .perform(
+            put(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON)
+    
