@@ -234,4 +234,64 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
                 .header(
                     "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
-    
+                .content(jsonify(someStrategyConfig())))
+        .andExpect(status().isForbidden());
+
+    verify(strategyConfigService, times(0)).updateStrategyConfig(any());
+  }
+
+  @Test
+  public void testUpdateStrategyConfigWhenUnauthorizedWithMissingToken() throws Exception {
+    mockMvc
+        .perform(
+            put(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(someStrategyConfig())))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testUpdateStrategyConfigWhenUnauthorizedWithInvalidToken() throws Exception {
+    mockMvc
+        .perform(
+            put(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header("Authorization", "Bearer junk.web.token")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(someStrategyConfig())))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testUpdateStrategyConfigWhenIdNotRecognized() throws Exception {
+    given(strategyConfigService.updateStrategyConfig(unrecognizedStrategyConfig()))
+        .willReturn(null);
+
+    mockMvc
+        .perform(
+            put(STRATEGIES_CONFIG_ENDPOINT_URI + UNKNOWN_STRAT_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(unrecognizedStrategyConfig())))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void testUpdateStrategyConfigWhenIdIsMissing() throws Exception {
+    mockMvc
+        .perform(
+            put(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(someStrategyConfigWithMissingId())))
+        .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void testDeleteStrategyConfigWithAdminTokenAuthorized() throws Exception {
+    given(strategyConfigService.deleteStrategyConfig(STRAT_1_ID)).willReturn(someStrategy
