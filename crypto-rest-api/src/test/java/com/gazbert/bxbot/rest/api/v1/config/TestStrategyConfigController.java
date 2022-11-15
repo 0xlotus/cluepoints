@@ -294,4 +294,39 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
 
   @Test
   public void testDeleteStrategyConfigWithAdminTokenAuthorized() throws Exception {
-    given(strategyConfigService.deleteStrategyConfig(STRAT_1_ID)).willReturn(someStrategy
+    given(strategyConfigService.deleteStrategyConfig(STRAT_1_ID)).willReturn(someStrategyConfig());
+
+    mockMvc
+        .perform(
+            delete(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD)))
+        .andExpect(status().isNoContent());
+
+    verify(strategyConfigService, times(1)).deleteStrategyConfig(STRAT_1_ID);
+  }
+
+  @Test
+  public void testDeleteStrategyConfigWithUserTokenForbidden() throws Exception {
+    given(strategyConfigService.deleteStrategyConfig(STRAT_1_ID)).willReturn(someStrategyConfig());
+
+    mockMvc
+        .perform(
+            delete(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD)))
+        .andExpect(status().isForbidden());
+
+    verify(strategyConfigService, times(0)).deleteStrategyConfig(STRAT_1_ID);
+  }
+
+  @Test
+  public void testDeleteStrategyConfigWhenUnauthorizedWithMissingToken() throws Exception {
+    mockMvc
+        .perform(
+            delete(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID).accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testDe
