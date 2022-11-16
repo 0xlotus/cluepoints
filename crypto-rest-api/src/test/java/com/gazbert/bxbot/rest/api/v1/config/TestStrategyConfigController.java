@@ -329,4 +329,35 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
   }
 
   @Test
-  public void testDe
+  public void testDeleteStrategyConfigWhenUnauthorizedWithInvalidToken() throws Exception {
+    mockMvc
+        .perform(
+            delete(STRATEGIES_CONFIG_ENDPOINT_URI + STRAT_1_ID)
+                .header("Authorization", "Bearer junk.web.token")
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testDeleteStrategyConfigWhenIdNotRecognized() throws Exception {
+    given(strategyConfigService.deleteStrategyConfig(UNKNOWN_STRAT_ID)).willReturn(null);
+
+    mockMvc
+        .perform(
+            delete(STRATEGIES_CONFIG_ENDPOINT_URI + UNKNOWN_STRAT_ID)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD))
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void testCreateStrategyConfigWithAdminTokenAuthorized() throws Exception {
+    given(strategyConfigService.createStrategyConfig(someStrategyConfig()))
+        .willReturn(someStrategyConfig());
+
+    mockMvc
+        .perform(
+            post(STRATEGIES_CONFIG_ENDPOINT_URI)
+                .header(
+              
