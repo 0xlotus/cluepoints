@@ -415,4 +415,38 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
         .andExpect(status().isUnauthorized());
   }
 
-  // --------------------------------------------------------------
+  // --------------------------------------------------------------------------
+  // Private utils
+  // --------------------------------------------------------------------------
+
+  private static List<StrategyConfig> allTheStrategiesConfig() {
+    final Map<String, String> configItems = new HashMap<>();
+
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+
+    final StrategyConfig strategyConfig1 =
+        new StrategyConfig(
+            STRAT_1_ID,
+            STRAT_1_NAME,
+            STRAT_1_DESCRIPTION,
+            STRAT_1_CLASSNAME,
+            STRAT_1_BEAN_NAME,
+            configItems);
+    final StrategyConfig strategyConfig2 =
+        new StrategyConfig(
+            STRAT_2_ID,
+            STRAT_2_NAME,
+            STRAT_2_DESCRIPTION,
+            STRAT_2_CLASSNAME,
+            STRAT_2_BEAN_NAME,
+            configItems);
+
+    final List<StrategyConfig> allStrategies = new ArrayList<>();
+    allStrategies.add(strategyConfig1);
+    allStrategies.add(strategyConfig2);
+    return allStrategies;
+  }
+
+  private static StrategyConfig someStrategyConfig() {
+    final Map<String, Str
