@@ -384,4 +384,35 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
         .perform(
             post(STRATEGIES_CONFIG_ENDPOINT_URI)
                 .header(
-                    "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD)
+                    "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(someStrategyConfig())))
+        .andExpect(status().isForbidden());
+
+    verify(strategyConfigService, times(0)).createStrategyConfig(any());
+  }
+
+  @Test
+  public void testCreateStrategyConfigWhenUnauthorizedWithMissingToken() throws Exception {
+    mockMvc
+        .perform(
+            post(STRATEGIES_CONFIG_ENDPOINT_URI)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(someStrategyConfig())))
+        .andExpect(status().isUnauthorized());
+  }
+
+  @Test
+  public void testCreateStrategyConfigWhenUnauthorizedWithInvalidToken() throws Exception {
+    mockMvc
+        .perform(
+            post(STRATEGIES_CONFIG_ENDPOINT_URI)
+                .header("Authorization", "Bearer junk.web.token")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonify(someStrategyConfig())))
+        .andExpect(status().isUnauthorized());
+  }
+
+  // --------------------------------------------------------------
