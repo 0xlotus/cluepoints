@@ -449,4 +449,33 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
   }
 
   private static StrategyConfig someStrategyConfig() {
-    final Map<String, Str
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+    return new StrategyConfig(
+        STRAT_1_ID,
+        STRAT_1_NAME,
+        STRAT_1_DESCRIPTION,
+        STRAT_1_CLASSNAME,
+        STRAT_1_BEAN_NAME,
+        configItems);
+  }
+
+  private static StrategyConfig someStrategyConfigWithMissingId() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+    return new StrategyConfig(
+        null, STRAT_1_NAME, STRAT_1_DESCRIPTION, STRAT_1_CLASSNAME, STRAT_1_BEAN_NAME, configItems);
+  }
+
+  private static StrategyConfig unrecognizedStrategyConfig() {
+    final Map<String, String> configItems = new HashMap<>();
+    configItems.put(BUY_PRICE_CONFIG_ITEM_KEY, BUY_PRICE_CONFIG_ITEM_VALUE);
+    configItems.put(AMOUNT_TO_BUY_CONFIG_ITEM_KEY, AMOUNT_TO_BUY_CONFIG_ITEM_VALUE);
+    return new StrategyConfig(
+        UNKNOWN_STRAT_ID,
+        STRAT_1_NAME,
+        STRAT_1_DESCRIPTION,
+        STRAT_1_CLASSNAME,
+       
