@@ -478,4 +478,7 @@ public class TestStrategyConfigController extends AbstractConfigControllerTest {
         STRAT_1_NAME,
         STRAT_1_DESCRIPTION,
         STRAT_1_CLASSNAME,
-       
+        STRAT_1_BEAN_NAME,
+        configItems);
+  }
+}
