@@ -37,4 +37,31 @@ import com.gazbert.crypto.core.mail.EmailAlerter;
 import com.gazbert.crypto.services.runtime.BotRestartService;
 import org.junit.Before;
 import org.junit.Test;
-impo
+import org.junit.runner.RunWith;
+import org.springframework.boot.actuate.logging.LogFileWebEndpoint;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.context.restart.RestartEndpoint;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+/**
+ * Tests the Bot restart controller behaviour.
+ *
+ * @author gazbert
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@WebAppConfiguration
+public class TestBotRestartController extends AbstractRuntimeControllerTest {
+
+  private static final String RESTART_ENDPOINT_URI = RUNTIME_ENDPOINT_BASE_URI + "/restart";
+  private static final String BOT_STATUS = "restarting";
+
+  @MockBean private BotRestartService botRestartService;
+
+  // Need these even though not used in the test directly because Spring loads it on startup...
+  @MockBean private
