@@ -64,4 +64,39 @@ public class TestBotRestartController extends AbstractRuntimeControllerTest {
   @MockBean private BotRestartService botRestartService;
 
   // Need these even though not used in the test directly because Spring loads it on startup...
-  @MockBean private
+  @MockBean private TradingEngine tradingEngine;
+  @MockBean private EmailAlerter emailAlerter;
+  @MockBean private RestartEndpoint restartEndpoint;
+  @MockBean private LogFileWebEndpoint logFileWebEndpoint;
+  @MockBean private AuthenticationManager authenticationManager;
+
+  @Before
+  public void setupBeforeEachTest() {
+    mockMvc = MockMvcBuilders.webAppContextSetup(ctx).addFilter(springSecurityFilterChain).build();
+  }
+
+  @Test
+  public void testBotRestartWithAdminTokenAuthorized() throws Exception {
+    given(botRestartService.restart()).willReturn(BOT_STATUS);
+
+    mockMvc
+        .perform(
+            post(RESTART_ENDPOINT_URI)
+                .header(
+                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD)))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$").value(BOT_STATUS));
+
+    verify(botRestartService, times(1)).restart();
+  }
+
+  @Test
+  public void testBotRestartWithUserTokenForbidden() throws Exception {
+    given(botRestartService.restart()).willReturn(BOT_STATUS);
+
+    mockMvc
+        .perform(
+            post(RESTART_ENDPOINT_URI)
+                .header(
+                    "Authorization
