@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -27,14 +28,16 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.gazbert.crypto.core.engine.TradingEngine;
 import com.gazbert.crypto.core.mail.EmailAlerter;
-import com.gazbert.crypto.services.runtime.BotRestartService;
+import com.gazbert.crypto.domain.engine.EngineConfig;
+import com.gazbert.crypto.services.config.EngineConfigService;
+import com.gazbert.crypto.services.runtime.BotStatusService;
+import java.math.BigDecimal;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,19 +52,27 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 /**
- * Tests the Bot restart controller behaviour.
+ * Tests the Bot Status controller behaviour.
  *
  * @author gazbert
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
-public class TestBotRestartController extends AbstractRuntimeControllerTest {
+public class TestBotStatusController extends AbstractRuntimeControllerTest {
 
-  private static final String RESTART_ENDPOINT_URI = RUNTIME_ENDPOINT_BASE_URI + "/restart";
-  private static final String BOT_STATUS = "restarting";
+  private static final String STATUS_ENDPOINT_URI = RUNTIME_ENDPOINT_BASE_URI + "/status";
 
-  @MockBean private BotRestartService botRestartService;
+  private static final String BOT_ID = "avro-707_1";
+  private static final String BOT_NAME = "Avro 707";
+  private static final String BOT_STATUS = "UP";
+
+  private static final String ENGINE_EMERGENCY_STOP_CURRENCY = "BTC";
+  private static final BigDecimal ENGINE_EMERGENCY_STOP_BALANCE = new BigDecimal("0.9232320");
+  private static final int ENGINE_TRADE_CYCLE_INTERVAL = 60;
+
+  @MockBean private BotStatusService botStatusService;
+  @MockBean private EngineConfigService engineConfigService;
 
   // Need these even though not used in the test directly because Spring loads it on startup...
   @MockBean private TradingEngine tradingEngine;
@@ -76,50 +87,53 @@ public class TestBotRestartController extends AbstractRuntimeControllerTest {
   }
 
   @Test
-  public void testBotRestartWithAdminTokenAuthorized() throws Exception {
-    given(botRestartService.restart()).willReturn(BOT_STATUS);
+  public void testGetBotStatusWithValidToken() throws Exception {
+    given(botStatusService.getStatus()).willReturn(BOT_STATUS);
+    given(engineConfigService.getEngineConfig()).willReturn(someEngineConfig());
 
     mockMvc
         .perform(
-            post(RESTART_ENDPOINT_URI)
-                .header(
-                    "Authorization", "Bearer " + getJwt(VALID_ADMIN_NAME, VALID_ADMIN_PASSWORD)))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").value(BOT_STATUS));
-
-    verify(botRestartService, times(1)).restart();
-  }
-
-  @Test
-  public void testBotRestartWithUserTokenForbidden() throws Exception {
-    given(botRestartService.restart()).willReturn(BOT_STATUS);
-
-    mockMvc
-        .perform(
-            post(RESTART_ENDPOINT_URI)
+            get(STATUS_ENDPOINT_URI)
                 .header(
                     "Authorization", "Bearer " + getJwt(VALID_USER_NAME, VALID_USER_PASSWORD)))
         .andDo(print())
-        .andExpect(status().isForbidden());
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.botId").value(BOT_ID))
+        .andExpect(jsonPath("$.displayName").value(BOT_NAME))
+        .andExpect(jsonPath("$.status").value(BOT_STATUS))
+        .andExpect(jsonPath("$.datetime").isNotEmpty());
 
-    verify(botRestartService, times(0)).restart();
+    verify(engineConfigService, times(1)).getEngineConfig();
   }
 
   @Test
-  public void testBotRestartWhenUnauthorizedWithInvalidToken() throws Exception {
+  public void testGetBotStatusWhenUnauthorizedWithInvalidToken() throws Exception {
     mockMvc
         .perform(
-            get(RESTART_ENDPOINT_URI)
+            get(STATUS_ENDPOINT_URI)
                 .header("Authorization", "Bearer junk.web.token")
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
   }
 
   @Test
-  public void testBotRestartWhenUnauthorizedWithMissingToken() throws Exception {
+  public void testGetBotStatusWhenUnauthorizedWithMissingToken() throws Exception {
     mockMvc
-        .perform(get(RESTART_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
+        .perform(get(STATUS_ENDPOINT_URI).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isUnauthorized());
+  }
+
+  // --------------------------------------------------------------------------
+  // Private utils
+  // --------------------------------------------------------------------------
+
+  private static EngineConfig someEngineConfig() {
+    final EngineConfig engineConfig = new EngineConfig();
+    engineConfig.setBotId(BOT_ID);
+    engineConfig.setBotName(BOT_NAME);
+    engineConfig.setEmergencyStopCurrency(ENGINE_EMERGENCY_STOP_CURRENCY);
+    engineConfig.setEmergencyStopBalance(ENGINE_EMERGENCY_STOP_BALANCE);
+    engineConfig.setTradeCycleInterval(ENGINE_TRADE_CYCLE_INTERVAL);
+    return engineConfig;
   }
 }

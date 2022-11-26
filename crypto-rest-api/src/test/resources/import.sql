@@ -1,0 +1,6 @@
+-- BX-bot Users and Roles for loading into the H2 in-memory database.
+--
+-- You MUST change the bcrypt passwords for your bot!
+--
+-- See:
+-- https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/crypto/bcrypt/BCryptPasswordEncoder.html
