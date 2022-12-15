@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,23 +24,23 @@
 
 package com.gazbert.crypto.services.config;
 
-import com.gazbert.crypto.domain.market.MarketConfig;
+import com.gazbert.crypto.domain.strategy.StrategyConfig;
 import java.util.List;
 
 /**
- * The Market configuration service.
+ * The Strategy configuration service.
  *
  * @author gazbert
  */
-public interface MarketConfigService {
+public interface StrategyConfigService {
 
-  List<MarketConfig> getAllMarketConfig();
+  List<StrategyConfig> getAllStrategyConfig();
 
-  MarketConfig getMarketConfig(String id);
+  StrategyConfig getStrategyConfig(String id);
 
-  MarketConfig createMarketConfig(MarketConfig config);
+  StrategyConfig updateStrategyConfig(StrategyConfig config);
 
-  MarketConfig updateMarketConfig(MarketConfig config);
+  StrategyConfig createStrategyConfig(StrategyConfig config);
 
-  MarketConfig deleteMarketConfig(String id);
+  StrategyConfig deleteStrategyConfig(String id);
 }
