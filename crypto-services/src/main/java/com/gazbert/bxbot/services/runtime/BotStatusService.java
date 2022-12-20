@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -24,16 +25,16 @@
 package com.gazbert.crypto.services.runtime;
 
 /**
- * The Bot restart service.
+ * The Bot status service.
  *
  * @author gazbert
  */
-public interface BotRestartService {
+public interface BotStatusService {
 
   /**
-   * Restarts the bot.
+   * Returns the status of the Bot.
    *
-   * @return 'Restarting' if the bot could be restarted.
+   * @return UP if the bot is running, DOWN if the bot is not running.
    */
-  String restart();
+  String getStatus();
 }
