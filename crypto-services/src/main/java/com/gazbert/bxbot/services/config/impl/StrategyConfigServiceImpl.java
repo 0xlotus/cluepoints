@@ -73,4 +73,13 @@ public class StrategyConfigServiceImpl implements StrategyConfigService {
 
   @Override
   public StrategyConfig createStrategyConfig(StrategyConfig config) {
-    LOG.info(() -> "About to create St
+    LOG.info(() -> "About to create Strategy config: " + config);
+    return strategyConfigRepository.save(config);
+  }
+
+  @Override
+  public StrategyConfig deleteStrategyConfig(String id) {
+    LOG.info(() -> "About to delete Strategy config for id: " + id);
+    return strategyConfigRepository.delete(id);
+  }
+}
