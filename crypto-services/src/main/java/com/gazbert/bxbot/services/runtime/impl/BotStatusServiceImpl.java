@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -23,36 +24,36 @@
 
 package com.gazbert.crypto.services.runtime.impl;
 
-import com.gazbert.crypto.services.runtime.BotRestartService;
-import java.util.Map;
+import com.gazbert.crypto.services.runtime.BotStatusService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.context.restart.RestartEndpoint;
+import org.springframework.boot.actuate.health.Health;
+import org.springframework.boot.actuate.health.HealthEndpoint;
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.stereotype.Service;
 
 /**
- * Implementation of the Bot restart service.
+ * Implementation of the Bot status service.
  *
  * @author gazbert
  */
-@Service("botRestartService")
-public class BotRestartServiceImpl implements BotRestartService {
+@Service("botStatusService")
+public class BotStatusServiceImpl implements BotStatusService {
 
   private static final Logger LOG = LogManager.getLogger();
-  private RestartEndpoint restartEndpoint;
+  private HealthEndpoint healthEndpoint;
 
   @Autowired
-  public BotRestartServiceImpl(RestartEndpoint restartEndpoint) {
-    this.restartEndpoint = restartEndpoint;
+  public BotStatusServiceImpl(HealthEndpoint healthEndpoint) {
+    this.healthEndpoint = healthEndpoint;
   }
 
   @Override
-  public String restart() {
-    // Spring endpoint returns a map: Collections.singletonMap("message", "Restarting");
-    final Map result = (Map) restartEndpoint.restart();
-    final String status = (String) result.get("message");
-    LOG.info(() -> "Restart result: " + status);
-    return status;
+  public String getStatus() {
+    final Health health = healthEndpoint.health();
+    final Status status = health.getStatus();
+    LOG.info(() -> "Health Status: " + status);
+    return status.getCode();
   }
 }
