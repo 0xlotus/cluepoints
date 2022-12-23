@@ -103,3 +103,13 @@ public class TestStrategyConfigService {
     final StrategyConfigRepository strategyConfigRepository =
         EasyMock.createMock(StrategyConfigRepository.class);
     expect(strategyConfigRepository.delete(strategyConfig.getId())).andReturn(strategyConfig);
+    replay(strategyConfigRepository);
+
+    final StrategyConfigServiceImpl strategyConfigService =
+        new StrategyConfigServiceImpl(strategyConfigRepository);
+
+    assertThat(strategyConfigService.deleteStrategyConfig(strategyConfig.getId()))
+        .isEqualTo(strategyConfig);
+    verify(strategyConfigRepository);
+  }
+}
