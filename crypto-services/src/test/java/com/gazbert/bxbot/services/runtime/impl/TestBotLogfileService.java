@@ -77,4 +77,29 @@ public class TestBotLogfileService {
     final String logfilePath = "src/test/logfiles/logfile.log";
     final String expectedLogfileContent =
         "4982 [main] 2019-07-20 17:30:21,429 INFO  EngineConfigYamlRepository get() "
-            + "- 
+            + "- Validating config..."
+            + System.lineSeparator()
+            + "4983 [main] 2019-07-20 17:30:22,429 INFO  EngineConfigYamlRepository get() "
+            + "- Config is good"
+            + System.lineSeparator();
+
+    final Path path = FileSystems.getDefault().getPath(logfilePath);
+    final Resource resource = new FileSystemResource(path);
+    final LogFileWebEndpoint logFileWebEndpoint = EasyMock.createMock(LogFileWebEndpoint.class);
+
+    expect(logFileWebEndpoint.logFile()).andReturn(resource);
+    replay(logFileWebEndpoint);
+
+    final BotLogfileServiceImpl botLogfileService = new BotLogfileServiceImpl(logFileWebEndpoint);
+    final String fetchedLogfile = botLogfileService.getLogfile(2); // 2 lines only
+
+    assertThat(fetchedLogfile).isEqualTo(expectedLogfileContent);
+    verify(logFileWebEndpoint);
+  }
+
+  @Test
+  public void whenLogfileTailCalledWith2ThenExpectOnlyLast2LinesToBeReturned() throws Exception {
+    final String logfilePath = "src/test/logfiles/logfile.log";
+    final String expectedLogfileContent =
+        "4982 [main] 2019-07-20 17:30:21,429 INFO  EngineConfigYamlRepository get() "
+            + "- Validating config...
