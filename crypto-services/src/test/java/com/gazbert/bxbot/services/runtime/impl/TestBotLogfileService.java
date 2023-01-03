@@ -254,4 +254,9 @@ public class TestBotLogfileService {
     final int maxLogfileSizeInBytes = firstLineOfLogfile.length();
     final Resource logfileAsResource =
         botLogfileService.getLogfileAsResource(maxLogfileSizeInBytes);
-    final byte[] logfile
+    final byte[] logfileInBytes = logfileAsResource.getInputStream().readAllBytes();
+
+    assertThat(new String(logfileInBytes, Charset.forName("UTF-8"))).isEqualTo(firstLineOfLogfile);
+    verify(logFileWebEndpoint);
+  }
+}
