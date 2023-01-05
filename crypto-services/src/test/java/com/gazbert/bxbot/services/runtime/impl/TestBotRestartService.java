@@ -49,4 +49,9 @@ public class TestBotRestartService {
     replay(restartEndpoint);
 
     final BotRestartServiceImpl botRestartService = new BotRestartServiceImpl(restartEndpoint);
-    final String status = botRestartService.restart
+    final String status = botRestartService.restart();
+
+    assertThat(status).isEqualTo(restartingStatus.get(restartingStatus.keySet().iterator().next()));
+    verify(restartEndpoint);
+  }
+}
