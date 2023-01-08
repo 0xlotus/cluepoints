@@ -52,4 +52,9 @@ public class TestBotStatusService {
     replay(healthEndpoint);
 
     final BotStatusServiceImpl botStatusService = new BotStatusServiceImpl(healthEndpoint);
-    final String fetch
+    final String fetchedBotStatus = botStatusService.getStatus();
+
+    assertThat(fetchedBotStatus).isEqualTo(botStatus);
+    verify(healthEndpoint);
+  }
+}
