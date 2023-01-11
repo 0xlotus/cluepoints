@@ -13,4 +13,16 @@
             <!--</PatternLayout>-->
             <!--<Policies>-->
                 <!--<TimeBasedTriggeringPolicy/>-->
-                <!--<Size
+                <!--<SizeBasedTriggeringPolicy size="100 MB"/>-->
+            <!--</Policies>-->
+            <!--<DefaultRolloverStrategy max="90"/>-->
+        <!--</RollingFile>-->
+    </Appenders>
+    <Loggers>
+        <!-- debug | info | warn | error | fatal -->
+        <Root level="fatal">
+            <AppenderRef ref="STDOUT"/>
+            <!--<AppenderRef ref="crypto_RollingFile"/>-->
+        </Root>
+    </Loggers>
+</Configuration>

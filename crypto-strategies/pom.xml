@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>crypto-strategies</artifactId>
+  <packaging>jar</packaging>
+  <name>BX-bot Trading Strategies</name>
+  <description>Sample Trading Strategies for trading on Bitcoin exchanges</description>
+  <url>http://github.com/gazbert/crypto</url>
+  <parent>
+    <groupId>com.gazbert.crypto</groupId>
+    <artifactId>crypto-parent</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <dependencies>
+    <!--
+    BX-bot dependencies
+    -->
+    <dependency>
+      <groupId>${pro
