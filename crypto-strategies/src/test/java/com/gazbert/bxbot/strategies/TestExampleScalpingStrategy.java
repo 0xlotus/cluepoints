@@ -679,3 +679,50 @@ public class TestExampleScalpingStrategy {
   public void testStrategyHandlesTradingApiExceptionWhenPlacingSellOrder() throws Exception {
     // expect to get current bid and ask spot prices
     final BigDecimal bidSpotPrice = new BigDecimal("1453.014");
+    expect(marketBuyOrders.get(0).getPrice()).andReturn(bidSpotPrice);
+    final BigDecimal askSpotPrice = new BigDecimal("1455.016");
+    expect(marketSellOrders.get(0).getPrice()).andReturn(askSpotPrice);
+
+    // mock an existing buy order state
+    final BigDecimal lastOrderAmount = new BigDecimal("35");
+    final BigDecimal lastOrderPrice = new BigDecimal("1454.018");
+    final Class orderStateClass =
+        Whitebox.getInnerClassType(ExampleScalpingStrategy.class, "OrderState");
+    final Object orderState = createMock(orderStateClass);
+    Whitebox.setInternalState(orderState, "id", "45345346");
+    Whitebox.setInternalState(orderState, "type", OrderType.BUY);
+    Whitebox.setInternalState(orderState, "price", lastOrderPrice);
+    Whitebox.setInternalState(orderState, "amount", lastOrderAmount);
+
+    // expect to check if the buy order has filled
+    expect(market.getId()).andReturn(MARKET_ID);
+    expect(tradingApi.getYourOpenOrders(MARKET_ID))
+        .andReturn(new ArrayList<>()); // empty list; order has filled
+
+    // expect to send new sell order to exchange and receive timeout exception
+    final BigDecimal requiredProfitInPercent = new BigDecimal("0.02");
+    final BigDecimal newAskPrice =
+        lastOrderPrice
+            .multiply(requiredProfitInPercent)
+            .add(lastOrderPrice)
+            .setScale(8, RoundingMode.HALF_UP);
+    expect(market.getId()).andReturn(MARKET_ID).atLeastOnce();
+    expect(tradingApi.createOrder(MARKET_ID, OrderType.SELL, lastOrderAmount, newAskPrice))
+        .andThrow(new TradingApiException("Exchange returned a 500 status code!"));
+
+    replay(
+        tradingApi, market, config, marketOrderBook, marketBuyOrder, marketSellOrder, orderState);
+
+    final ExampleScalpingStrategy strategy = new ExampleScalpingStrategy();
+
+    // inject the existing buy order
+    Whitebox.setInternalState(strategy, "lastOrder", orderState);
+
+    // run test
+    strategy.init(tradingApi, market, config);
+    strategy.execute();
+
+    verify(
+        tradingApi, market, config, marketOrderBook, marketBuyOrder, marketSellOrder, orderState);
+  }
+}
