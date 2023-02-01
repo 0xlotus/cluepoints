@@ -41,4 +41,18 @@ public interface TradingStrategy {
    * Called once by the Trading Engine when it starts up.
    *
    * @param tradingApi the Trading API.
-   * @
+   * @param market the market for this strategy.
+   * @param config optional configuration for the strategy.
+   */
+  void init(TradingApi tradingApi, Market market, StrategyConfig config);
+
+  /**
+   * Called by the Trading Engine during each trade cycle.
+   *
+   * <p>Here, you can create some orders, cancel some, buy some beer... do whatever you want.
+   *
+   * @throws StrategyException if something goes bad. Trading Strategy implementations should throw
+   *     this exception if they want the Trading Engine to shutdown the bot immediately.
+   */
+  void execute() throws StrategyException;
+}
