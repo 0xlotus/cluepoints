@@ -3,4 +3,46 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-  <modelVersion>4.0.0</mod
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>crypto-trading-api</artifactId>
+  <packaging>jar</packaging>
+  <name>BX-bot Trading API</name>
+  <description>The Trading API for Strategies to use and Exchange Adapters to implement.
+  </description>
+  <url>http://github.com/gazbert/crypto</url>
+  <parent>
+    <groupId>com.gazbert.crypto</groupId>
+    <artifactId>crypto-parent</artifactId>
+    <version>${revision}</version>
+  </parent>
+  <dependencies>
+    <!--
+    3rd party dependencies
+    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-log4j2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+
+    <!--
+    Testing dependencies
+    -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <defaultGoal>clean install</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <ex
