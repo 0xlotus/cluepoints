@@ -17,4 +17,53 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, AR
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.trading.api;
+
+/**
+ * Holds information for an Exchange market.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+public interface Market {
+
+  /**
+   * Returns the market name, e.g. LTC_BTC, USD_BTC.
+   *
+   * @return the market name.
+   */
+  String getName();
+
+  /**
+   * Sets the market id, e.g. 3, btc_usd
+   *
+   * @param id the ID of the Market.
+   */
+  void setId(String id);
+
+  /**
+   * Returns the market id, e.g. 3, btc_usd
+   *
+   * @return the market id.
+   */
+  String getId();
+
+  /**
+   * Returns the base currency for the market currency pair.
+   *
+   * <p>When you buy or sell a currency pair, you are performing that action on the base currency.
+   * E.g. in a LTC/BTC market, the first currency (LTC) is the base currency and the second currency
+   * (BTC) is the counter currency.
+   *
+   * @return the base currency short code, e.g. LTC
+   */
+  String getBaseCurrency();
+
+  /**
+   * Returns the counter currency for the market currency pair. Also known as the quote currency.
+   * E.g. in a LTC/BTC market, the first currency (LTC) is the base currency and the second currency
+   * 
