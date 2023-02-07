@@ -17,40 +17,4 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-package com.gazbert.crypto.trading.api;
-
-import java.math.BigDecimal;
-import java.util.Map;
-
-/**
- * Encapsulates wallet balance info held on the exchange.
- *
- * @author gazbert
- * @since 1.0
- */
-public interface BalanceInfo {
-
-  /**
-   * Returns map of available balances.
-   *
-   * <p>The key is the currency id in UPPERCASE, e.g. LTC, BTC, USD
-   *
-   * @return map of available balances.
-   */
-  Map<String, BigDecimal> getBalancesAvailable();
-
-  /**
-   * Returns map of balances on hold.
-   *
-   * <p>Some exchanges do not provide this information and the returned map will be empty.
-   *
-   * <p>The key is the currency id in UPPERCASE, e.g. LTC, BTC, USD
-   *
-   * @return map of balances on hold.
-   */
-  Map<String, BigDecimal> getBalancesOnHold();
-}
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, AR
