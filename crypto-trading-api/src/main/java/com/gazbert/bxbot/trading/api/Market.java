@@ -66,4 +66,9 @@ public interface Market {
   /**
    * Returns the counter currency for the market currency pair. Also known as the quote currency.
    * E.g. in a LTC/BTC market, the first currency (LTC) is the base currency and the second currency
-   * 
+   * (BTC) is the counter currency.
+   *
+   * @return the counter currency short code, e.g. LTC
+   */
+  String getCounterCurrency();
+}
