@@ -18,4 +18,59 @@
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.trading.api;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+/**
+ * Represents an Open Order (active order) on the exchange.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+public interface OpenOrder {
+
+  /**
+   * Returns the ID for this order.
+   *
+   * @return the ID of the order.
+   */
+  String getId();
+
+  /**
+   * Returns the exchange date/time the order was created.
+   *
+   * @return The exchange date/time.
+   */
+  Date getCreationDate();
+
+  /**
+   * Returns the id of the market this order was placed on.
+   *
+   * @return the id of the market.
+   */
+  String getMarketId();
+
+  /**
+   * Returns the type of order. Value will be {@link OrderType#BUY} or {@link OrderType#SELL}.
+   *
+   * @return the type of order.
+   */
+  OrderType getType();
+
+  /**
+   * Returns the price per unit for this order. This is usually in BTC or USD.
+   *
+   * @return the price per unit for this order.
+   */
+  BigDecimal getPrice();
+
+  /**
+   * Returns the Quantity remaining for this order. This is usually the amount of the other currency
+   * you want to trade for BTC/USD.
+   *
+   * @ret
