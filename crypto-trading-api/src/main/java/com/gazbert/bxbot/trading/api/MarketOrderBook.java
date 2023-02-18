@@ -17,3 +17,49 @@
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.trading.api;
+
+import java.util.List;
+
+/**
+ * Represents a Market Order Book.
+ *
+ * <p>The Market Order Book SELL orders are ordered price ascending - <em>lowest</em> ASK price is
+ * first in list.
+ *
+ * <p>The Market Order Book BUY orders are ordered price descending - <em>highest</em> BID price is
+ * first in list.
+ *
+ * @author gazbert
+ * @since 1.0
+ */
+public interface MarketOrderBook {
+
+  /**
+   * Returns the market id for this Market Order Book.
+   *
+   * @return The market id.
+   */
+  String getMarketId();
+
+  /**
+   * Returns current SELL orders for the market. Ordered price ascending - <em>lowest</em> ASK price
+   * is first in list.
+   *
+   * @return current SELL orders for the market.
+   */
+  List<MarketOrder> getSellOrders();
+
+  /**
+   * Return the current BUY orders for the market. Ordered price descending - <em>highest</em> BID
+   * price is first in list.
+   *
+   * @return current BUY orders for the market.
+   */
+  List<MarketOrder> getBuyOrders();
+}
