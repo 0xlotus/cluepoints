@@ -73,4 +73,24 @@ public interface OpenOrder {
    * Returns the Quantity remaining for this order. This is usually the amount of the other currency
    * you want to trade for BTC/USD.
    *
-   * @ret
+   * @return the Quantity remaining for this order.
+   */
+  BigDecimal getQuantity();
+
+  /**
+   * Returns the Original total order quantity. If the Exchange does not provide this information,
+   * the value will be null. This is usually the amount of the other currency you want to trade for
+   * BTC/USD.
+   *
+   * @return the Original total order quantity if the Exchange provides this information, null
+   *     otherwise.
+   */
+  BigDecimal getOriginalQuantity();
+
+  /**
+   * Returns the Total value of order (price * quantity). This is usually in BTC or USD.
+   *
+   * @return the Total value of order (price * quantity).
+   */
+  BigDecimal getTotal();
+}
