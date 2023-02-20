@@ -7,4 +7,36 @@
  * this software and associated documentation files (the "Software"), to deal in
  * the Software without restriction, including without limitation the rights to
  * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Softwa
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.trading.api;
+
+import java.math.BigDecimal;
+
+/**
+ * Holds Exchange Ticker information.
+ *
+ * <p>Not all exchanges provide the information returned in the Ticker methods - you'll need to
+ * check the relevant Exchange Adapter code/Javadoc and online Exchange API documentation.
+ *
+ * <p>If the exchange does not provide the information, a null value is returned.
+ *
+ * @author gazbert
+ * @since 1.1
+ */
+public interface Ticker {
+
+  /**
+   * Returns the last
