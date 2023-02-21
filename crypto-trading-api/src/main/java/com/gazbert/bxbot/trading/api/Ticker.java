@@ -39,4 +39,50 @@ import java.math.BigDecimal;
 public interface Ticker {
 
   /**
-   * Returns the last
+   * Returns the last trade price.
+   *
+   * @return the last trade price if the exchange provides it, null otherwise.
+   */
+  BigDecimal getLast();
+
+  /**
+   * Returns the highest buy order price.
+   *
+   * @return the highest but order price if the exchange provides it, null otherwise.
+   */
+  BigDecimal getBid();
+
+  /**
+   * Returns the lowest sell order price.
+   *
+   * @return the lowest sell order price if the exchange provides it, null otherwise.
+   */
+  BigDecimal getAsk();
+
+  /**
+   * Returns the last 24 hours price low.
+   *
+   * @return the last 24 hours price low if the exchange provides it, null otherwise.
+   */
+  BigDecimal getLow();
+
+  /**
+   * Returns the last 24 hours price high.
+   *
+   * @return the last 24 hours price high if the exchange provides it, null otherwise.
+   */
+  BigDecimal getHigh();
+
+  /**
+   * Returns the first trade price of the day.
+   *
+   * @return the first trade price of the day if the exchange provides it, null otherwise.
+   */
+  BigDecimal getOpen();
+
+  /**
+   * Returns the last 24 hours volume.
+   *
+   * @return the last 24 hours volume if the exchange provides it, null otherwise.
+   */
+  BigDecimal ge
