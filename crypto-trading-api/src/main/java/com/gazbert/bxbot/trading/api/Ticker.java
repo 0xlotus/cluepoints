@@ -85,4 +85,20 @@ public interface Ticker {
    *
    * @return the last 24 hours volume if the exchange provides it, null otherwise.
    */
-  BigDecimal ge
+  BigDecimal getVolume();
+
+  /**
+   * Returns the last 24 hours volume weighted average -
+   * https://en.wikipedia.org/wiki/Volume-weighted_average_price
+   *
+   * @return the last 24 hours volume weighted average if the exchange provides it, null otherwise.
+   */
+  BigDecimal getVwap();
+
+  /**
+   * Returns the current time on the exchange in UNIX time format.
+   *
+   * @return the current time on the exchange if provided, null otherwise.
+   */
+  Long getTimestamp();
+}
