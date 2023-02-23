@@ -35,4 +35,18 @@ import org.junit.Test;
 public class TestTradingApiExceptionCreation {
 
   private static final String ERROR_MSG = "Exchange has fallen over";
-  private static final RuntimeException CAUSE = new RuntimeE
+  private static final RuntimeException CAUSE = new RuntimeException("The cause of the exception");
+
+  @Test
+  public void testCreationOfExceptionIsAsExpected() {
+    final TradingApiException exception = new TradingApiException(ERROR_MSG);
+    assertEquals(ERROR_MSG, exception.getMessage());
+  }
+
+  @Test
+  public void testCreationOfExceptionWithCauseIsAsExpected() {
+    final TradingApiException exception = new TradingApiException(ERROR_MSG, CAUSE);
+    assertEquals(ERROR_MSG, exception.getMessage());
+    assertEquals(CAUSE, exception.getCause());
+  }
+}
