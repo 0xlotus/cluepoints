@@ -17,25 +17,4 @@
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
  * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
  * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
-package com.gazbert.crypto.datastore.yaml;
-
-/**
- * Locations of YAML files for the entities.
- *
- * @author gazbert
- */
-public final class FileLocations {
-
-  public static final String EMAIL_ALERTS_CONFIG_YAML_FILENAME = "config/email-alerts.yaml";
-  public static final String ENGINE_CONFIG_YAML_FILENAME = "config/engine.yaml";
-  public static final String EXCHANGE_CONFIG_YAML_FILENAME = "config/exchange.yaml";
-  public static final String MARKETS_CONFIG_YAML_FILENAME = "config/markets.yaml";
-  public static final String STRATEGIES_CONFIG_YAML_FILENAME = "config/strategies.yaml";
-
-  private FileLocations() {
-  }
-}
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARIS
