@@ -1,0 +1,12 @@
+---
+exchange:
+  name: Bitstamp
+  # Invalid field below
+  adapterrr:  com.gazbert.crypto.exchanges.BitstampExchangeAdapter
+  authenticationConfig:
+    client-id: your-client-id
+    key: your-api-key
+    secret: your-secret-key
+  networkConfig:
+    connectionTimeout: 30
+    nonFatalErrorCodes: [502, 503, 504, 520

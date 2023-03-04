@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -21,24 +22,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gazbert.crypto.datastore.yaml.exchange;
+package com.gazbert.crypto.datastore.yaml.strategy;
 
-import com.gazbert.crypto.domain.exchange.ExchangeConfig;
+import com.gazbert.crypto.domain.strategy.StrategyConfig;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Wraps Exchange config for dumping to and loading from YAML.
+ * Wraps a list of Strategy configs for dumping to and loading from YAML.
  *
  * @author gazbert
  */
-public class ExchangeType {
+public class StrategiesType {
 
-  private ExchangeConfig exchange;
+  private List<StrategyConfig> strategies;
 
-  public ExchangeConfig getExchange() {
-    return exchange;
+  /** Returns the Strategy configs. */
+  public List<StrategyConfig> getStrategies() {
+    if (strategies == null) {
+      strategies = new ArrayList<>();
+    }
+    return strategies;
   }
 
-  public void setExchange(ExchangeConfig exchange) {
-    this.exchange = exchange;
+  public void setStrategies(List<StrategyConfig> strategies) {
+    this.strategies = strategies;
   }
 }

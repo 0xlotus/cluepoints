@@ -1,3 +1,4 @@
+
 /*
  * The MIT License (MIT)
  *
@@ -21,24 +22,32 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.gazbert.crypto.datastore.yaml.exchange;
+package com.gazbert.crypto.datastore.yaml.market;
 
-import com.gazbert.crypto.domain.exchange.ExchangeConfig;
+import com.gazbert.crypto.domain.market.MarketConfig;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Wraps Exchange config for dumping to and loading from YAML.
+ * Wraps a list of Market configs for dumping to and loading from YAML.
  *
  * @author gazbert
  */
-public class ExchangeType {
+public class MarketsType {
 
-  private ExchangeConfig exchange;
+  private List<MarketConfig> markets;
 
-  public ExchangeConfig getExchange() {
-    return exchange;
+  /**
+   * Returns the Market configs.
+   */
+  public List<MarketConfig> getMarkets() {
+    if (markets == null) {
+      markets = new ArrayList<>();
+    }
+    return markets;
   }
 
-  public void setExchange(ExchangeConfig exchange) {
-    this.exchange = exchange;
+  public void setMarkets(List<MarketConfig> markets) {
+    this.markets = markets;
   }
 }
