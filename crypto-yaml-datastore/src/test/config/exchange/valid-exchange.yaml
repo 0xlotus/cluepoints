@@ -1,8 +1,8 @@
+
 ---
 exchange:
   name: Bitstamp
-  # Invalid field below
-  adapterrr:  com.gazbert.crypto.exchanges.BitstampExchangeAdapter
+  adapter: com.gazbert.crypto.exchanges.BitstampExchangeAdapter
   authenticationConfig:
     client-id: your-client-id
     key: your-api-key
