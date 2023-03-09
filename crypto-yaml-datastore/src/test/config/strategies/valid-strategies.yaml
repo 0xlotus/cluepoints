@@ -1,7 +1,7 @@
 ---
 strategies:
 
-  - thisFieldBreaksTheTest: scalping-strategy
+  - id: scalping-strategy
     name: Basic Scalping Strat
     description: >
       A simple trend following scalper that buys at the current BID price,
@@ -20,6 +20,4 @@ strategies:
     className: com.gazbert.crypto.strategies.YourEmaShortingStrategy
     configItems:
       btc-sell-order-amount: 0.5
-      shortEmaInterval: 5
-      mediumEmaInterval: 10
-      longEmaInterval: 20
+      shortEmaInterval
