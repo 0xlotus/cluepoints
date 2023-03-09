@@ -20,4 +20,16 @@ strategies:
     className: com.gazbert.crypto.strategies.YourEmaShortingStrategy
     configItems:
       btc-sell-order-amount: 0.5
-      shortEmaInterval
+      shortEmaInterval: 5
+      mediumEmaInterval: 10
+      longEmaInterval: 20
+
+  - id: macd-strategy
+    name: MACD Based Strat
+    description: Strat uses MACD data to take long position in USD.
+    beanName: myMacdStratBean
+    # config is optional
+    # configItems:
+    #   counter-currency-buy-order-amount: 20
+    #   shortEmaInterval: 12
+    #   longEmaInterval: 26
