@@ -15,4 +15,34 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PART
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.gazbert.crypto.datastore.yaml.emailalerts;
+
+import static junit.framework.TestCase.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import com.gazbert.crypto.datastore.yaml.ConfigurationManager;
+import com.gazbert.crypto.domain.emailalerts.EmailAlertsConfig;
+import com.gazbert.crypto.domain.emailalerts.SmtpConfig;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import org.junit.Test;
+
+/**
+ * Tests the Email Alerts configuration is loaded as expected.
+ *
+ * @author gazbert
+ */
+public class TestEmailAlertsConfigurationManagement {
+
+  private static final String VALID_YAML_CONFIG_FILENAME =
+      "src/test/config/emailalerts/valid-email-alerts.yaml";
+  private static final String INVALID_YAML_CONFIG_FILENAME =
+      "src/test/config/emailalerts/invalid-email-a
