@@ -69,4 +69,31 @@ public class TestEmailAlertsConfigurationManagement {
 
     assertTrue(emailAlertsType.getEmailAlerts().isEnabled());
 
-    final SmtpConfig smtpConfig = emailA
+    final SmtpConfig smtpConfig = emailAlertsType.getEmailAlerts().getSmtpConfig();
+    assertEquals("smtp.gmail.com", smtpConfig.getHost());
+    assertEquals(587, smtpConfig.getTlsPort());
+    assertEquals("your.account.username@gmail.com", smtpConfig.getAccountUsername());
+    assertEquals("your.account.password", smtpConfig.getAccountPassword());
+    assertEquals("from.addr@gmail.com", smtpConfig.getFromAddress());
+    assertEquals("to.addr@gmail.com", smtpConfig.getToAddress());
+  }
+
+  @Test
+  public void testLoadingValidYamlConfigFileWithoutSmtpConfigIsSuccessful() {
+    final EmailAlertsType emailAlertsType =
+        ConfigurationManager.loadConfig(
+            EmailAlertsType.class, VALID_YAML_CONFIG_WITHOUT_EMAIL_ALERTS_FILENAME);
+    assertFalse(emailAlertsType.getEmailAlerts().isEnabled());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testLoadingMissingYamlConfigThrowsException() {
+    ConfigurationManager.loadConfig(EmailAlertsType.class, MISSING_YAML_CONFIG_FILENAME);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void testLoadingInvalidYamlConfigFileThrowsException() {
+    ConfigurationManager.loadConfig(EmailAlertsType.class, INVALID_YAML_CONFIG_FILENAME);
+  }
+
+  @Test
