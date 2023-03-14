@@ -45,4 +45,28 @@ public class TestEmailAlertsConfigurationManagement {
   private static final String VALID_YAML_CONFIG_FILENAME =
       "src/test/config/emailalerts/valid-email-alerts.yaml";
   private static final String INVALID_YAML_CONFIG_FILENAME =
-      "src/test/config/emailalerts/invalid-email-a
+      "src/test/config/emailalerts/invalid-email-alerts.yaml";
+  private static final String VALID_YAML_CONFIG_WITHOUT_EMAIL_ALERTS_FILENAME =
+      "src/test/config/emailalerts/valid-email-alerts-without-smtp-config.yaml";
+  private static final String MISSING_YAML_CONFIG_FILENAME =
+      "src/test/config/emailalerts/missing-email-alerts.yaml";
+  private static final String YAML_CONFIG_TO_SAVE_FILENAME =
+      "src/test/config/emailalerts/saved-email-alerts.yaml";
+  private static final String INVALID_YAML_CONFIG_TO_SAVE_FILENAME =
+      "src/test/config/not-here/saved-email-alerts.yaml";
+
+  private static final String HOST = "mail.google.com";
+  private static final int TLS_PORT = 587;
+  private static final String ACCOUNT_USERNAME = "user@google.com";
+  private static final String ACCOUNT_PASSWORD = "myPass";
+  private static final String FROM_ADDRESS = "from.me@google.com";
+  private static final String TO_ADDRESS = "to.them@google.com";
+
+  @Test
+  public void testLoadingValidYamlConfigFileIsSuccessful() {
+    final EmailAlertsType emailAlertsType =
+        ConfigurationManager.loadConfig(EmailAlertsType.class, VALID_YAML_CONFIG_FILENAME);
+
+    assertTrue(emailAlertsType.getEmailAlerts().isEnabled());
+
+    final SmtpConfig smtpConfig = emailA
