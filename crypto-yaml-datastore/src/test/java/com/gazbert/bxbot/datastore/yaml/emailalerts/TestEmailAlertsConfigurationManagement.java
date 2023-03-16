@@ -123,4 +123,30 @@ public class TestEmailAlertsConfigurationManagement {
     assertThat(emailAlertsReloaded.getEmailAlerts().isEnabled()).isEqualTo(true);
     assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getAccountUsername())
         .isEqualTo(ACCOUNT_USERNAME);
-    assertThat(em
+    assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getAccountPassword())
+        .isEqualTo(ACCOUNT_PASSWORD);
+    assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getHost()).isEqualTo(HOST);
+    assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getTlsPort())
+        .isEqualTo(TLS_PORT);
+    assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getFromAddress())
+        .isEqualTo(FROM_ADDRESS);
+    assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getToAddress())
+        .isEqualTo(TO_ADDRESS);
+
+    // cleanup
+    Files.delete(FileSystems.getDefault().getPath(YAML_CONFIG_TO_SAVE_FILENAME));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void testSavingConfigToInvalidYamlFileIsHandled() {
+    final SmtpConfig smtpConfig = new SmtpConfig();
+    smtpConfig.setAccountUsername(ACCOUNT_USERNAME);
+    smtpConfig.setAccountPassword(ACCOUNT_PASSWORD);
+    smtpConfig.setHost(HOST);
+    smtpConfig.setTlsPort(TLS_PORT);
+    smtpConfig.setFromAddress(FROM_ADDRESS);
+    smtpConfig.setToAddress(TO_ADDRESS);
+
+    final EmailAlertsConfig emailAlertsConfig = new EmailAlertsConfig();
+    emailAlertsConfig.setEnabled(true);
+    emailAlertsCon
