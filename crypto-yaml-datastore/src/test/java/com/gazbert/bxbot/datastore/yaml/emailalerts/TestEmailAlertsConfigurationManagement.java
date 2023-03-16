@@ -97,3 +97,30 @@ public class TestEmailAlertsConfigurationManagement {
   }
 
   @Test
+  public void testSavingConfigToXmlIsSuccessful() throws Exception {
+    final SmtpConfig smtpConfig = new SmtpConfig();
+    smtpConfig.setAccountUsername(ACCOUNT_USERNAME);
+    smtpConfig.setAccountPassword(ACCOUNT_PASSWORD);
+    smtpConfig.setHost(HOST);
+    smtpConfig.setTlsPort(TLS_PORT);
+    smtpConfig.setFromAddress(FROM_ADDRESS);
+    smtpConfig.setToAddress(TO_ADDRESS);
+
+    final EmailAlertsConfig emailAlertsConfig = new EmailAlertsConfig();
+    emailAlertsConfig.setEnabled(true);
+    emailAlertsConfig.setSmtpConfig(smtpConfig);
+
+    final EmailAlertsType emailAlertsType = new EmailAlertsType();
+    emailAlertsType.setEmailAlerts(emailAlertsConfig);
+
+    ConfigurationManager.saveConfig(
+        EmailAlertsType.class, emailAlertsType, YAML_CONFIG_TO_SAVE_FILENAME);
+
+    // Read it back in
+    final EmailAlertsType emailAlertsReloaded =
+        ConfigurationManager.loadConfig(EmailAlertsType.class, YAML_CONFIG_TO_SAVE_FILENAME);
+
+    assertThat(emailAlertsReloaded.getEmailAlerts().isEnabled()).isEqualTo(true);
+    assertThat(emailAlertsReloaded.getEmailAlerts().getSmtpConfig().getAccountUsername())
+        .isEqualTo(ACCOUNT_USERNAME);
+    assertThat(em
