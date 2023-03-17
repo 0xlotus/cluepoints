@@ -149,4 +149,12 @@ public class TestEmailAlertsConfigurationManagement {
 
     final EmailAlertsConfig emailAlertsConfig = new EmailAlertsConfig();
     emailAlertsConfig.setEnabled(true);
-    emailAlertsCon
+    emailAlertsConfig.setSmtpConfig(smtpConfig);
+
+    final EmailAlertsType emailAlertsType = new EmailAlertsType();
+    emailAlertsType.setEmailAlerts(emailAlertsConfig);
+
+    ConfigurationManager.saveConfig(
+        EmailAlertsType.class, emailAlertsType, INVALID_YAML_CONFIG_TO_SAVE_FILENAME);
+  }
+}
