@@ -35,4 +35,36 @@ IF NOT "%1"=="status" GOTO:invalidArgs
 REM TODO: Check if bot is already running before trying to start it!
 SET START_TIME=%time%
 ECHO Starting BX-bot...
-START "BX-bot - %START_TIME%" java -Xmx64m -Xss256k -Dlog4j.configurationFile=%log4j2_config% --illegal-access=deny -jar %l
+START "BX-bot - %START_TIME%" java -Xmx64m -Xss256k -Dlog4j.configurationFile=%log4j2_config% --illegal-access=deny -jar %lib_dir%\%crypto_jar%
+FOR /F "tokens=2" %%i in ('TASKLIST /NH /FI "WINDOWTITLE eq BX-bot - %START_TIME%"' ) DO (SET PID=%%i)
+ECHO %PID% > %pid_file%
+ECHO BX-bot started with PID: %PID%
+GOTO:EOF
+
+:stop
+IF NOT EXIST %pid_file% (
+    ECHO BX-bot is not running. Nothing to stop.
+) ELSE (
+    FOR /f %%a IN (%pid_file%) DO (
+    	ECHO Stopping BX-bot instance running with PID: %%a ...
+   		taskkill /F /PID %%a
+        DEL %pid_file%
+        EXIT /b
+    )
+)
+GOTO:EOF
+
+:status
+IF EXIST %pid_file% (
+    FOR /f %%a IN (%pid_file%) DO (
+       ECHO BX-bot is running with PID: %%a
+       EXIT /b
+    )
+) ELSE (
+    ECHO BX-bot is not running.
+)
+GOTO:EOF
+
+:invalidArgs
+ECHO Invalid args. Usage: crypto.bat [start^|stop^|status]
+GOTO:EOF
