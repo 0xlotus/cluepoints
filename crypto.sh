@@ -55,4 +55,21 @@ case "$1" in
        if [[ ${pid} -gt 1 ]]; then
           echo "Failed to stop BX-bot. Manual kill required!"
        else
-          echo "BX-bot has stoppe
+          echo "BX-bot has stopped."
+          rm ${pid_file}
+       fi
+       ;;
+
+   'status')
+      if [[ -e ${pid_file} ]]; then
+         pid=$(cat ${pid_file});
+         echo "BX-bot is running with PID: $pid"
+      else
+         echo "BX-bot is not running."
+      fi
+      ;;
+
+   *)
+         echo "Invalid args. Usage: $0 [start|stop|status]"
+      ;;
+esac
