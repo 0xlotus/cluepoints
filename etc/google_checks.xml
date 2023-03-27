@@ -124,4 +124,31 @@
     <module name="PackageName">
       <property name="format" value="^[a-z]+(\.[a-z][a-z0-9]*)*$"/>
       <message key="name.invalidPattern"
-        value="Package nam
+        value="Package name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="TypeName">
+      <message key="name.invalidPattern"
+        value="Type name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="MemberName">
+      <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+      <message key="name.invalidPattern"
+        value="Member name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="ParameterName">
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
+      <message key="name.invalidPattern"
+        value="Parameter name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="LambdaParameterName">
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
+      <message key="name.invalidPattern"
+        value="Lambda parameter name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="CatchParameterName">
+      <property name="format" value="^[a-z]([a-z0-9][a-zA-Z0-9]*)?$"/>
+      <message key="name.invalidPattern"
+        value="Catch parameter name ''{0}'' must match pattern ''{1}''."/>
+    </module>
+    <module name="LocalVariableName">
+      <pro
