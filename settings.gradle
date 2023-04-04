@@ -1,0 +1,31 @@
+
+plugins {
+    id "com.gradle.enterprise" version "3.1.1"
+}
+
+rootProject.name = 'crypto-parent'
+include ':crypto-trading-api'
+include ':crypto-exchange-api'
+include ':crypto-strategy-api'
+include ':crypto-exchanges'
+include ':crypto-strategies'
+include ':crypto-domain-objects'
+include ':crypto-yaml-datastore'
+include ':crypto-repository'
+include ':crypto-core'
+include ':crypto-services'
+include ':crypto-rest-api'
+include ':crypto-app'
+
+project(':crypto-trading-api').projectDir = "$rootDir/crypto-trading-api" as File
+project(':crypto-exchange-api').projectDir = "$rootDir/crypto-exchange-api" as File
+project(':crypto-strategy-api').projectDir = "$rootDir/crypto-strategy-api" as File
+project(':crypto-exchanges').projectDir = "$rootDir/crypto-exchanges" as File
+project(':crypto-strategies').projectDir = "$rootDir/crypto-strategies" as File
+project(':crypto-domain-objects').projectDir = "$rootDir/crypto-domain-objects" as File
+project(':crypto-yaml-datastore').projectDir = "$rootDir/crypto-yaml-datastore" as File
+project(':crypto-repository').projectDir = "$rootDir/crypto-repository" as File
+project(':crypto-core').projectDir = "$rootDir/crypto-core" as File
+project(':crypto-services').projectDir = "$rootDir/crypto-services" as File
+project(':crypto-rest-api').projectDir = "$rootDir/crypto-rest-api" as File
+project(':crypto-app').projectDir = "$rootDir/crypto-app" as File
